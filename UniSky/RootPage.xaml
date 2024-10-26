@@ -1,0 +1,17 @@
+﻿<Page
+    x:Class="UniSky.RootPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UniSky"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:viewmodels="using:UniSky.ViewModels"
+    xmlns:pages="using:UniSky.Pages"
+    mc:Ignorable="d"
+    Background="#FF0085ff">
+    <Page.DataContext>
+        <viewmodels:RootViewModel/>
+    </Page.DataContext>
+
+    <Frame x:Name="RootFrame" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"/>
+</Page>
