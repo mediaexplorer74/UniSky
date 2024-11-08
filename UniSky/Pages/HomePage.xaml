@@ -11,8 +11,47 @@
     DataContext="{x:Bind ViewModel}"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
+    <Page.Resources>
+        <ExponentialEase x:Key="EaseMove" EasingMode="EaseOut" Exponent="7"/>
+        <Storyboard x:Name="PaneOpenStoryboard"
+                    x:Key="PaneOpenStoryboard">
+            <DoubleAnimation From="-10" 
+                             To="0"
+                             Storyboard.TargetName="PaneHeaderTransform" 
+                             Storyboard.TargetProperty="Y"
+                             Duration="00:00:00.50" 
+                             EasingFunction="{StaticResource EaseMove}"/>
+            <DoubleAnimation From="0" 
+                             To="10"
+                             Storyboard.TargetName="TitleHeaderTransform" 
+                             Storyboard.TargetProperty="Y" 
+                             Duration="00:00:00.50"
+                             EasingFunction="{StaticResource EaseMove}"/>
+        </Storyboard>
+        <Storyboard x:Name="PaneCloseStoryboard"
+                    x:Key="PaneCloseStoryboard">
+            <DoubleAnimation From="0" 
+                             To="-10"
+                             Storyboard.TargetName="PaneHeaderTransform" 
+                             Storyboard.TargetProperty="Y"
+                             Duration="00:00:00.50" 
+                             EasingFunction="{StaticResource EaseMove}"/>
+            <DoubleAnimation From="10" 
+                             To="0"
+                             Storyboard.TargetName="TitleHeaderTransform" 
+                             Storyboard.TargetProperty="Y" 
+                             Duration="00:00:00.50"
+                             EasingFunction="{StaticResource EaseMove}"/>
+        </Storyboard>
+    </Page.Resources>
+
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
         <mux:NavigationView x:Name="NavView"
+                            Grid.Row="1"
                             Style="{StaticResource InvertedNavigationViewStyle}"
                             PaneDisplayMode="LeftMinimal"
                             IsBackButtonVisible="Collapsed"
@@ -91,7 +130,10 @@
                 </mux:NavigationViewItem>
             </mux:NavigationView.FooterMenuItems>
             <mux:NavigationView.PaneHeader>
-                <Grid>
+                <Grid Margin="0,0,0,0">
+                    <Grid.RenderTransform>
+                        <TranslateTransform x:Name="PaneHeaderTransform" />
+                    </Grid.RenderTransform>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="32"/>
                         <ColumnDefinition Width="*"/>
@@ -107,6 +149,7 @@
                     </Viewbox>
 
                     <TextBlock Text="Unisky"
+                               Style="{StaticResource CaptionTextBlockStyle}" 
                                VerticalAlignment="Center" 
                                Grid.Column="1"
                                Margin="8,0"/>
@@ -119,7 +162,8 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <Frame x:Name="NavigationFrame" />
+                <Frame x:Name="NavigationFrame"
+                       Grid.Row="0"/>
 
                 <Grid x:Name="FooterNavigation"
                       Visibility="Collapsed"
@@ -229,6 +273,46 @@
                               ToolTipService.ToolTip="Settings"
                               ToolTipService.Placement="Top"/>
                 </Grid>
+
+
+
+                <Grid x:Name="AppTitleBar"
+                      Background="Transparent"
+                      VerticalAlignment="Top">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition x:Name="LeftPaddingColumn" Width="0"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid Grid.Column="1" 
+                          MaxWidth="600" 
+                          HorizontalAlignment="Stretch">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="32"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RenderTransform>
+                            <TranslateTransform x:Name="TitleHeaderTransform"/>
+                        </Grid.RenderTransform>
+
+                        <Viewbox VerticalAlignment="Center"
+                                 HorizontalAlignment="Center"
+                                 Margin="8,2,0,0"
+                                 Width="16"
+                                 Height="16"
+                                 Grid.Column="0">
+                            <Path Data="{StaticResource BlueSkyLogoPath}"
+                                  Fill="{ThemeResource ApplicationForegroundThemeBrush}"/>
+                        </Viewbox>
+
+                        <TextBlock x:Name="AppTitleTextBlock"
+                                   Style="{StaticResource CaptionTextBlockStyle}" 
+                                   Text="Unisky"
+                                   VerticalAlignment="Center" 
+                                   Grid.Column="1"
+                                   Margin="8,0"/>
+                    </Grid>
+                </Grid>
             </Grid>
 
         </mux:NavigationView>
@@ -256,7 +340,7 @@
                         <Setter Target="FooterNavigation.Visibility" Value="Collapsed"/>
                     </VisualState.Setters>
                 </VisualState>
-                <VisualState x:Name="Wide">
+                <!--<VisualState x:Name="Wide">
                     <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowWidth="1023" />
                     </VisualState.StateTriggers>
@@ -264,6 +348,18 @@
                     <VisualState.Setters>
                         <Setter Target="NavView.PaneDisplayMode" Value="Left"/>
                         <Setter Target="FooterNavigation.Visibility" Value="Collapsed"/>
+                    </VisualState.Setters>
+                </VisualState>-->
+            </VisualStateGroup>
+            <VisualStateGroup>
+                <VisualState x:Name="Active">
+                    <VisualState.Setters>
+                        <Setter Target="AppTitleTextBlock.Foreground" Value="{ThemeResource ApplicationForegroundThemeBrush}"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Inactive">
+                    <VisualState.Setters>
+                        <Setter Target="AppTitleTextBlock.Foreground" Value="{ThemeResource ApplicationSecondaryForegroundThemeBrush}"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

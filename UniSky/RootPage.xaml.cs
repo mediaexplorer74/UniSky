@@ -18,9 +18,11 @@ using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Graphics;
+using Windows.Graphics.Display;
 using Windows.Storage;
 using Windows.UI;
 using Windows.UI.Composition;
+using Windows.UI.Core;
 using Windows.UI.Notifications;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
@@ -47,7 +49,7 @@ public sealed partial class RootPage : Page
         Loaded += RootPage_Loaded;
     }
 
-    private async void RootPage_Loaded(object sender, RoutedEventArgs e)
+    private void RootPage_Loaded(object sender, RoutedEventArgs e)
     {
         var serviceLocator = Ioc.Default.GetRequiredService<INavigationServiceLocator>();
         var service = serviceLocator.GetNavigationService("Root");

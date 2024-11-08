@@ -34,7 +34,7 @@
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
     <AppxBundle>Always</AppxBundle>
-    <AppxBundlePlatforms>x64|arm</AppxBundlePlatforms>
+    <AppxBundlePlatforms>x64</AppxBundlePlatforms>
     <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
   </PropertyGroup>
@@ -143,6 +143,7 @@
     </Compile>
     <Compile Include="Converters\Static.cs" />
     <Compile Include="DataTemplates\PostEmbedTemplateSelector.cs" />
+    <Compile Include="Extensions\HairlineBorder.cs" />
     <Compile Include="Extensions\SynchronizationContextExtensions.cs" />
     <Compile Include="Helpers\Composition\BirdAnimation.cs" />
     <Compile Include="Helpers\Geometry\CanvasPathBuilderExtensions.cs" />

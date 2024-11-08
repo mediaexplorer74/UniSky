@@ -5,10 +5,10 @@
                     xmlns:not1809="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract, 7)"
                     xmlns:datatemplates="using:UniSky.DataTemplates"
                     xmlns:converters="using:UniSky.Converters"
+                    xmlns:extensions="using:UniSky.Extensions"
                     xmlns:feeds="using:UniSky.ViewModels.Feeds" 
                     xmlns:posts="using:UniSky.ViewModels.Posts"
                     x:DefaultBindMode="OneWay">
-
     <Style x:Key="FeedItemActionButtonStyle" TargetType="Button">
         <Setter Property="Padding" Value="8"/>
         <Setter Property="Margin" Value="0,0,8,0"/>
@@ -137,15 +137,19 @@
 
     <DataTemplate x:Key="FeedItemContentTemplate"
                   x:DataType="posts:PostViewModel">
-        <Grid HorizontalAlignment="Stretch" Padding="0,8">
+        <Grid BorderBrush="{StaticResource SystemControlSeparatorBrush}"
+              extensions:HairlineBorder.Thickness="0,0,0,1"
+              HorizontalAlignment="Stretch"
+              Padding="12,8,12,4">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <Grid x:Name="RetweetContainer"
                   x:Load="{x:Bind converters:Static.NotNull(RetweetedBy)}"
-                  Margin="34,0,0,8">
+                  Margin="34,0,0,4">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
@@ -164,7 +168,29 @@
                 </TextBlock>
             </Grid>
 
-            <Grid Grid.Row="1">
+            <Grid x:Name="ReplyContainer"
+                  x:Load="{x:Bind converters:Static.NotNull(ReplyTo)}"
+                  Grid.Row="1"
+                  Margin="34,0,0,4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Viewbox Height="12">
+                    <TextBlock Foreground="{ThemeResource ApplicationSecondaryForegroundThemeBrush}"
+                               FontFamily="{ThemeResource SymbolThemeFontFamily}">&#xE97A;</TextBlock>
+                </Viewbox>
+
+                <TextBlock Grid.Column="1" 
+                           Foreground="{ThemeResource ApplicationSecondaryForegroundThemeBrush}"
+                           FontSize="12"
+                           Margin="8,0">
+                    Replying to <Run Text="{x:Bind ReplyTo.Name, Mode=OneWay}" FontWeight="Bold"/>
+                </TextBlock>
+            </Grid>
+
+            <Grid Grid.Row="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
@@ -203,11 +229,14 @@
                      <Run Text="{x:Bind Author.Handle, Mode=OneWay}"/>
                 </TextBlock>
 
-                <TextBlock Text="{x:Bind Text}"
-                            Grid.Column="1"
-                            Grid.Row="1"
-                            TextWrapping="Wrap"
-                            VerticalAlignment="Top"/>
+                <TextBlock x:Name="MainContent"
+                           x:Load="{x:Bind converters:Static.NotNullOrWhiteSpace(Text)}"
+                           Text="{x:Bind Text}"
+                           Grid.Column="1"
+                           Grid.Row="1"
+                           TextWrapping="Wrap"
+                           IsTextSelectionEnabled="True"
+                           VerticalAlignment="Top"/>
 
                 <Grid x:Name="EmbedContentContainer"
                       x:Load="{x:Bind converters:Static.NotNull(Embed)}"
@@ -233,7 +262,7 @@
                              Grid.Column="0"
                              Style="{StaticResource FeedItemActionButtonStyle}">
                         <StackPanel Orientation="Horizontal">
-                            <Viewbox Height="12">
+                            <Viewbox Height="14">
                                 <TextBlock>&#xE97A;</TextBlock>
                             </Viewbox>
                             <TextBlock Text="{x:Bind Replies, Mode=OneWay}"
@@ -246,7 +275,7 @@
                              Grid.Column="1"
                              Style="{StaticResource FeedItemActionButtonStyle}">
                         <StackPanel Orientation="Horizontal">
-                            <Viewbox Height="12">
+                            <Viewbox Height="14">
                                 <TextBlock>&#xE8EB;</TextBlock>
                             </Viewbox>
                             <TextBlock Text="{x:Bind Retweets, Mode=OneWay}"
@@ -261,7 +290,7 @@
                              Style="{StaticResource FeedItemActionButtonStyle}"
                              Command="{x:Bind LikeCommand}">
                         <StackPanel Orientation="Horizontal">
-                            <Viewbox Height="12">
+                            <Viewbox Height="14">
                                 <TextBlock>&#xEB51;</TextBlock>
                             </Viewbox>
                             <TextBlock Text="{x:Bind Likes, Mode=OneWay}"
@@ -291,7 +320,7 @@
                             </MenuFlyout>
                         </Button.Flyout>
 
-                        <Viewbox Height="12">
+                        <Viewbox Height="14">
                             <TextBlock>&#xE712;</TextBlock>
                         </Viewbox>
                     </Button>

@@ -87,6 +87,7 @@ sealed partial class App : Application
                 .TitleBar.ExtendViewIntoTitleBar = true;
         }
 
+
         if (e.PrelaunchActivated == false)
         {
             if (rootFrame.Content == null)

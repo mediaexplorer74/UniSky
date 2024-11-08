@@ -8,13 +8,16 @@
     xmlns:viewmodels="using:UniSky.ViewModels" 
     xmlns:mux="using:Microsoft.UI.Xaml.Controls" 
     xmlns:feeds="using:UniSky.ViewModels.Feeds" 
+    xmlns:extensions="using:UniSky.Extensions"
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance Type=viewmodels:FeedsViewModel}"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid HorizontalAlignment="Center" 
+    <Grid x:Name="RootGrid"
+          HorizontalAlignment="Center" 
           VerticalAlignment="Stretch" 
-          MaxWidth="600" >
+          BorderBrush="{StaticResource SystemControlSeparatorBrush}"
+          MaxWidth="600">
         <Pivot x:Name="FeedsPivot"
                ItemsSource="{x:Bind ViewModel.Feeds}">
             <Pivot.HeaderTemplate>
@@ -22,6 +25,19 @@
                     <TextBlock Text="{Binding Name}"/>
                 </DataTemplate>
             </Pivot.HeaderTemplate>
+            <Pivot.ItemContainerStyle>
+                <Style TargetType="PivotItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="Margin" Value="0"/>
+                </Style>
+            </Pivot.ItemContainerStyle>
+            <Pivot.Resources>
+                <x:Double x:Key="PivotHeaderItemFontSize">20</x:Double>
+                <Style TargetType="PivotHeaderItem">
+                    <Setter Property="Height" Value="42"/>
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                </Style>
+            </Pivot.Resources>
             <Pivot.ItemTemplate>
                 <DataTemplate x:DataType="feeds:FeedViewModel">
                     <Grid>
@@ -31,10 +47,13 @@
                                       SelectionMode="None"
                                       HorizontalAlignment="Stretch"
                                       HorizontalContentAlignment="Stretch"
-                                      ScrollViewer.IsVerticalScrollChainingEnabled="True">
+                                      ScrollViewer.IsVerticalScrollChainingEnabled="True"
+                                      BorderBrush="{StaticResource SystemControlSeparatorBrush}"
+                                      extensions:HairlineBorder.Thickness="0,1,0,0">
                                 <ListView.ItemContainerStyle>
                                     <Style TargetType="ListViewItem">
                                         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                        <Setter Property="Padding" Value="0"/>
                                     </Style>
                                 </ListView.ItemContainerStyle>
                                 <ListView.FooterTemplate>
@@ -58,6 +77,7 @@
                             <TextBlock Text="Unable to fetch timeline!" Style="{StaticResource TitleTextBlockStyle}"/>
                             <Button Content="Try again" Style="{ThemeResource TextBlockButtonStyle}" />
                         </StackPanel>
+
                     </Grid>
                 </DataTemplate>
             </Pivot.ItemTemplate>
@@ -74,5 +94,28 @@
                        FontFamily="{ThemeResource SymbolThemeFontFamily}"
                        FontSize="20"/>
         </Button>
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="Small">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+
+                    <VisualState.Setters>
+                        <Setter Target="RootGrid.(extensions:HairlineBorder.Thickness)" Value="0"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Medium">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="621" />
+                    </VisualState.StateTriggers>
+
+                    <VisualState.Setters>
+                        <Setter Target="RootGrid.(extensions:HairlineBorder.Thickness)" Value="1,0"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
     </Grid>
 </Page>

@@ -425,7 +425,8 @@
                                                 IsTabStop="False"
                                                 VerticalContentAlignment="Stretch"
                                                 HorizontalContentAlignment="Stretch"
-                                                Grid.Column="2" />
+                                                Grid.Column="2">
+                                            </ContentControl>
                                         </Grid>
 
                                         <Grid

@@ -28,6 +28,8 @@ public partial class PostViewModel : ViewModelBase
 
     [ObservableProperty]
     private ProfileViewModel retweetedBy;
+    [ObservableProperty]
+    private ProfileViewModel replyTo;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasEmbed))]
@@ -42,6 +44,11 @@ public partial class PostViewModel : ViewModelBase
         if (feedPost.Reason is ReasonRepost { By: not null } repost)
         {
             RetweetedBy = new ProfileViewModel(repost.By);
+        }
+
+        if (feedPost.Reply is FeedViewPostReply { Parent: PostView { Author: not null } })
+        {
+            ReplyTo = new ProfileViewModel(feedPost.Reply.Parent.Author);
         }
     }
 

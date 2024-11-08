@@ -7,8 +7,13 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using UniSky.ViewModels;
 using UniSky.ViewModels.Feeds;
+using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Foundation.Metadata;
+using Windows.Phone;
+using Windows.UI.ViewManagement;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -44,7 +49,21 @@ namespace UniSky.Pages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+
+            if (!ApiInformation.IsApiContractPresent(typeof(PhoneContract).FullName, 1))
+            {
+                CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+                coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
+
+                RootGrid.Padding = new Thickness(0, coreTitleBar.Height, 0, 0);
+            }
+
             this.ViewModel = ActivatorUtilities.CreateInstance<FeedsViewModel>(Ioc.Default);
+        }
+
+        private void CoreTitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
+        {
+            RootGrid.Padding = new Thickness(0, sender.Height, 0, 0);
         }
 
         private async void OnRefreshRequested(MUXC.RefreshContainer sender, MUXC.RefreshRequestedEventArgs args)
