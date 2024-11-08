@@ -3,12 +3,19 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
                     xmlns:w1809="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 7)"
                     xmlns:not1809="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract, 7)"
+                    xmlns:i="using:Microsoft.Xaml.Interactivity" 
+                    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
                     xmlns:datatemplates="using:UniSky.DataTemplates"
                     xmlns:converters="using:UniSky.Converters"
                     xmlns:extensions="using:UniSky.Extensions"
                     xmlns:feeds="using:UniSky.ViewModels.Feeds" 
-                    xmlns:posts="using:UniSky.ViewModels.Posts"
+                    xmlns:posts="using:UniSky.ViewModels.Posts" 
                     x:DefaultBindMode="OneWay">
+
+    <!-- TODO: un-steal these colours -->
+    <SolidColorBrush x:Key="LikeBrush">#ea4298</SolidColorBrush>
+    <SolidColorBrush x:Key="RetweetBrush">#5cefaa</SolidColorBrush>
+    
     <Style x:Key="FeedItemActionButtonStyle" TargetType="Button">
         <Setter Property="Padding" Value="8"/>
         <Setter Property="Margin" Value="0,0,8,0"/>
@@ -291,7 +298,7 @@
                              Command="{x:Bind LikeCommand}">
                         <StackPanel Orientation="Horizontal">
                             <Viewbox Height="14">
-                                <TextBlock>&#xEB51;</TextBlock>
+                                <TextBlock x:Name="LikeTextBlock">&#xEB51;</TextBlock>
                             </Viewbox>
                             <TextBlock Text="{x:Bind Likes, Mode=OneWay}"
                                         Margin="8,-1,0,0"
@@ -326,6 +333,51 @@
                     </Button>
                 </Grid>
             </Grid>
+
+            <i:Interaction.Behaviors>
+                <core:DataTriggerBehavior Binding="{x:Bind IsLiked}"
+                                          ComparisonCondition="Equal"
+                                          Value="True">
+                    <core:DataTriggerBehavior.Actions>
+                        <core:ChangePropertyAction TargetObject="{Binding ElementName=LikeButton}" 
+                                                   PropertyName="Foreground"
+                                                   Value="{StaticResource LikeBrush}"/>
+                        <core:ChangePropertyAction TargetObject="{Binding ElementName=LikeTextBlock}" 
+                                                   PropertyName="Text"
+                                                   Value="&#xEB52;"/>
+                    </core:DataTriggerBehavior.Actions>
+                </core:DataTriggerBehavior>
+                <core:DataTriggerBehavior Binding="{x:Bind IsLiked}"
+                                          ComparisonCondition="Equal"
+                                          Value="False">
+                    <core:DataTriggerBehavior.Actions>
+                        <core:ChangePropertyAction TargetObject="{Binding ElementName=LikeButton}" 
+                                                   PropertyName="Foreground"
+                                                   Value="{StaticResource ApplicationForegroundThemeBrush}"/>
+                        <core:ChangePropertyAction TargetObject="{Binding ElementName=LikeTextBlock}" 
+                                                   PropertyName="Text"
+                                                   Value="&#xEB51;"/>
+                    </core:DataTriggerBehavior.Actions>
+                </core:DataTriggerBehavior>
+                <core:DataTriggerBehavior Binding="{x:Bind IsRetweeted}"
+                                          ComparisonCondition="Equal"
+                                          Value="True">
+                    <core:DataTriggerBehavior.Actions>
+                        <core:ChangePropertyAction TargetObject="{Binding ElementName=RetweetButton}" 
+                                                   PropertyName="Foreground"
+                                                   Value="{StaticResource RetweetBrush}"/>
+                    </core:DataTriggerBehavior.Actions>
+                </core:DataTriggerBehavior>
+                <core:DataTriggerBehavior Binding="{x:Bind IsRetweeted}"
+                                          ComparisonCondition="Equal"
+                                          Value="False">
+                    <core:DataTriggerBehavior.Actions>
+                        <core:ChangePropertyAction TargetObject="{Binding ElementName=RetweetButton}" 
+                                                   PropertyName="Foreground"
+                                                   Value="{StaticResource ApplicationForegroundThemeBrush}"/>
+                    </core:DataTriggerBehavior.Actions>
+                </core:DataTriggerBehavior>
+            </i:Interaction.Behaviors>
         </Grid>
     </DataTemplate>
 </ResourceDictionary>

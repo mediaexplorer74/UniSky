@@ -27,6 +27,11 @@ public partial class PostViewModel : ViewModelBase
     private string replies;
 
     [ObservableProperty]
+    private bool isLiked;
+    [ObservableProperty]
+    private bool isRetweeted;
+
+    [ObservableProperty]
     private ProfileViewModel retweetedBy;
     [ObservableProperty]
     private ProfileViewModel replyTo;
@@ -61,6 +66,9 @@ public partial class PostViewModel : ViewModelBase
         Retweets = ToNumberString(view.RepostCount);
         Replies = ToNumberString(view.ReplyCount);
         Embed = CreateEmbedViewModel(view.Embed);
+
+        IsLiked = view.Viewer?.Like != null;
+        IsRetweeted = view.Viewer?.Repost != null;
     }
 
     [RelayCommand]
@@ -71,6 +79,8 @@ public partial class PostViewModel : ViewModelBase
 
         var likeRecord = (await protocol.Repo.CreateLikeAsync(view.Cid, view.Uri).ConfigureAwait(false))
             .HandleResult();
+
+        IsLiked = likeRecord != null;
     }
 
     private string ToNumberString(int n)
