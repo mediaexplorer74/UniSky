@@ -22,6 +22,7 @@ jobs:
 
     env:
       Solution_Name: UniSky.sln
+      Project_Name: UniSky
 
     steps:
     - name: Checkout
@@ -44,7 +45,7 @@ jobs:
       run: |
         $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.BASE64_ENCODED_PFX }}")
         $certificatePath = "GitHubActionsWorkflow.pfx"
-        [IO.File]::WriteAllBytes("UniSky/$certificatePath", $pfx_cert_byte)
+        [IO.File]::WriteAllBytes("$env:Project_Name/$certificatePath", $pfx_cert_byte)
 
     # Create the app package by building and packaging the project
     - name: Create the app package
@@ -65,4 +66,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: Appx Package
-        path: ${{ env.Solution_Name }}\\Packages
+        path: ${{ env.Project_Name }}\\Packages
