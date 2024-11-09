@@ -66,4 +66,6 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: AppxPackage-${{ matrix.configuration }}-${{ matrix.platform }}
-        path: ${{ env.Project_Name }}\\Packages
+        path: |
+          ${{ env.Project_Name }}\\Packages
+          ${{ env.Project_Name }}\\bin\\${{ matrix.platform }}\\${{ matrix.configuration }}\\ilc\\${{ env.Project_Name }}.pdb 
