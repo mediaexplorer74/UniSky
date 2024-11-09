@@ -10,7 +10,6 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using FishyFlip.Models.Internal;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Geometry;
-using Microsoft.Toolkit.Uwp.Notifications;
 using UniSky.Helpers.Composition;
 using UniSky.Pages;
 using UniSky.Services;

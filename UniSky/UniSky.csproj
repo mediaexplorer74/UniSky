@@ -26,9 +26,8 @@
     <SkipMicrosoftUIXamlCheckTargetPlatformVersion>true</SkipMicrosoftUIXamlCheckTargetPlatformVersion>
     <!-- god help me -->
     <PackageExtPrefix>appx</PackageExtPrefix>
-    <PackageCertificateThumbprint>001AA11011A8DE018049B0B614F2E6733355A7A1</PackageCertificateThumbprint>
-    <PackageCertificateKeyFile>
-    </PackageCertificateKeyFile>
+    <PackageCertificateThumbprint>DC602F589DA1A63E306D391C8B4EBA155050115C</PackageCertificateThumbprint>
+    <PackageCertificateKeyFile>UniSky_TemporaryKey.pfx</PackageCertificateKeyFile>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
@@ -354,12 +353,6 @@
     <SDKReference Include="WindowsMobile, Version=10.0.22000.0">
       <Name>Windows Mobile Extensions for the UWP</Name>
     </SDKReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Microsoft.Toolkit.Uwp.Notifications, Version=6.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>E:\source\Unicord\Libraries\WindowsCommunityToolkit\Microsoft.Toolkit.Uwp.Notifications\bin\Release\uap10.0.19041\Microsoft.Toolkit.Uwp.Notifications.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
