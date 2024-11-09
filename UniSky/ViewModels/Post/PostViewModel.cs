@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
@@ -15,16 +16,23 @@ public partial class PostViewModel : ViewModelBase
 {
     private readonly PostView view;
 
+    private ATUri like;
+    private ATUri repost;
+
     [ObservableProperty]
     private string text;
     [ObservableProperty]
     private ProfileViewModel author;
+
     [ObservableProperty]
-    private string likes;
+    [NotifyPropertyChangedFor(nameof(Likes))]
+    private int likeCount;
     [ObservableProperty]
-    private string retweets;
+    [NotifyPropertyChangedFor(nameof(Retweets))]
+    private int retweetCount;
     [ObservableProperty]
-    private string replies;
+    [NotifyPropertyChangedFor(nameof(Replies))]
+    private int replyCount;
 
     [ObservableProperty]
     private bool isLiked;
@@ -39,6 +47,13 @@ public partial class PostViewModel : ViewModelBase
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasEmbed))]
     private PostEmbedViewModel embed;
+
+    public string Likes
+        => ToNumberString(LikeCount);
+    public string Retweets
+        => ToNumberString(RetweetCount);
+    public string Replies
+        => ToNumberString(ReplyCount);
 
     public bool HasEmbed
         => Embed != null;
@@ -62,13 +77,28 @@ public partial class PostViewModel : ViewModelBase
         this.view = view;
         Author = new ProfileViewModel(view.Author);
         Text = view.Record.Text;
-        Likes = ToNumberString(view.LikeCount);
-        Retweets = ToNumberString(view.RepostCount);
-        Replies = ToNumberString(view.ReplyCount);
         Embed = CreateEmbedViewModel(view.Embed);
 
-        IsLiked = view.Viewer?.Like != null;
-        IsRetweeted = view.Viewer?.Repost != null;
+        LikeCount = view.LikeCount;
+        RetweetCount = view.RepostCount;
+        ReplyCount = view.ReplyCount;
+
+        if (view.Viewer is not null)
+        {
+            IsRetweeted = view.Viewer.Repost != null;
+
+            if (view.Viewer.Like is not null)
+            {
+                this.like = view.Viewer.Like;
+                IsLiked = true;
+            }
+
+            if (view.Viewer.Repost is not null)
+            {
+                this.repost = view.Viewer.Repost;
+                IsRetweeted = true;
+            }
+        }
     }
 
     [RelayCommand]
@@ -77,10 +107,26 @@ public partial class PostViewModel : ViewModelBase
         var protocol = Ioc.Default.GetRequiredService<IProtocolService>()
             .Protocol;
 
-        var likeRecord = (await protocol.Repo.CreateLikeAsync(view.Cid, view.Uri).ConfigureAwait(false))
-            .HandleResult();
+        if (IsLiked)
+        {
+            var like = Interlocked.Exchange(ref this.like, null); // not stressed about threading here, just cleaner way to exchange values
+            if (like == null)
+                return;
 
-        IsLiked = likeRecord != null;
+            IsLiked = false;
+            LikeCount--;
+
+            _ = (await protocol.Repo.DeleteLikeAsync(like.Rkey).ConfigureAwait(false))
+                .HandleResult();
+        }
+        else
+        {
+            IsLiked = true;
+            LikeCount++;
+
+            this.like = (await protocol.Repo.CreateLikeAsync(view.Cid, view.Uri).ConfigureAwait(false))
+                .HandleResult()?.Uri;
+        }
     }
 
     private string ToNumberString(int n)

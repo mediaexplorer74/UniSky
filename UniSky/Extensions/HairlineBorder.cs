@@ -26,7 +26,7 @@ namespace UniSky.Extensions
 
         private static void OnThicknessPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is not (Grid or Panel or Control))
+            if (d is not (Grid or StackPanel or Control or Border))
                 return;
 
             var newValue = (Thickness)(e.NewValue);
@@ -50,6 +50,9 @@ namespace UniSky.Extensions
                     break;
                 case Control c:
                     c.BorderThickness = thickness;
+                    break;
+                case StackPanel s:
+                    s.BorderThickness = thickness;
                     break;
             }
         }

@@ -7,11 +7,13 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:viewmodels="using:UniSky.ViewModels"
     xmlns:pages="using:UniSky.Pages"
-    mc:Ignorable="d"
-    Background="#FF0085ff">
+    mc:Ignorable="d">
     <Page.DataContext>
         <viewmodels:RootViewModel/>
     </Page.DataContext>
 
-    <Frame x:Name="RootFrame" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"/>
+    <Grid>
+        <Border Background="#FF0085ff"/>
+        <Frame x:Name="RootFrame" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"/>
+    </Grid>
 </Page>
