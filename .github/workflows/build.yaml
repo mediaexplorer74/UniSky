@@ -1,7 +1,7 @@
 # This workflow will build, sign, and package a WinUI 3 MSIX desktop application
 # built on .NET.
 
-name: Build Appx
+name: Build
 
 on:
   push:
@@ -26,29 +26,29 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
     # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
     - name: Setup MSBuild.exe
-      uses: microsoft/setup-msbuild@v1.0.2
+      uses: microsoft/setup-msbuild@v2
 
     # Restore the application to populate the obj folder with RuntimeIdentifiers
-    - name: Restore the application
+    - name: Restore NuGet Packages
       run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
       env:
         Configuration: ${{ matrix.configuration }}
 
     # Decode the base 64 encoded pfx and save the Signing_Certificate
-    - name: Decode the pfx
+    - name: Load Certificate
       run: |
         $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.BASE64_ENCODED_PFX }}")
         $certificatePath = "GitHubActionsWorkflow.pfx"
         [IO.File]::WriteAllBytes("$env:Project_Name/$certificatePath", $pfx_cert_byte)
 
     # Create the app package by building and packaging the project
-    - name: Create the app package
+    - name: Build App Packages
       run: msbuild $env:Solution_Name /p:Configuration=$env:Configuration /p:Platform=$env:Platform /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:Appx_Bundle /p:PackageCertificateKeyFile=GitHubActionsWorkflow.pfx /p:AppxPackageDir="$env:Appx_Package_Dir" /p:GenerateAppxPackageOnBuild=true
       env:
         Appx_Bundle: Never
@@ -58,11 +58,11 @@ jobs:
         Platform: ${{ matrix.platform }}
 
     # Remove the pfx
-    - name: Remove the pfx
+    - name: Cleanup
       run: Remove-Item -path UniSky/GitHubActionsWorkflow.pfx
 
     # Upload the MSIX package: https://github.com/marketplace/actions/upload-a-build-artifact
-    - name: Upload Appx package
+    - name: Upload Appx Package
       uses: actions/upload-artifact@v4
       with:
         name: AppxPackage-${{ matrix.configuration }}-${{ matrix.platform }}
