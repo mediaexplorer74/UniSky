@@ -65,5 +65,5 @@ jobs:
     - name: Upload Appx package
       uses: actions/upload-artifact@v4
       with:
-        name: Appx Package
+        name: AppxPackage-${{ matrix.configuration }}-${{ matrix.platform }}
         path: ${{ env.Project_Name }}\\Packages
