@@ -28,10 +28,11 @@ public partial class FeedsViewModel : ViewModelBase
         this.logger = logger;
 
         Feeds = [];
-        Feeds.Add(new FeedViewModel(null, null, protocolService));
+        Feeds.Add(new FeedViewModel(FeedType.Following, null, null, protocolService));
 
         Task.Run(LoadAsync);
     }
+
     public ObservableCollection<FeedViewModel> Feeds { get; }
 
     [RelayCommand]
@@ -62,7 +63,7 @@ public partial class FeedsViewModel : ViewModelBase
             {
                 foreach (var feed in generators.Feeds)
                 {
-                    Feeds.Add(new FeedViewModel(feed.Uri, feed, this.protocolService));
+                    Feeds.Add(new FeedViewModel(FeedType.Custom, feed.Uri, feed, this.protocolService));
                 }
             });
         }

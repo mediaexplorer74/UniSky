@@ -54,26 +54,10 @@ namespace UniSky.Pages
         {
             base.OnNavigatedTo(e);
 
-            if (ApiInformation.IsApiContractPresent(typeof(PhoneContract).FullName, 1))
-            {
-                AppTitleBar.Visibility = Visibility.Collapsed;
+            Window.Current.SetTitleBar(AppTitleBar);
 
-                StatusBar statusBar = StatusBar.GetForCurrentView();
-                statusBar.BackgroundColor = ((SolidColorBrush)Background).Color;
-            }
-            else
-            {
-                CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
-                ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
-
-                titleBar.ButtonBackgroundColor = Colors.Transparent;
-
-                Window.Current.SetTitleBar(AppTitleBar);
-
-                coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
-                coreTitleBar.IsVisibleChanged += CoreTitleBar_IsVisibleChanged;
-                Window.Current.CoreWindow.Activated += CoreWindow_Activated;
-            }
+            var safeAreaService = Ioc.Default.GetRequiredService<ISafeAreaService>();
+            safeAreaService.SafeAreaUpdated += OnSafeAreaUpdated;
 
             var serviceLocator = Ioc.Default.GetRequiredService<INavigationServiceLocator>();
             var service = serviceLocator.GetNavigationService("Home");
@@ -85,36 +69,28 @@ namespace UniSky.Pages
             }
         }
 
-        private void CoreTitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
+        private void OnSafeAreaUpdated(object sender, SafeAreaUpdatedEventArgs e)
         {
-            // Get the size of the caption controls and set padding.
-            LeftPaddingColumn.Width = new GridLength(sender.SystemOverlayLeftInset);
-            //RightPaddingColumn.Width = new GridLength(sender.SystemOverlayRightInset);
-            AppTitleBar.Height = sender.Height;
-        }
-
-        private void CoreTitleBar_IsVisibleChanged(CoreApplicationViewTitleBar sender, object args)
-        {
-            if (sender.IsVisible)
+            if (e.SafeArea.HasTitleBar)
             {
                 AppTitleBar.Visibility = Visibility.Visible;
+                AppTitleBar.Height = e.SafeArea.Bounds.Top;
             }
             else
             {
                 AppTitleBar.Visibility = Visibility.Collapsed;
             }
-        }
 
-        private void CoreWindow_Activated(CoreWindow sender, WindowActivatedEventArgs args)
-        {
-            if (args.WindowActivationState == CoreWindowActivationState.Deactivated)
-            {
-                VisualStateManager.GoToState(this, "Inactive", true);
-            }
-            else
+            if (e.SafeArea.IsActive)
             {
                 VisualStateManager.GoToState(this, "Active", true);
             }
+            else
+            {
+                VisualStateManager.GoToState(this, "Inactive", true);
+            }
+
+            Margin = new Thickness(e.SafeArea.Bounds.Left, 0, e.SafeArea.Bounds.Right, e.SafeArea.Bounds.Bottom);
         }
 
         private void NavigationView_ItemInvoked(MUXC.NavigationView sender, MUXC.NavigationViewItemInvokedEventArgs args)

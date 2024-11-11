@@ -33,8 +33,8 @@ internal static class BirdAnimation
         var initialScale = (float)(1.5 * Math.Min(size.Width / 620, 1.0));
 
         var scale = MathF.Max((float)size.Width / 30, (float)size.Height / 12);
-        var offsetX = (float)((size.Width / 2.0));
-        var offsetY = (float)((size.Height / 2.0));
+        var offsetX = (float)(size.Width / 2.0);
+        var offsetY = (float)(size.Height / 2.0);
 
         var compositor = frameVisual.Compositor;
         var clip = compositor.CreateGeometricClip(BSKY_LOGO);

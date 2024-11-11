@@ -11,6 +11,7 @@ namespace UniSky.DataTemplates
 {
     internal class PostEmbedTemplateSelector : DataTemplateSelector
     {
+        public DataTemplate VideoEmbedTemplate { get; set; }
         public DataTemplate ImagesEmbedTemplate { get; set; }
 
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
@@ -18,6 +19,7 @@ namespace UniSky.DataTemplates
             return item switch
             {
                 PostEmbedImagesViewModel => ImagesEmbedTemplate,
+                PostEmbedVideoViewModel => VideoEmbedTemplate,
                 _ => null,
             };
         }

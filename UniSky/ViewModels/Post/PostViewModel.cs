@@ -6,9 +6,12 @@ using CommunityToolkit.Mvvm.Input;
 using FishyFlip.Models;
 using FishyFlip.Tools;
 using Humanizer;
+using UniSky.Pages;
 using UniSky.Services;
 using UniSky.ViewModels.Feeds;
 using UniSky.ViewModels.Profiles;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Media.Animation;
 
 namespace UniSky.ViewModels.Posts;
 
@@ -129,6 +132,15 @@ public partial class PostViewModel : ViewModelBase
         }
     }
 
+    [RelayCommand]
+    private void OpenProfile(UIElement element)
+    {
+        var service = Ioc.Default.GetRequiredService<INavigationServiceLocator>()
+            .GetNavigationService("Home");
+
+        service.Navigate<ProfilePage>(this.view.Author, new ContinuumNavigationTransitionInfo() { ExitElement = element });
+    }
+
     private string ToNumberString(int n)
     {
         if (n == 0)
@@ -145,6 +157,7 @@ public partial class PostViewModel : ViewModelBase
         return embed switch
         {
             ImageViewEmbed images => new PostEmbedImagesViewModel(images),
+            VideoViewEmbed video => new PostEmbedVideoViewModel(video),
             _ => null,
         };
     }

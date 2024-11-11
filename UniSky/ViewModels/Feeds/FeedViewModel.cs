@@ -11,9 +11,17 @@ namespace UniSky.ViewModels.Feeds;
 
 #nullable enable
 
+public enum FeedType
+{
+    Following,
+    Custom,
+    Author
+}
+
 public partial class FeedViewModel : ViewModelBase
 {
-    private readonly ATUri? uri;
+    private readonly FeedType type;
+    private readonly ATUri? id;
     private readonly FeedRecord? generator;
     private readonly IProtocolService protocolService;
 
@@ -22,14 +30,20 @@ public partial class FeedViewModel : ViewModelBase
     [ObservableProperty]
     private FeedItemCollection items = null!;
 
-    public FeedViewModel(ATUri? uri, FeedRecord? record, IProtocolService protocolService)
+    protected FeedViewModel(FeedType type)
     {
-        this.uri = uri;
+        this.type = type;
+    }
+
+    public FeedViewModel(FeedType type, ATUri? id, FeedRecord? record, IProtocolService protocolService)
+    {
+        this.type = type;
+        this.id = id;
         this.generator = record;
         this.protocolService = protocolService;
 
         this.Name = record?.DisplayName ?? "Following";
-        this.Items = new FeedItemCollection(this, uri, protocolService);
+        this.Items = new FeedItemCollection(this, type, id, protocolService);
     }
 
     public async Task RefreshAsync(Deferral? deferral = null)

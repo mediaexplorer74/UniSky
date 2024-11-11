@@ -22,6 +22,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using MUXC = Microsoft.UI.Xaml.Controls;
+using UniSky.Services;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -50,20 +51,15 @@ namespace UniSky.Pages
         {
             base.OnNavigatedTo(e);
 
-            if (!ApiInformation.IsApiContractPresent(typeof(PhoneContract).FullName, 1))
-            {
-                CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
-                coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
-
-                RootGrid.Padding = new Thickness(0, coreTitleBar.Height, 0, 0);
-            }
+            var safeAreaService = Ioc.Default.GetRequiredService<ISafeAreaService>();
+            safeAreaService.SafeAreaUpdated += OnSafeAreaUpdated;
 
             this.ViewModel = ActivatorUtilities.CreateInstance<FeedsViewModel>(Ioc.Default);
         }
 
-        private void CoreTitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
+        private void OnSafeAreaUpdated(object sender, SafeAreaUpdatedEventArgs e)
         {
-            RootGrid.Padding = new Thickness(0, sender.Height, 0, 0);
+            RootGrid.Padding = new Thickness(0, e.SafeArea.Bounds.Top, 0, 0);
         }
 
         private async void OnRefreshRequested(MUXC.RefreshContainer sender, MUXC.RefreshRequestedEventArgs args)

@@ -5,8 +5,10 @@
     xmlns:local="using:UniSky.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-    xmlns:viewmodels="using:UniSky.ViewModels" 
     xmlns:mux="using:Microsoft.UI.Xaml.Controls"
+    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI.Extensions"
+    xmlns:extensions="using:UniSky.Extensions"
+    xmlns:viewmodels="using:UniSky.ViewModels" 
     mc:Ignorable="d"
     DataContext="{x:Bind ViewModel}"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -162,8 +164,15 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <Frame x:Name="NavigationFrame"
-                       Grid.Row="0"/>
+                <Border x:Name="FrameContainer"
+                        HorizontalAlignment="Stretch" 
+                        VerticalAlignment="Stretch" 
+                        MaxWidth="600"
+                        BorderBrush="{StaticResource SystemControlSeparatorBrush}"
+                        ui:UIElementExtensions.ClipToBounds="True">
+                    <Frame x:Name="NavigationFrame"
+                           HorizontalAlignment="Stretch"/>
+                </Border>
 
                 <Grid x:Name="FooterNavigation"
                       Visibility="Collapsed"
@@ -329,6 +338,7 @@
                     </VisualState.StateTriggers>
 
                     <VisualState.Setters>
+                        <Setter Target="FrameContainer.(extensions:HairlineBorder.Thickness)" Value="0"/>
                         <Setter Target="NavView.PaneDisplayMode" Value="LeftMinimal"/>
                         <Setter Target="FooterNavigation.Visibility" Value="Visible"/>
                     </VisualState.Setters>
@@ -339,6 +349,7 @@
                     </VisualState.StateTriggers>
 
                     <VisualState.Setters>
+                        <Setter Target="FrameContainer.(extensions:HairlineBorder.Thickness)" Value="1,0"/>
                         <Setter Target="NavView.PaneDisplayMode" Value="LeftCompact"/>
                         <Setter Target="FooterNavigation.Visibility" Value="Collapsed"/>
                     </VisualState.Setters>

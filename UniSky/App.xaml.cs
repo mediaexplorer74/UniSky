@@ -53,6 +53,7 @@ sealed partial class App : Application
 
         collection.AddSingleton<INavigationServiceLocator, NavigationServiceLocator>();
         collection.AddSingleton<IProtocolService, ProtocolService>();
+        collection.AddSingleton<ISafeAreaService, SafeAreaService>();
 
         Ioc.Default.ConfigureServices(collection.BuildServiceProvider());
     }

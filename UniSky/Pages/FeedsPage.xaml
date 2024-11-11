@@ -13,11 +13,7 @@
     d:DataContext="{d:DesignInstance Type=viewmodels:FeedsViewModel}"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid x:Name="RootGrid"
-          HorizontalAlignment="Center" 
-          VerticalAlignment="Stretch" 
-          BorderBrush="{StaticResource SystemControlSeparatorBrush}"
-          MaxWidth="600">
+    <Grid x:Name="RootGrid">
         <Pivot x:Name="FeedsPivot"
                ItemsSource="{x:Bind ViewModel.Feeds}">
             <Pivot.HeaderTemplate>
@@ -45,11 +41,16 @@
                             <ListView ItemsSource="{x:Bind Items}" 
                                       ItemTemplate="{StaticResource FeedItemContentTemplate}"
                                       SelectionMode="None"
+                                      IsItemClickEnabled="True"
                                       HorizontalAlignment="Stretch"
                                       HorizontalContentAlignment="Stretch"
                                       ScrollViewer.IsVerticalScrollChainingEnabled="True"
                                       BorderBrush="{StaticResource SystemControlSeparatorBrush}"
                                       extensions:HairlineBorder.Thickness="0,1,0,0">
+                                <ListView.Resources>
+                                    <SolidColorBrush Color="Transparent" x:Key="ListViewItemRevealBackground"/>
+                                    <SolidColorBrush Color="Transparent" x:Key="ListViewItemBackgroundPointerOver"/>
+                                </ListView.Resources>
                                 <ListView.ItemContainerStyle>
                                     <Style TargetType="ListViewItem">
                                         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -94,28 +95,5 @@
                        FontFamily="{ThemeResource SymbolThemeFontFamily}"
                        FontSize="20"/>
         </Button>
-
-        <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup>
-                <VisualState x:Name="Small">
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="0" />
-                    </VisualState.StateTriggers>
-
-                    <VisualState.Setters>
-                        <Setter Target="RootGrid.(extensions:HairlineBorder.Thickness)" Value="0"/>
-                    </VisualState.Setters>
-                </VisualState>
-                <VisualState x:Name="Medium">
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="621" />
-                    </VisualState.StateTriggers>
-
-                    <VisualState.Setters>
-                        <Setter Target="RootGrid.(extensions:HairlineBorder.Thickness)" Value="1,0"/>
-                    </VisualState.Setters>
-                </VisualState>
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
     </Grid>
 </Page>

@@ -9,7 +9,7 @@
                     xmlns:converters="using:UniSky.Converters"
                     xmlns:extensions="using:UniSky.Extensions"
                     xmlns:feeds="using:UniSky.ViewModels.Feeds" 
-                    xmlns:posts="using:UniSky.ViewModels.Posts" 
+                    xmlns:posts="using:UniSky.ViewModels.Posts" xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
                     x:DefaultBindMode="OneWay">
 
     <!-- TODO: un-steal these colours -->
@@ -139,8 +139,15 @@
         </UserControl>
     </DataTemplate>
 
+    <DataTemplate x:Key="VideoEmbedContentTemplate" x:DataType="posts:PostEmbedVideoViewModel">
+        <controls:ConstrainedBox AspectRatio="{Binding Ratio}">
+            <MediaPlayerElement PosterSource="{Binding ThumbnailUrl}" Source="{Binding Source}" AreTransportControlsEnabled="True" />
+        </controls:ConstrainedBox>
+    </DataTemplate>
+    
     <datatemplates:PostEmbedTemplateSelector x:Key="PostEmbedTemplateSelector"
-                                             ImagesEmbedTemplate="{StaticResource ImagesEmbedContentTemplate}"/>
+                                             ImagesEmbedTemplate="{StaticResource ImagesEmbedContentTemplate}"
+                                             VideoEmbedTemplate="{StaticResource VideoEmbedContentTemplate}"/>
 
     <DataTemplate x:Key="FeedItemContentTemplate"
                   x:DataType="posts:PostViewModel">
@@ -197,22 +204,28 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <Ellipse Width="42" 
-                         Height="42"
-                         Margin="0,0,12,0"
-                         Grid.RowSpan="4"
-                         VerticalAlignment="Top">
-                    <Ellipse.Fill>
-                        <ImageBrush>
-                            <ImageBrush.ImageSource>
-                                <BitmapImage UriSource="{Binding Author.AvatarUrl}"
-                                             DecodePixelWidth="48"
-                                             DecodePixelHeight="48"
-                                             DecodePixelType="Logical"/>
-                            </ImageBrush.ImageSource>
-                        </ImageBrush>
-                    </Ellipse.Fill>
-                </Ellipse>
+                <Button Command="{x:Bind OpenProfileCommand}"
+                        CommandParameter="{Binding ElementName=ProfileEllipse}"
+                        Style="{ThemeResource CleanButtonStyle}"
+                        Padding="0"
+                        Margin="0,0,12,0"
+                        Grid.RowSpan="4"
+                        VerticalAlignment="Top">
+                    <Ellipse x:Name="ProfileEllipse"
+                             Width="42" 
+                             Height="42">
+                        <Ellipse.Fill>
+                            <ImageBrush>
+                                <ImageBrush.ImageSource>
+                                    <BitmapImage UriSource="{Binding Author.AvatarUrl}"
+                                                 DecodePixelWidth="42"
+                                                 DecodePixelHeight="42"
+                                                 DecodePixelType="Logical"/>
+                                </ImageBrush.ImageSource>
+                            </ImageBrush>
+                        </Ellipse.Fill>
+                    </Ellipse>
+                </Button>
 
                 <StackPanel Grid.Column="1">
                     <TextBlock Foreground="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"                  
@@ -233,10 +246,14 @@
 
                     <Grid x:Name="EmbedContentContainer"
                           x:Load="{x:Bind converters:Static.NotNull(Embed)}">
-                        <ContentControl x:Name="EmbedContent"
-                                        Margin="0,4,0,4"
-                                        ContentTemplateSelector="{StaticResource PostEmbedTemplateSelector}"
-                                        Content="{x:Bind Embed}"/>
+                        <!--<controls:ConstrainedBox AspectRatio="4:3"
+                                                 HorizontalContentAlignment="Center"
+                                                 VerticalContentAlignment="Center">-->
+                            <ContentControl x:Name="EmbedContent"
+                                            Margin="0,4,0,4"
+                                            ContentTemplateSelector="{StaticResource PostEmbedTemplateSelector}"
+                                            Content="{x:Bind Embed}"/>
+                        <!--</controls:ConstrainedBox>-->
                     </Grid>
 
                     <Grid x:Name="Interactions">

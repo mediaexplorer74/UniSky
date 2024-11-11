@@ -39,6 +39,8 @@ public partial class HomeViewModel : ViewModelBase
     private readonly IProtocolService protocolService;
     private readonly SessionModel sessionModel;
 
+    private FeedProfile profile;
+
     [ObservableProperty]
     private string _avatarUrl;
 
@@ -121,7 +123,7 @@ public partial class HomeViewModel : ViewModelBase
 
         try
         {
-            var profile = (await this.protocol.Actor.GetProfileAsync(protocol.Session.Did)
+            profile = (await this.protocol.Actor.GetProfileAsync(protocol.Session.Did)
                 .ConfigureAwait(false))
                 .HandleResult();
 
@@ -182,8 +184,10 @@ public partial class HomeViewModel : ViewModelBase
             case HomePages.Search:
             case HomePages.Notifications:
             case HomePages.Chat:
-            case HomePages.Profile:
                 this.homeNavigationService.Navigate<Page>();
+                break;
+            case HomePages.Profile:
+                this.homeNavigationService.Navigate<ProfilePage>(this.profile);
                 break;
         }
     }

@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 using System.Web;
 using FishyFlip.Models;
 using FishyFlip.Tools;
-using Google.Protobuf.Collections;
 using UniSky.Services;
 using UniSky.ViewModels.Error;
 using UniSky.ViewModels.Posts;
+using UniSky.ViewModels.Profile;
 using Windows.Foundation;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -16,13 +16,34 @@ using Windows.UI.Xaml.Data;
 
 namespace UniSky.ViewModels.Feeds;
 
-public class FeedItemCollection(FeedViewModel parent, ATUri uri, IProtocolService protocolService)
-    : ObservableCollection<PostViewModel>, ISupportIncrementalLoading
+public class FeedItemCollection : ObservableCollection<PostViewModel>, ISupportIncrementalLoading
 {
     private readonly SemaphoreSlim semaphore = new SemaphoreSlim(1, 1);
     private readonly CoreDispatcher dispatcher = Window.Current.Dispatcher;
-
+    private readonly FeedViewModel parent;
+    private readonly FeedType type;
+    private readonly ATUri uri;
+    private readonly ATDid did;
+    private readonly AuthorFeedFilterType filterType;
+    private readonly IProtocolService protocolService;
     private string cursor;
+
+    public FeedItemCollection(FeedViewModel parent, FeedType type, ATUri uri, IProtocolService protocolService)
+    {
+        this.parent = parent;
+        this.type = type;
+        this.uri = uri;
+        this.protocolService = protocolService;
+    }
+
+    public FeedItemCollection(ProfileFeedViewModel parent, FeedType type, ATDid did, AuthorFeedFilterType filterType, IProtocolService protocolService)
+    {
+        this.parent = parent;
+        this.type = type;
+        this.did = did;
+        this.filterType = filterType;
+        this.protocolService = protocolService;
+    }
 
     public bool HasMoreItems { get; private set; } = true;
 
@@ -64,32 +85,50 @@ public class FeedItemCollection(FeedViewModel parent, ATUri uri, IProtocolServic
         var viewModel = parent;
         viewModel.Error = null;
 
-        count = Math.Max(count, 5);
+        count = Math.Clamp(count, 5, 100);
 
         using var context = viewModel.GetLoadingContext();
 
         try
         {
             FeedViewPost[] posts;
-            if (uri == null)
+            switch (type)
             {
-                var list = (await service.Feed.GetTimelineAsync(count, this.cursor)
-                    .ConfigureAwait(false))
-                    .HandleResult();
+                case FeedType.Following:
+                    {
+                        var list = (await service.Feed.GetTimelineAsync(count, this.cursor)
+                            .ConfigureAwait(false))
+                            .HandleResult();
 
-                // BUGBUG: seems FishyFlip doesn't do this for me?
-                this.cursor = HttpUtility.UrlEncode(list.Cursor);
-                posts = list.Feed;
-            }
-            else
-            {
-                var list = (await service.Feed.GetFeedAsync(uri, count, this.cursor)
-                    .ConfigureAwait(false))
-                    .HandleResult();
+                        // BUGBUG: seems FishyFlip doesn't do this for me?
+                        this.cursor = HttpUtility.UrlEncode(list.Cursor);
+                        posts = list.Feed;
+                        break;
+                    }
+                case FeedType.Custom:
+                    {
+                        var list = (await service.Feed.GetFeedAsync(uri, count, this.cursor)
+                            .ConfigureAwait(false))
+                            .HandleResult();
 
-                // BUGBUG: ^^
-                this.cursor = HttpUtility.UrlEncode(list.Cursor);
-                posts = list.Feed;
+                        // BUGBUG: ^^
+                        this.cursor = HttpUtility.UrlEncode(list.Cursor);
+                        posts = list.Feed;
+                        break;
+                    }
+                case FeedType.Author:
+                    {
+                        var list = (await service.Feed.GetAuthorFeedAsync(did, filterType, limit: count, cursor: this.cursor)
+                            .ConfigureAwait(false))
+                            .HandleResult();
+
+                        // BUGBUG: ^^
+                        this.cursor = HttpUtility.UrlEncode(list.Cursor);
+                        posts = list.Feed;
+                        break;
+                    }
+                default:
+                    throw new InvalidOperationException();
             }
 
             await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>

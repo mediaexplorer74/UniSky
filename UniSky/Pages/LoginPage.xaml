@@ -88,8 +88,8 @@
                 <StackPanel.ChildrenTransitions>
                     <TransitionCollection>
                         <EntranceThemeTransition FromVerticalOffset="0" 
-                                             FromHorizontalOffset="100" 
-                                             IsStaggeringEnabled="True"/>
+                                                 FromHorizontalOffset="100" 
+                                                 IsStaggeringEnabled="True"/>
                         <RepositionThemeTransition IsStaggeringEnabled="False"/>
                     </TransitionCollection>
                 </StackPanel.ChildrenTransitions>

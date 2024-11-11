@@ -26,14 +26,15 @@
     <SkipMicrosoftUIXamlCheckTargetPlatformVersion>true</SkipMicrosoftUIXamlCheckTargetPlatformVersion>
     <!-- god help me -->
     <PackageExtPrefix>appx</PackageExtPrefix>
-    <PackageCertificateThumbprint>DC602F589DA1A63E306D391C8B4EBA155050115C</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>
+    </PackageCertificateThumbprint>
     <PackageCertificateKeyFile>UniSky_TemporaryKey.pfx</PackageCertificateKeyFile>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
-    <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
+    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
     <AppxBundle>Always</AppxBundle>
-    <AppxBundlePlatforms>x86|x64|arm|arm64</AppxBundlePlatforms>
+    <AppxBundlePlatforms>arm</AppxBundlePlatforms>
     <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
   </PropertyGroup>
@@ -70,6 +71,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM'">
     <OutputPath>bin\ARM\Release\</OutputPath>
@@ -117,6 +119,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
+    <UseDotNetNativeToolchain>false</UseDotNetNativeToolchain>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>bin\x64\Release\</OutputPath>
@@ -140,6 +143,9 @@
     <Compile Include="Controls\Compose\ComposeDialog.xaml.cs">
       <DependentUpon>ComposeDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ConstrainedBox\AspectRatio.cs" />
+    <Compile Include="Controls\ConstrainedBox\ConstrainedBox.cs" />
+    <Compile Include="Controls\ConstrainedBox\ConstrainedBox.Properties.cs" />
     <Compile Include="Converters\Static.cs" />
     <Compile Include="DataTemplates\PostEmbedTemplateSelector.cs" />
     <Compile Include="Extensions\HairlineBorder.cs" />
@@ -176,15 +182,23 @@
     <Compile Include="Helpers\Geometry\Scalar.cs" />
     <Compile Include="Helpers\Geometry\Utils.cs" />
     <Compile Include="Helpers\JsonContext.cs" />
+    <Compile Include="Pages\ProfilePage.xaml.cs">
+      <DependentUpon>ProfilePage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Services\INavigationService.cs" />
     <Compile Include="Services\INavigationServiceLocator.cs" />
     <Compile Include="Services\IProtocolService.cs" />
+    <Compile Include="Services\ISafeAreaService.cs" />
     <Compile Include="Services\NavigationServiceLocator.cs" />
     <Compile Include="DataTemplates\Feeds.xaml.cs">
       <DependentUpon>Feeds.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Services\SafeAreaService.cs" />
     <Compile Include="ViewModels\Compose\ComposeViewModel.cs" />
     <Compile Include="ViewModels\Error\ExceptionViewModel.cs" />
+    <Compile Include="ViewModels\Post\PostEmbedVideoViewModel.cs" />
+    <Compile Include="ViewModels\Profile\ProfileFeedViewModel.cs" />
+    <Compile Include="ViewModels\Profile\ProfilePageViewModel.cs" />
     <Compile Include="ViewModels\Profile\ProfileViewModel.cs" />
     <Compile Include="ViewModels\Post\PostEmbedImagesViewModel.cs" />
     <Compile Include="ViewModels\Post\PostEmbedImageViewModel.cs" />
@@ -301,11 +315,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Pages\ProfilePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="RootPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Page Include="DataTemplates\Feeds.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Templates\ButtonStyles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -319,7 +341,7 @@
       <Version>8.3.2</Version>
     </PackageReference>
     <PackageReference Include="FishyFlip">
-      <Version>2.2.0-alpha.2</Version>
+      <Version>2.2.0-alpha.4</Version>
     </PackageReference>
     <PackageReference Include="Humanizer.Core">
       <Version>2.14.1</Version>
@@ -333,7 +355,13 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.14</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI">
+      <Version>6.1.1</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Media">
+      <Version>6.1.1</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Animations">
       <Version>6.1.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
