@@ -143,7 +143,7 @@
     <Compile Include="Controls\Compose\ComposeDialog.xaml.cs">
       <DependentUpon>ComposeDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ConstrainedBox\AspectRatio.cs" />
+    <Compile Include="Controls\ConstrainedBox\AspectRatioConstraint.cs" />
     <Compile Include="Controls\ConstrainedBox\ConstrainedBox.cs" />
     <Compile Include="Controls\ConstrainedBox\ConstrainedBox.Properties.cs" />
     <Compile Include="Converters\Static.cs" />
@@ -181,7 +181,6 @@
     <Compile Include="Helpers\Geometry\Parsers\CanvasGeometryParser.cs" />
     <Compile Include="Helpers\Geometry\Scalar.cs" />
     <Compile Include="Helpers\Geometry\Utils.cs" />
-    <Compile Include="Helpers\JsonContext.cs" />
     <Compile Include="Pages\ProfilePage.xaml.cs">
       <DependentUpon>ProfilePage.xaml</DependentUpon>
     </Compile>
@@ -190,8 +189,8 @@
     <Compile Include="Services\IProtocolService.cs" />
     <Compile Include="Services\ISafeAreaService.cs" />
     <Compile Include="Services\NavigationServiceLocator.cs" />
-    <Compile Include="DataTemplates\Feeds.xaml.cs">
-      <DependentUpon>Feeds.xaml</DependentUpon>
+    <Compile Include="DataTemplates\FeedTemplates.xaml.cs">
+      <DependentUpon>FeedTemplates.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\SafeAreaService.cs" />
     <Compile Include="ViewModels\Compose\ComposeViewModel.cs" />
@@ -205,8 +204,6 @@
     <Compile Include="ViewModels\Post\PostEmbedViewModel.cs" />
     <Compile Include="ViewModels\Post\PostViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
-    <Compile Include="Models\LoginModel.cs" />
-    <Compile Include="Models\SessionModel.cs" />
     <Compile Include="Pages\FeedsPage.xaml.cs">
       <DependentUpon>FeedsPage.xaml</DependentUpon>
     </Compile>
@@ -216,7 +213,6 @@
     <Compile Include="Pages\LoginPage.xaml.cs">
       <DependentUpon>LoginPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Polyfill\IsExternalInit.cs" />
     <Compile Include="RootPage.xaml.cs">
       <DependentUpon>RootPage.xaml</DependentUpon>
     </Compile>
@@ -323,11 +319,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="DataTemplates\Feeds.xaml">
+    <Page Include="DataTemplates\FeedTemplates.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Templates\ButtonStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Templates\MediaTransportControlsStyles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -339,9 +339,6 @@
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm">
       <Version>8.3.2</Version>
-    </PackageReference>
-    <PackageReference Include="FishyFlip">
-      <Version>2.2.0-alpha.4</Version>
     </PackageReference>
     <PackageReference Include="Humanizer.Core">
       <Version>2.14.1</Version>
@@ -381,6 +378,20 @@
     <SDKReference Include="WindowsMobile, Version=10.0.22000.0">
       <Name>Windows Mobile Extensions for the UWP</Name>
     </SDKReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Libraries\FishyFlip\src\FishyFlip\FishyFlip.csproj">
+      <Project>{d05bc964-67d9-496f-9952-5fc5cb633161}</Project>
+      <Name>FishyFlip</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UniSky.Background\UniSky.Background.csproj">
+      <Project>{92c64af9-26a6-423b-9bb0-fd21d01e976a}</Project>
+      <Name>UniSky.Background</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UniSky.Models\UniSky.Models.csproj">
+      <Project>{7491ea1a-e1b7-469c-a3c2-5202aa14ce26}</Project>
+      <Name>UniSky.Models</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

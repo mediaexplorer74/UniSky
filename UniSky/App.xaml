@@ -11,10 +11,14 @@
             <controls:XamlControlsResources.MergedDictionaries>
                 <ResourceDictionary>
                     <ResourceDictionary.MergedDictionaries>
+                        <!-- Styles -->
                         <ResourceDictionary Source="/Templates/NavigationViewStyles.xaml"/>
                         <ResourceDictionary Source="/Templates/ButtonStyles.xaml"/>
-                        <Feeds xmlns="using:UniSky.Templates"/>
-                    </ResourceDictionary.MergedDictionaries>
+                        <ResourceDictionary Source="/Templates/MediaTransportControlsStyles.xaml"/>
+
+                        <!-- Templates -->
+                        <FeedTemplates xmlns="using:UniSky.Templates"/>
+                     </ResourceDictionary.MergedDictionaries>
                     <ResourceDictionary.ThemeDictionaries>
                         <ResourceDictionary x:Key="Dark">
                             <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush" Color="#FF080808" />
@@ -29,11 +33,8 @@
 
                     <Thickness x:Key="HairlineThickness">0,1,0,0</Thickness>
                     <CornerRadius x:Key="ControlCornerRadius">0,0,0,0</CornerRadius>
-
-              
                 </ResourceDictionary>
             </controls:XamlControlsResources.MergedDictionaries>
-            
         </controls:XamlControlsResources>
     </Application.Resources>
 </Application>

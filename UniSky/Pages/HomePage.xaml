@@ -9,6 +9,7 @@
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI.Extensions"
     xmlns:extensions="using:UniSky.Extensions"
     xmlns:viewmodels="using:UniSky.ViewModels" 
+    xmlns:converters="using:UniSky.Converters"
     mc:Ignorable="d"
     DataContext="{x:Bind ViewModel}"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -83,7 +84,9 @@
                                        HorizontalAlignment="Center"/>
                         </Viewbox>
 
-                        <mux:InfoBadge Value="{Binding NotificationCount}"
+                        <mux:InfoBadge x:Name="NotificationsSidebarInfoBadge"
+                                       x:Load="{x:Bind converters:Static.AtLeast(ViewModel.NotificationCount, 1), Mode=OneWay}"
+                                       Value="{x:Bind ViewModel.NotificationCount, Mode=OneWay}"
                                        Background="{ThemeResource SystemColorControlAccentBrush}"
                                        Foreground="{ThemeResource ApplicationForegroundThemeBrush}"
                                        Margin="0,-2,2,0"
@@ -132,7 +135,7 @@
                 </mux:NavigationViewItem>
             </mux:NavigationView.FooterMenuItems>
             <mux:NavigationView.PaneHeader>
-                <Grid Margin="0,0,0,0">
+                <Grid x:Name="PaneHeader" Margin="0,0,0,0">
                     <Grid.RenderTransform>
                         <TranslateTransform x:Name="PaneHeaderTransform" />
                     </Grid.RenderTransform>
@@ -223,8 +226,9 @@
                                   Unchecked="FooterToggleButton_Unchecked">
                         <Grid>
                             <TextBlock Text="&#xE910;"/>
-
-                            <mux:InfoBadge Value="{Binding NotificationCount}"
+                            <mux:InfoBadge x:Name="NotificationsButtonInfoBadge"
+                                           x:Load="{x:Bind converters:Static.AtLeast(ViewModel.NotificationCount, 1), Mode=OneWay}"
+                                           Value="{x:Bind ViewModel.NotificationCount, Mode=OneWay}"
                                            FontFamily="{ThemeResource ContentControlThemeFontFamily}"
                                            Background="{ThemeResource SystemColorControlAccentBrush}"
                                            Foreground="{ThemeResource ApplicationForegroundThemeBrush}"

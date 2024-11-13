@@ -16,11 +16,11 @@ public record class SessionModel
     public string RefreshJwt { get; init; }
     public string AccessJwt { get; init; }
     public string Handle { get; init; }
-    public string EmailAddress { get; init; }
-    public string ProofKey { get; init; }
+    public string? EmailAddress { get; init; }
+    public string? ProofKey { get; init; }
 
     [JsonConstructor]
-    public SessionModel(bool isActive, string service, string did, string refreshJwt, string accessJwt, string handle, string emailAddress, string? proofKey)
+    public SessionModel(bool isActive, string service, string did, string refreshJwt, string accessJwt, string handle, string? emailAddress, string? proofKey)
     {
         IsActive = isActive;
         Service = service;
@@ -37,5 +37,5 @@ public record class SessionModel
 
     [JsonIgnore]
     public AuthSession Session
-        => new AuthSession(new Session(new ATDid(DID), null, new ATHandle(Handle), EmailAddress, AccessJwt, RefreshJwt), this.ProofKey);
+        => new AuthSession(new Session(new ATDid(DID), null, new ATHandle(Handle), EmailAddress, AccessJwt, RefreshJwt), this.ProofKey ?? "");
 }

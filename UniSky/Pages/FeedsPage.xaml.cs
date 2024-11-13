@@ -1,28 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using CommunityToolkit.Mvvm.DependencyInjection;
+﻿using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Uwp.UI.Extensions;
+using UniSky.Services;
 using UniSky.ViewModels;
 using UniSky.ViewModels.Feeds;
-using Windows.ApplicationModel.Core;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.Foundation.Metadata;
-using Windows.Phone;
-using Windows.UI.ViewManagement;
-using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+
 using MUXC = Microsoft.UI.Xaml.Controls;
-using UniSky.Services;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -68,6 +55,21 @@ namespace UniSky.Pages
 
             var deferral = args.GetDeferral();
             await feed.RefreshAsync(deferral);
+        }
+
+        private void PivotHeaderText_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            var feedsList = FeedsPivot.ContainerFromItem(FeedsPivot.SelectedItem)
+                .FindDescendantByName("PART_FeedList");
+
+            if (feedsList is not ListView lv)
+                return;
+
+            var scrollView = lv.FindDescendant<ScrollViewer>();
+            if (scrollView is null)
+                return;
+
+            scrollView.ChangeView(0, 0, null);
         }
     }
 }

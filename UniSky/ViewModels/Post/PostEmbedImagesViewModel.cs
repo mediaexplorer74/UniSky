@@ -1,7 +1,9 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using FishyFlip.Models;
+using Microsoft.Toolkit.Uwp.UI.Controls;
 
 namespace UniSky.ViewModels.Posts;
 
@@ -13,6 +15,9 @@ public partial class PostEmbedImagesViewModel : PostEmbedViewModel
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(Image1), nameof(Image2), nameof(Image3), nameof(Image4))]
     private PostEmbedImageViewModel[] images;
+
+    [ObservableProperty]
+    private AspectRatioConstraint aspectRatio;
 
     public PostEmbedImageViewModel Image1
         => Images.ElementAtOrDefault(0);
@@ -33,6 +38,24 @@ public partial class PostEmbedImagesViewModel : PostEmbedViewModel
     {
         Count = embed.Images.Length;
         Images = embed.Images.Select(i => new PostEmbedImageViewModel(i)).ToArray();
-        Debug.Assert(Images.Length <= 4);
+        Debug.Assert(Images.Length > 0 && Images.Length <= 4);
+
+
+        var firstRatio = embed.Images[0].AspectRatio;
+        if (Images.Length == 1 && firstRatio == null)
+        {
+            AspectRatio = new();
+        }
+        else
+        {
+            AspectRatio = new AspectRatioConstraint(Images.Length switch
+            {
+                1 => Math.Max((double)firstRatio.Width / firstRatio.Height, 0.75),
+                2 => 2.0,
+                3 => 2.0,
+                4 => 3.0 / 2.0,
+                _ => throw new NotImplementedException()
+            });
+        }
     }
 }

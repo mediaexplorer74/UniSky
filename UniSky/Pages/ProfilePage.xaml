@@ -37,9 +37,10 @@
         </ListView.ItemContainerStyle>
         <ListView.Header>
             <Grid x:Name="ProfileContainer"
-                    extensions:HairlineBorder.Thickness="0,0,0,1"
-                    BorderBrush="{StaticResource SystemControlSeparatorBrush}"
-                    Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}">
+                  extensions:HairlineBorder.Thickness="0,0,0,1"
+                  BorderBrush="{StaticResource SystemControlSeparatorBrush}"
+                  Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}"
+                  Tapped="ProfileContainer_Tapped">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>

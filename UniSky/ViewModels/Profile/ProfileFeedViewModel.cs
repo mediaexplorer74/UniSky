@@ -12,7 +12,7 @@ namespace UniSky.ViewModels.Profile;
 public partial class ProfileFeedViewModel : FeedViewModel
 {
     public ProfileFeedViewModel(AuthorFeedFilterType filterType, FeedProfile profile, IProtocolService protocolService)
-        : base(FeedType.Author)
+        : base(FeedType.Author, protocolService)
     {
         this.Name = filterType switch
         {

@@ -3,4 +3,4 @@
 namespace System.Runtime.CompilerServices;
 
 [EditorBrowsable(EditorBrowsableState.Never)]
-internal class IsExternalInit { }
+public class IsExternalInit { }

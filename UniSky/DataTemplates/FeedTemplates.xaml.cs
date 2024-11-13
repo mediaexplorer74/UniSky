@@ -9,9 +9,9 @@ using Windows.UI.Xaml;
 
 namespace UniSky.Templates
 {
-    public partial class Feeds : ResourceDictionary
+    public partial class FeedTemplates : ResourceDictionary
     {
-        public Feeds()
+        public FeedTemplates()
         {
             this.InitializeComponent();
         }

@@ -1,31 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using CommunityToolkit.Mvvm.DependencyInjection;
+﻿using CommunityToolkit.Mvvm.DependencyInjection;
 using FishyFlip.Models;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml.Media;
 using UniSky.Services;
 using UniSky.ViewModels;
-using Windows.ApplicationModel.Core;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.ViewManagement;
-using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 using MUXC = Microsoft.UI.Xaml.Controls;
-using Windows.UI.Core;
-using Windows.Foundation.Metadata;
-using Windows.Phone;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -75,10 +58,12 @@ namespace UniSky.Pages
             {
                 AppTitleBar.Visibility = Visibility.Visible;
                 AppTitleBar.Height = e.SafeArea.Bounds.Top;
+                PaneHeader.Margin = new Thickness();
             }
             else
             {
                 AppTitleBar.Visibility = Visibility.Collapsed;
+                PaneHeader.Margin = new Thickness(0, e.SafeArea.Bounds.Top, 0, 0);
             }
 
             if (e.SafeArea.IsActive)

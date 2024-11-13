@@ -74,9 +74,9 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         /// <summary>
         /// Gets or sets aspect Ratio to use for the contents of the Panel (after scaling).
         /// </summary>
-        public AspectRatio AspectRatio
+        public AspectRatioConstraint AspectRatio
         {
-            get { return (AspectRatio)GetValue(AspectRatioProperty); }
+            get { return (AspectRatioConstraint)GetValue(AspectRatioProperty); }
             set { SetValue(AspectRatioProperty, value); }
         }
 
@@ -84,7 +84,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         /// Identifies the <see cref="AspectRatio"/> property.
         /// </summary>
         public static readonly DependencyProperty AspectRatioProperty =
-            DependencyProperty.Register(nameof(AspectRatio), typeof(AspectRatio), typeof(ConstrainedBox), new PropertyMetadata(null, ConstraintPropertyChanged));
+            DependencyProperty.Register(nameof(AspectRatio), typeof(AspectRatioConstraint), typeof(ConstrainedBox), new PropertyMetadata(null, ConstraintPropertyChanged));
 
         private bool _propertyUpdating;
 
@@ -148,7 +148,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                 ClearValue(MultipleYProperty);
             }
 
-            if (ReadLocalValue(AspectRatioProperty) is AspectRatio ratio && ratio <= 0)
+            if (ReadLocalValue(AspectRatioProperty) is AspectRatioConstraint ratio && (ratio <= 0 || !IsPositiveRealNumber(ratio)))
             {
                 ClearValue(AspectRatioProperty);
             }

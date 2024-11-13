@@ -15,6 +15,7 @@ using Windows.Foundation.Metadata;
 using Windows.Phone;
 using Windows.Storage;
 using Windows.UI.ViewManagement;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace UniSky.ViewModels;
@@ -38,6 +39,7 @@ public partial class HomeViewModel : ViewModelBase
     private readonly ILogger<HomeViewModel> logger;
     private readonly IProtocolService protocolService;
     private readonly SessionModel sessionModel;
+    private readonly DispatcherTimer notificationUpdateTimer;
 
     private FeedProfile profile;
 
@@ -100,6 +102,10 @@ public partial class HomeViewModel : ViewModelBase
 
         protocolService.SetProtocol(protocol);
 
+        // TODO: throttle when in background
+        this.notificationUpdateTimer = new DispatcherTimer() { Interval = TimeSpan.FromMinutes(1) };
+        this.notificationUpdateTimer.Tick += OnNotificationTimerTick;
+
         Task.Run(LoadAsync);
     }
 
@@ -123,23 +129,47 @@ public partial class HomeViewModel : ViewModelBase
 
         try
         {
-            profile = (await this.protocol.Actor.GetProfileAsync(protocol.Session.Did)
-                .ConfigureAwait(false))
-                .HandleResult();
+            await Task.WhenAll(UpdateProfileAsync(), UpdateNotificationsAsync())
+                .ConfigureAwait(false);
 
-            AvatarUrl = profile.Avatar;
-            DisplayName = profile.DisplayName;
-
-            var notifications = (await this.protocol.Notification.GetUnreadCountAsync()
-                .ConfigureAwait(false))
-                .HandleResult();
-
-            NotificationCount = notifications.Count;
+            this.syncContext.Post(() => notificationUpdateTimer.Start());
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "Failed to fetch user info!");
             this.SetErrored(ex);
+        }
+    }
+
+    private async Task UpdateProfileAsync()
+    {
+        profile = (await this.protocol.Actor.GetProfileAsync(protocol.Session.Did)
+            .ConfigureAwait(false))
+            .HandleResult();
+
+        AvatarUrl = profile.Avatar;
+        DisplayName = profile.DisplayName;
+    }
+
+    private async Task UpdateNotificationsAsync()
+    {
+        var notifications = (await this.protocol.Notification.GetUnreadCountAsync()
+            .ConfigureAwait(false))
+            .HandleResult();
+
+        NotificationCount = notifications.Count;
+    }
+
+    private async void OnNotificationTimerTick(object sender, object e)
+    {
+        try
+        {
+            await UpdateNotificationsAsync()
+                .ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Failed to update notifications");
         }
     }
 

@@ -42,7 +42,14 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
 
             // Call base.MeasureOverride so any child elements know what room there is to work with.
             // Don't return this though. An image that hasn't loaded yet for example will request very little space.
-            base.MeasureOverride(_lastMeasuredSize);
+            var measureSize = base.MeasureOverride(_lastMeasuredSize);
+
+            if (!IsPositiveRealNumber(_lastMeasuredSize.Width))
+                _lastMeasuredSize = new Size(measureSize.Width, _lastMeasuredSize.Height);
+
+            if (!IsPositiveRealNumber(_lastMeasuredSize.Height))
+                _lastMeasuredSize = new Size(_lastMeasuredSize.Width, measureSize.Height);
+
             return _lastMeasuredSize;
         }
 

@@ -30,17 +30,17 @@ public partial class FeedViewModel : ViewModelBase
     [ObservableProperty]
     private FeedItemCollection items = null!;
 
-    protected FeedViewModel(FeedType type)
+    protected FeedViewModel(FeedType type, IProtocolService protocolService)
     {
         this.type = type;
+        this.protocolService = protocolService;
     }
 
     public FeedViewModel(FeedType type, ATUri? id, FeedRecord? record, IProtocolService protocolService)
+        : this(type, protocolService)
     {
-        this.type = type;
         this.id = id;
         this.generator = record;
-        this.protocolService = protocolService;
 
         this.Name = record?.DisplayName ?? "Following";
         this.Items = new FeedItemCollection(this, type, id, protocolService);

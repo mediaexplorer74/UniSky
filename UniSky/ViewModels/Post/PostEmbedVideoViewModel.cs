@@ -2,10 +2,10 @@
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using FishyFlip.Models;
+using Microsoft.Toolkit.Uwp.UI.Controls;
 using Windows.Media.Core;
 using Windows.Media.Playback;
 using Windows.Media.Streaming.Adaptive;
-using WinAspectRatio = Microsoft.Toolkit.Uwp.UI.Controls.AspectRatio;
 
 namespace UniSky.ViewModels.Posts;
 
@@ -18,8 +18,7 @@ public partial class PostEmbedVideoViewModel : PostEmbedViewModel
     [ObservableProperty]
     private IMediaPlaybackSource source;
     [ObservableProperty]
-    private WinAspectRatio ratio;
-
+    private AspectRatioConstraint ratio;
 
     public PostEmbedVideoViewModel(VideoViewEmbed video)
         : base(video)
@@ -27,8 +26,8 @@ public partial class PostEmbedVideoViewModel : PostEmbedViewModel
         this.video = video;
         this.ThumbnailUrl = video.Thumbnail;
         this.Ratio = video.AspectRatio != null ?
-            new WinAspectRatio(video.AspectRatio.Width, video.AspectRatio.Height) :
-            new WinAspectRatio(16, 9);
+            new AspectRatioConstraint(Math.Max((double)video.AspectRatio.Width / video.AspectRatio.Height, 0.5)) :
+            new AspectRatioConstraint(16, 9);
 
         // todo: lazy
         _ = Task.Run(LoadAsync);

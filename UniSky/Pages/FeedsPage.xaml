@@ -18,7 +18,9 @@
                ItemsSource="{x:Bind ViewModel.Feeds}">
             <Pivot.HeaderTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Name}"/>
+                    <TextBlock x:Name="PivotHeaderText"
+                               Text="{Binding Name}"
+                               Tapped="PivotHeaderText_Tapped"/>
                 </DataTemplate>
             </Pivot.HeaderTemplate>
             <Pivot.ItemContainerStyle>
@@ -38,7 +40,8 @@
                 <DataTemplate x:DataType="feeds:FeedViewModel">
                     <Grid>
                         <mux:RefreshContainer RefreshRequested="OnRefreshRequested">
-                            <ListView ItemsSource="{x:Bind Items}" 
+                            <ListView x:Name="PART_FeedList"
+                                      ItemsSource="{x:Bind Items}" 
                                       ItemTemplate="{StaticResource FeedItemContentTemplate}"
                                       SelectionMode="None"
                                       IsItemClickEnabled="True"

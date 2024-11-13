@@ -81,11 +81,7 @@ sealed partial class App : Application
 
             // Place the frame in the current Window
             Window.Current.Content = rootFrame;
-
-            CoreApplication.GetCurrentView()
-                .TitleBar.ExtendViewIntoTitleBar = true;
         }
-
 
         if (e.PrelaunchActivated == false)
         {

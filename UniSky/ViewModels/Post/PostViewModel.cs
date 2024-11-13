@@ -158,7 +158,11 @@ public partial class PostViewModel : ViewModelBase
         {
             ImageViewEmbed images => new PostEmbedImagesViewModel(images),
             VideoViewEmbed video => new PostEmbedVideoViewModel(video),
-            _ => null,
+            _ => null
+            //RecordViewEmbed record => record.Record switch
+            //{
+            //    PostViewEmbed
+            //},
         };
     }
 }

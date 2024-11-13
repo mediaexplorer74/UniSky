@@ -1,34 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Numerics;
-using System.Reflection.Metadata;
-using System.Runtime.InteropServices.WindowsRuntime;
+﻿using System.Numerics;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using FishyFlip.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Graphics.Canvas.Effects;
 using Microsoft.Toolkit.Uwp.UI.Animations.Expressions;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
-using Org.BouncyCastle.Security.Certificates;
 using UniSky.Services;
-using UniSky.ViewModels;
 using UniSky.ViewModels.Profile;
-using UniSky.ViewModels.Profiles;
-using Windows.ApplicationModel.Core;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.Foundation.Metadata;
-using Windows.Networking.NetworkOperators;
-using Windows.Phone;
 using Windows.UI.Composition;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
@@ -197,6 +178,15 @@ namespace UniSky.Pages
                 _textContainer.CenterPoint = new Vector3((float)TextContainer.ActualWidth / 2, (float)TextContainer.ActualHeight / 2, 0);
             if (_profileImage != null)
                 _profileImage.CenterPoint = new Vector3(4, (float)ProfileImage.ActualHeight + 4, 0);
+        }
+
+        private void ProfileContainer_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            var scrollView = RootList.FindDescendant<ScrollViewer>();
+            if (scrollView is null)
+                return;
+
+            scrollView.ChangeView(0, 0, null);
         }
     }
 }

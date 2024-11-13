@@ -9,9 +9,13 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using FishyFlip.Models;
 using FishyFlip.Tools;
 using Humanizer;
+using UniSky.Extensions;
 using UniSky.Services;
 using UniSky.ViewModels.Feeds;
 using UniSky.ViewModels.Profiles;
+using Windows.Foundation.Metadata;
+using Windows.Phone;
+using Windows.UI.ViewManagement;
 
 namespace UniSky.ViewModels.Profile;
 
@@ -76,4 +80,28 @@ public partial class ProfilePageViewModel : ProfileViewModel
         FollowingCount = profile.FollowsCount;
         PostCount = profile.PostsCount;
     }
+
+    protected override void OnLoadingChanged(bool value)
+    {
+        if (!ApiInformation.IsApiContractPresent(typeof(PhoneContract).FullName, 1))
+            return;
+
+        this.syncContext.Post(() =>
+        {
+            var statusBar = StatusBar.GetForCurrentView();
+            _ = statusBar.ShowAsync();
+
+            statusBar.ProgressIndicator.ProgressValue = null;
+
+            if (value)
+            {
+                _ = statusBar.ProgressIndicator.ShowAsync();
+            }
+            else
+            {
+                _ = statusBar.ProgressIndicator.HideAsync();
+            }
+        });
+    }
+
 }
