@@ -37,7 +37,7 @@ public sealed partial class HomePage : Page
     {
         base.OnNavigatedTo(e);
 
-        Window.Current.SetTitleBar(AppTitleBar);
+        Window.Current.SetTitleBar(TitleBarDrag);
 
         var safeAreaService = Ioc.Default.GetRequiredService<ISafeAreaService>();
         safeAreaService.SafeAreaUpdated += OnSafeAreaUpdated;

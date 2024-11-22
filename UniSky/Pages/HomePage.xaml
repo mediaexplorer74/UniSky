@@ -174,7 +174,13 @@
                         BorderBrush="{StaticResource SystemControlSeparatorBrush}"
                         ui:UIElementExtensions.ClipToBounds="True">
                     <Frame x:Name="NavigationFrame"
-                           HorizontalAlignment="Stretch"/>
+                           HorizontalAlignment="Stretch">
+                        <Frame.ContentTransitions>
+                            <TransitionCollection>
+                                <NavigationThemeTransition/>
+                            </TransitionCollection>
+                        </Frame.ContentTransitions>
+                    </Frame>
                 </Border>
 
                 <Grid x:Name="FooterNavigation"
@@ -303,6 +309,7 @@
                           MaxWidth="600" 
                           HorizontalAlignment="Stretch">
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="32"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
@@ -310,12 +317,20 @@
                             <TranslateTransform x:Name="TitleHeaderTransform"/>
                         </Grid.RenderTransform>
 
+                        <Button x:Name="BackButton"
+                                x:Load="{x:Bind NavigationFrame.CanGoBack, Mode=OneWay}"
+                                Style="{StaticResource NavigationBackButtonNormalStyle}"
+                                Height="32"
+                                FontSize="13"
+                                ToolTipService.ToolTip="Back"
+                                Command="{x:Bind ViewModel.GoBackCommand}"/>
+
                         <Viewbox VerticalAlignment="Center"
                                  HorizontalAlignment="Center"
                                  Margin="8,2,0,0"
                                  Width="16"
                                  Height="16"
-                                 Grid.Column="0">
+                                 Grid.Column="1">
                             <Path x:Name="AppIconPath"
                                   Data="{StaticResource BlueSkyLogoPath}"
                                   Fill="{ThemeResource ApplicationForegroundThemeBrush}"/>
@@ -326,8 +341,13 @@
                                    Style="{StaticResource CaptionTextBlockStyle}" 
                                    Text="Unisky"
                                    VerticalAlignment="Center" 
-                                   Grid.Column="1"
+                                   Grid.Column="2"
                                    Margin="8,0"/>
+
+                        <Border x:Name="TitleBarDrag"
+                                Background="Transparent"
+                                Grid.Column="1"
+                                Grid.ColumnSpan="2"/>
                     </Grid>
                 </Grid>
             </Grid>

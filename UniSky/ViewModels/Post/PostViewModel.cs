@@ -105,17 +105,15 @@ public partial class PostViewModel : ViewModelBase
 
         if (view.Viewer is not null)
         {
-            IsRetweeted = view.Viewer.Repost != null;
-
-            if (view.Viewer.Like is not null)
+            if (view.Viewer.Like is { } like)
             {
-                this.like = view.Viewer.Like;
+                this.like = like;
                 IsLiked = true;
             }
 
-            if (view.Viewer.Repost is not null)
+            if (view.Viewer.Repost is { } repost)
             {
-                this.repost = view.Viewer.Repost;
+                this.repost = repost;
                 IsRetweeted = true;
             }
         }

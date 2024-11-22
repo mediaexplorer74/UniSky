@@ -4,6 +4,7 @@ using Microsoft.Toolkit.Uwp.UI.Media.Geometry;
 using Windows.Foundation;
 using Windows.Foundation.Metadata;
 using Windows.UI.Composition;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Hosting;
 
@@ -11,25 +12,15 @@ namespace UniSky.Helpers.Composition;
 
 internal static class BirdAnimation
 {
-    // Duplicated in App.xaml too
-    private const string BSKY_LOGO
-        = "M13.873 3.77C21.21 9.243 29.103 20.342 32 26.3v15.732c0-.335-.13.043-.41.858-1.512 4.414-7.418 21.642-20.923" +
-        " 7.87-7.111-7.252-3.819-14.503 9.125-16.692-7.405 1.252-15.73-.817-18.014-8.93C1.12 22.804 0 8.431 0 6.488 0-3.237" +
-        " 8.579-.18 13.873 3.77ZM50.127 3.77C42.79 9.243 34.897 20.342 32 26.3v15.732c0-.335.13.043.41.858 1.512 4.414 7.418" +
-        " 21.642 20.923 7.87 7.111-7.252 3.819-14.503-9.125-16.692 7.405 1.252 15.73-.817 18.014-8.93C62.88 22.804 64 8.431" +
-        " 64 6.488 64-3.237 55.422-.18 50.127 3.77Z";
-
-    private const int WIDTH = 64;
-    private const int HEIGHT = 57;
-
     public static void RunBirdAnimation(Frame frame)
     {
+        // TODO: fallback to a shape visual
         if (!ApiInformation.IsMethodPresent(typeof(Compositor).FullName, "CreateGeometricClip"))
             return;
 
-        var bskyLogoPath = (string)App.Current.Resources["BlueSkyLogoPath"];
-        var bskyLogoWidth = (int)App.Current.Resources["BlueSkyLogoWidth"];
-        var bskyLogoHeight = (int)App.Current.Resources["BlueSkyLogoHeight"];
+        var appLogoPath = (string)Application.Current.Resources["BlueSkyLogoPath"];
+        var appLogoWidth = (int)Application.Current.Resources["BlueSkyLogoWidth"];
+        var appLogoHeight = (int)Application.Current.Resources["BlueSkyLogoHeight"];
 
         var size = new Size(frame.ActualWidth, frame.ActualHeight);
         var frameVisual = ElementCompositionPreview.GetElementVisual(frame);
@@ -41,9 +32,9 @@ internal static class BirdAnimation
         var offsetY = (float)(size.Height / 2.0);
 
         var compositor = frameVisual.Compositor;
-        var clip = compositor.CreateGeometricClip(bskyLogoPath);
+        var clip = compositor.CreateGeometricClip(appLogoPath);
         clip.ViewBox = compositor.CreateViewBox();
-        clip.ViewBox.Size = new Vector2(bskyLogoWidth, bskyLogoHeight);
+        clip.ViewBox.Size = new Vector2(appLogoWidth, appLogoHeight);
         clip.ViewBox.Stretch = CompositionStretch.None;
         clip.AnchorPoint = new Vector2(0.5f, 0.5f);
         clip.Scale = new Vector2(initialScale, initialScale);

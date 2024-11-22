@@ -49,8 +49,6 @@ sealed partial class App : Application
         collection.AddLogging(c => c.AddDebug()
             .SetMinimumLevel(LogLevel.Trace));
 
-        //collection.AddSingleton(s => new ApplicationDatasto(ApplicationData.Current));
-
         collection.AddTransient<LoginService>();
         collection.AddTransient<SessionService>();
 

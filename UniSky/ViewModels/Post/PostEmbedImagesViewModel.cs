@@ -39,8 +39,11 @@ public partial class PostEmbedImagesViewModel : PostEmbedViewModel
     {
         Count = embed.Images.Count;
         Images = embed.Images.Select(i => new PostEmbedImageViewModel(i)).ToArray();
-        Debug.Assert(Images.Length > 0 && Images.Length <= 4);
 
+        // this would be problematic
+        Debug.Assert(Images.Length > 0 && Images.Length <= 4);
+        Debug.Assert(embed.Images.Count == Images.Length);
+        Debug.Assert(Images.Length == Count);
 
         var firstRatio = embed.Images[0].AspectRatio;
         if (Images.Length == 1 && firstRatio == null)

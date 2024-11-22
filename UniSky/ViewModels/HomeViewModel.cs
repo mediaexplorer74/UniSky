@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using FishyFlip;
 using FishyFlip.Events;
 using FishyFlip.Lexicon.App.Bsky.Actor;
@@ -16,6 +17,7 @@ using UniSky.Services;
 using Windows.Foundation.Metadata;
 using Windows.Phone;
 using Windows.Storage;
+using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -109,14 +111,22 @@ public partial class HomeViewModel : ViewModelBase
         this.notificationUpdateTimer = new DispatcherTimer() { Interval = TimeSpan.FromMinutes(1) };
         this.notificationUpdateTimer.Tick += OnNotificationTimerTick;
 
+        var navigationManager = SystemNavigationManager.GetForCurrentView();
+        navigationManager.BackRequested += OnBackRequested;
+
         Task.Run(LoadAsync);
+    }
+
+    [RelayCommand]
+    private void GoBack()
+    {
+        this.homeNavigationService.GoBack();
     }
 
     private async Task LoadAsync()
     {
         using var loading = this.GetLoadingContext();
         var protocol = this.protocolService.Protocol;
-
 
         try
         {
@@ -191,6 +201,15 @@ public partial class HomeViewModel : ViewModelBase
         catch (Exception ex)
         {
             logger.LogError(ex, "Failed to update notifications");
+        }
+    }
+
+    private void OnBackRequested(object sender, BackRequestedEventArgs e)
+    {
+        if (homeNavigationService.CanGoBack)
+        {
+            e.Handled = true;
+            homeNavigationService.GoBack();
         }
     }
 
