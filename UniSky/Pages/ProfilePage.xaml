@@ -95,9 +95,9 @@
                             Foreground="{ThemeResource ApplicationSecondaryForegroundThemeBrush}"
                             Typography.NumeralAlignment="Tabular"
                             Margin="0,4,0,0">
-                        <Run Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Text="{Binding Followers, Mode=OneWay, FallbackValue=0}"/> Followers •
-                        <Run Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Text="{Binding Following, Mode=OneWay, FallbackValue=0}"/> Following •
-                        <Run Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Text="{Binding Posts, Mode=OneWay, FallbackValue=0}"/> Posts
+                        <Run Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Text="{Binding Followers, Mode=OneWay, FallbackValue=0}"/> <Run x:Uid="FollowersRun"/> •
+                        <Run Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Text="{Binding Following, Mode=OneWay, FallbackValue=0}"/> <Run x:Uid="FollowingRun"/> •
+                        <Run Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Text="{Binding Posts, Mode=OneWay, FallbackValue=0}"/> <Run x:Uid="PostsRun"/>
                     </TextBlock>
                 </StackPanel>
 

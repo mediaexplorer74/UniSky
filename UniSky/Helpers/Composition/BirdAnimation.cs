@@ -27,6 +27,10 @@ internal static class BirdAnimation
         if (!ApiInformation.IsMethodPresent(typeof(Compositor).FullName, "CreateGeometricClip"))
             return;
 
+        var bskyLogoPath = (string)App.Current.Resources["BlueSkyLogoPath"];
+        var bskyLogoWidth = (int)App.Current.Resources["BlueSkyLogoWidth"];
+        var bskyLogoHeight = (int)App.Current.Resources["BlueSkyLogoHeight"];
+
         var size = new Size(frame.ActualWidth, frame.ActualHeight);
         var frameVisual = ElementCompositionPreview.GetElementVisual(frame);
 
@@ -37,9 +41,9 @@ internal static class BirdAnimation
         var offsetY = (float)(size.Height / 2.0);
 
         var compositor = frameVisual.Compositor;
-        var clip = compositor.CreateGeometricClip(BSKY_LOGO);
+        var clip = compositor.CreateGeometricClip(bskyLogoPath);
         clip.ViewBox = compositor.CreateViewBox();
-        clip.ViewBox.Size = new Vector2(WIDTH, HEIGHT);
+        clip.ViewBox.Size = new Vector2(bskyLogoWidth, bskyLogoHeight);
         clip.ViewBox.Stretch = CompositionStretch.None;
         clip.AnchorPoint = new Vector2(0.5f, 0.5f);
         clip.Scale = new Vector2(initialScale, initialScale);

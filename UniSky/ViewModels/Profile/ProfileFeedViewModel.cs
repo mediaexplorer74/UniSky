@@ -8,6 +8,7 @@ using FishyFlip.Lexicon.App.Bsky.Actor;
 using FishyFlip.Models;
 using UniSky.Services;
 using UniSky.ViewModels.Feeds;
+using Windows.ApplicationModel.Resources;
 
 namespace UniSky.ViewModels.Profile;
 
@@ -16,11 +17,13 @@ public partial class ProfileFeedViewModel : FeedViewModel
     public ProfileFeedViewModel(string filterType, ATObject profile, IProtocolService protocolService)
         : base(FeedType.Author, protocolService)
     {
+        var resources = ResourceLoader.GetForCurrentView();
+
         this.Name = filterType switch
         {
-            "posts_no_replies" => "Posts",
-            "posts_with_replies" => "Replies",
-            "posts_with_media" => "Media",
+            "posts_no_replies" => resources.GetString("FeedPosts"),
+            "posts_with_replies" => resources.GetString("FeedReplies"),
+            "posts_with_media" => resources.GetString("FeedMedia"),
             "posts_and_author_threads" => throw new NotImplementedException(),
             _ => throw new NotImplementedException(),
         };

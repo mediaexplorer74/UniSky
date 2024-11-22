@@ -373,6 +373,8 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <PRIResource Include="Resources\en-GB\custom-twitter\Resources.resw" />
+    <PRIResource Include="Resources\en-GB\Resources.resw" />
     <None Include="UniSky_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>

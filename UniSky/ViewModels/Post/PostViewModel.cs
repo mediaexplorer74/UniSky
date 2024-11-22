@@ -144,7 +144,6 @@ public partial class PostViewModel : ViewModelBase
             IsLiked = true;
             LikeCount++;
 
-
             this.like = (await protocol.CreateLikeAsync(new StrongRef(view.Uri, view.Cid)).ConfigureAwait(false))
                 .HandleResult()?.Uri;
         }

@@ -217,7 +217,7 @@
                            Foreground="{ThemeResource ApplicationSecondaryForegroundThemeBrush}"
                            FontSize="12"
                            Margin="8,0">
-                    Reposted by <Run Text="{x:Bind RetweetedBy.Name, Mode=OneWay}" FontWeight="Bold"/>
+                    <Run x:Uid="RetweetedByRun" Text="Reposted by"/> <Run Text="{x:Bind RetweetedBy.Name, Mode=OneWay}" FontWeight="Bold"/>
                 </TextBlock>
             </Grid>
 
@@ -238,7 +238,7 @@
                            Foreground="{ThemeResource ApplicationSecondaryForegroundThemeBrush}"
                            FontSize="12"
                            Margin="8,0">
-                    Replying to <Run Text="{x:Bind ReplyTo.Name, Mode=OneWay}" FontWeight="Bold"/>
+                    <Run x:Uid="ReplyingToRun" Text="Replying to"/> <Run Text="{x:Bind ReplyTo.Name, Mode=OneWay}" FontWeight="Bold"/>
                 </TextBlock>
             </Grid>
 
@@ -305,6 +305,7 @@
                         </Grid.ColumnDefinitions>
 
                         <Button x:Name="RepliesButton"
+                                x:Uid="PostReplyButton"
                                 Grid.Column="0"
                                 Style="{StaticResource FeedItemActionButtonStyle}">
                             <StackPanel Orientation="Horizontal">
@@ -321,6 +322,7 @@
                             </StackPanel>
                         </Button>
                         <Button x:Name="RetweetButton"
+                                x:Uid="PostRetweetButton"
                                 Grid.Column="1"
                                 Style="{StaticResource FeedItemActionButtonStyle}">
                             <StackPanel Orientation="Horizontal">
@@ -338,6 +340,7 @@
                         </Button>
 
                         <Button x:Name="LikeButton"
+                                x:Uid="PostLikeButton"
                                 Grid.Column="2"
                                 Style="{StaticResource FeedItemActionButtonStyle}"
                                 Command="{x:Bind LikeCommand}">
@@ -356,6 +359,7 @@
                         </Button>
 
                         <Button x:Name="MoreButton"
+                                x:Uid="PostMoreButton"
                                 Style="{StaticResource FeedItemActionButtonStyle}"
                                 HorizontalAlignment="Right"
                                 Grid.Column="3"

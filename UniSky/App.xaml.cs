@@ -10,6 +10,7 @@ using UniSky.Services;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
+using Windows.ApplicationModel.Resources.Core;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
@@ -38,6 +39,8 @@ sealed partial class App : Application
         this.Suspending += OnSuspending;
 
         this.ConfigureServices();
+
+        ResourceContext.SetGlobalQualifierValue("Custom", "Twitter", ResourceQualifierPersistence.None);
     }
 
     private void ConfigureServices()
