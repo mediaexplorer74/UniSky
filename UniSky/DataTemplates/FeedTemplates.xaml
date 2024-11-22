@@ -363,8 +363,9 @@
                             <Button.Flyout>
                                 <MenuFlyout w1809:Placement="BottomEdgeAlignedRight"
                                             not1809:Placement="Bottom">
-                                    <MenuFlyoutItem Text="Copy Text" Icon="Copy"/>
-                                    <MenuFlyoutItem Text="Copy Link" Icon="Link"/>
+                                    <MenuFlyoutItem Text="Share" Icon="Share" Command="{Binding ShareCommand}"/>
+                                    <MenuFlyoutItem Text="Copy Text" Icon="Copy" Command="{Binding CopyTextCommand}"/>
+                                    <MenuFlyoutItem Text="Copy Link" Icon="Link" Command="{Binding CopyLinkCommand}"/>
                                     <MenuFlyoutSeparator/>
                                     <MenuFlyoutItem Text="Mute Thread" Icon="Mute"/>
                                     <MenuFlyoutItem Text="Hide Post" Icon="Clear"/>

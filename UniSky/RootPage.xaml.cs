@@ -7,7 +7,6 @@ using System.Numerics;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Xml;
 using CommunityToolkit.Mvvm.DependencyInjection;
-using FishyFlip.Models.Internal;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Geometry;
 using UniSky.Helpers.Composition;

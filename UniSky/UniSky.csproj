@@ -181,6 +181,7 @@
     <Compile Include="Helpers\Geometry\Parsers\CanvasGeometryParser.cs" />
     <Compile Include="Helpers\Geometry\Scalar.cs" />
     <Compile Include="Helpers\Geometry\Utils.cs" />
+    <Compile Include="Helpers\UrlHelpers.cs" />
     <Compile Include="Pages\ProfilePage.xaml.cs">
       <DependentUpon>ProfilePage.xaml</DependentUpon>
     </Compile>
@@ -340,6 +341,9 @@
     <PackageReference Include="CommunityToolkit.Mvvm">
       <Version>8.3.2</Version>
     </PackageReference>
+    <PackageReference Include="FishyFlipDX">
+      <Version>2.2.0-alpha.64</Version>
+    </PackageReference>
     <PackageReference Include="Humanizer.Core">
       <Version>2.14.1</Version>
     </PackageReference>
@@ -362,7 +366,7 @@
       <Version>6.1.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
-      <Version>2.7.3</Version>
+      <Version>2.7.4-prerelease.221117002</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed">
       <Version>2.0.1</Version>
@@ -380,10 +384,6 @@
     </SDKReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Libraries\FishyFlip\src\FishyFlip\FishyFlip.csproj">
-      <Project>{d05bc964-67d9-496f-9952-5fc5cb633161}</Project>
-      <Name>FishyFlip</Name>
-    </ProjectReference>
     <ProjectReference Include="..\UniSky.Background\UniSky.Background.csproj">
       <Project>{92c64af9-26a6-423b-9bb0-fd21d01e976a}</Project>
       <Name>UniSky.Background</Name>

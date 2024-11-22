@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
+using FishyFlip.Lexicon.App.Bsky.Embed;
 using FishyFlip.Models;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 
@@ -34,9 +35,9 @@ public partial class PostEmbedImagesViewModel : PostEmbedViewModel
     public bool IsThree => Count == 3;
     public bool IsFour => Count == 4;
 
-    public PostEmbedImagesViewModel(ImageViewEmbed embed) : base(embed)
+    public PostEmbedImagesViewModel(ViewImages embed) : base(embed)
     {
-        Count = embed.Images.Length;
+        Count = embed.Images.Count;
         Images = embed.Images.Select(i => new PostEmbedImageViewModel(i)).ToArray();
         Debug.Assert(Images.Length > 0 && Images.Length <= 4);
 
@@ -50,7 +51,7 @@ public partial class PostEmbedImagesViewModel : PostEmbedViewModel
         {
             AspectRatio = new AspectRatioConstraint(Images.Length switch
             {
-                1 => Math.Max((double)firstRatio.Width / firstRatio.Height, 0.75),
+                1 => Math.Max((double)firstRatio.Width.Value / firstRatio.Height.Value, 0.75),
                 2 => 2.0,
                 3 => 2.0,
                 4 => 3.0 / 2.0,

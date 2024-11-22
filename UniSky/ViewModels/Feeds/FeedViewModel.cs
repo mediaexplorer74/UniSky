@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using FishyFlip.Lexicon.App.Bsky.Feed;
 using FishyFlip.Models;
 using UniSky.Helpers;
 using UniSky.Services;
@@ -22,7 +23,7 @@ public partial class FeedViewModel : ViewModelBase
 {
     private readonly FeedType type;
     private readonly ATUri? id;
-    private readonly FeedRecord? generator;
+    private readonly GeneratorView? generator;
     private readonly IProtocolService protocolService;
 
     [ObservableProperty]
@@ -36,7 +37,7 @@ public partial class FeedViewModel : ViewModelBase
         this.protocolService = protocolService;
     }
 
-    public FeedViewModel(FeedType type, ATUri? id, FeedRecord? record, IProtocolService protocolService)
+    public FeedViewModel(FeedType type, ATUri? id, GeneratorView? record, IProtocolService protocolService)
         : this(type, protocolService)
     {
         this.id = id;

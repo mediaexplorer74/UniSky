@@ -2,16 +2,16 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.Input;
+using FishyFlip.Lexicon.App.Bsky.Actor;
+using FishyFlip.Lexicon.App.Bsky.Feed;
 using FishyFlip.Models;
-using UniSky.Extensions;
-using UniSky.Helpers;
-using UniSky.Services;
-using UniSky.ViewModels.Feeds;
 using FishyFlip.Tools;
 using Microsoft.Extensions.Logging;
-using UniSky.ViewModels.Error;
-using CommunityToolkit.Mvvm.Input;
 using UniSky.Controls.Compose;
+using UniSky.Extensions;
+using UniSky.Services;
+using UniSky.ViewModels.Feeds;
 
 namespace UniSky.ViewModels;
 
@@ -28,7 +28,6 @@ public partial class FeedsViewModel : ViewModelBase
         this.logger = logger;
 
         Feeds = [];
-        Feeds.Add(new FeedViewModel(FeedType.Following, null, null, protocolService));
 
         Task.Run(LoadAsync);
     }
@@ -47,23 +46,41 @@ public partial class FeedsViewModel : ViewModelBase
         try
         {
             var protocol = protocolService.Protocol;
-            var prefs = (await protocol.Actor.GetPreferencesAsync()
+            var prefs = (await protocol.GetPreferencesAsync()
                 .ConfigureAwait(false))
                 .HandleResult();
 
             var feeds = prefs.Preferences
-            .OfType<SavedFeedsPref>()
-                .FirstOrDefault();
+                .OfType<SavedFeedsPrefV2>()
+                .FirstOrDefault()?.Items
+                .Where(p => p.Pinned == true);
 
-            var generators = (await protocol.Feed.GetFeedGeneratorsAsync(feeds.Pinned)
+            var generatedFeeds = feeds.Where(s => s.TypeValue == "feed")
+                .Select(s => new ATUri(s.Value))
+                .ToList();
+
+            var generators = (await protocol.GetFeedGeneratorsAsync(generatedFeeds)
                 .ConfigureAwait(false))
                 .HandleResult();
 
             syncContext.Post(() =>
             {
-                foreach (var feed in generators.Feeds)
+                // TODO: this _all_ sucks
+                foreach (var feed in feeds)
                 {
-                    Feeds.Add(new FeedViewModel(FeedType.Custom, feed.Uri, feed, this.protocolService));
+                    if (feed.TypeValue == "feed")
+                    {
+                        var generatedFeed = generators.Feeds.FirstOrDefault(f => f.Uri.ToString() == feed.Value);
+                        Feeds.Add(new FeedViewModel(FeedType.Custom, generatedFeed.Uri, generatedFeed, this.protocolService));
+                    }
+
+                    if (feed.TypeValue == "timeline")
+                    {
+                        if (feed.Value == "following")
+                        {
+                            Feeds.Add(new FeedViewModel(FeedType.Following, null, null, this.protocolService));
+                        }
+                    }
                 }
             });
         }

@@ -1,4 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using FishyFlip.Lexicon;
+using FishyFlip.Lexicon.App.Bsky.Actor;
 using FishyFlip.Models;
 
 namespace UniSky.ViewModels.Profiles;
@@ -22,19 +24,22 @@ public partial class ProfileViewModel : ViewModelBase
         this.Handle = "@example.com";
     }
 
-    public ProfileViewModel(FeedProfile profile)
+    public ProfileViewModel(ATObject obj)
     {
-        this.id = profile.Did;
-        this.AvatarUrl = profile.Avatar;
-        this.Name = profile.DisplayName;
-        this.Handle = $"@{profile.Handle}";
-    }
+        if (obj is ProfileViewBasic profile)
+        {
+            this.id = profile.Did;
+            this.AvatarUrl = profile.Avatar;
+            this.Name = profile.DisplayName;
+            this.Handle = $"@{profile.Handle}";
+        }
 
-    public ProfileViewModel(ActorProfile profile)
-    {
-        this.id = profile.Did;
-        this.AvatarUrl = profile.Avatar;
-        this.Name = profile.DisplayName;
-        this.Handle = $"@{profile.Handle}";
+        if (obj is ProfileViewDetailed profileDetailed)
+        {
+            this.id = profileDetailed.Did;
+            this.AvatarUrl = profileDetailed.Avatar;
+            this.Name = profileDetailed.DisplayName;
+            this.Handle = $"@{profileDetailed.Handle}";
+        }
     }
 }

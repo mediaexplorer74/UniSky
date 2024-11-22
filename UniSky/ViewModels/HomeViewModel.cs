@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using FishyFlip;
 using FishyFlip.Events;
+using FishyFlip.Lexicon.App.Bsky.Actor;
+using FishyFlip.Lexicon.App.Bsky.Notification;
 using FishyFlip.Models;
 using FishyFlip.Tools;
 using Microsoft.Extensions.Logging;
@@ -32,16 +34,16 @@ public enum HomePages
 
 public partial class HomeViewModel : ViewModelBase
 {
-    private readonly ATProtocol protocol;
     private readonly SessionService sessionService;
     private readonly INavigationService rootNavigationService;
     private readonly INavigationService homeNavigationService;
     private readonly ILogger<HomeViewModel> logger;
+    private readonly ILogger<ATProtocol> atLogger;
     private readonly IProtocolService protocolService;
     private readonly SessionModel sessionModel;
     private readonly DispatcherTimer notificationUpdateTimer;
 
-    private FeedProfile profile;
+    private ProfileViewDetailed profile;
 
     [ObservableProperty]
     private string _avatarUrl;
@@ -95,9 +97,10 @@ public partial class HomeViewModel : ViewModelBase
         this.logger = logger;
         this.protocolService = protocolService;
         this.sessionModel = sessionModel;
+        this.atLogger = protocolLogger;
 
-        this.protocol = new ATProtocolBuilder()
-            .WithLogger(protocolLogger)
+        var protocol = new ATProtocolBuilder()
+            .WithLogger(atLogger)
             .Build();
 
         protocolService.SetProtocol(protocol);
@@ -112,11 +115,17 @@ public partial class HomeViewModel : ViewModelBase
     private async Task LoadAsync()
     {
         using var loading = this.GetLoadingContext();
+        var protocol = this.protocolService.Protocol;
+
 
         try
         {
-            var session = await this.protocol.AuthenticateWithPasswordSessionAsync(sessionModel.Session);
-            var refreshSession = await this.protocol.RefreshAuthSessionAsync();
+            var session = await protocol.AuthenticateWithPasswordSessionAsync(sessionModel.Session);
+            var refreshSession = await protocol.RefreshAuthSessionAsync();
+
+            await protocol.AuthenticateWithPasswordSessionAsync(refreshSession);
+
+            protocolService.SetProtocol(protocol);
         }
         catch (Exception ex)
         {
@@ -134,6 +143,14 @@ public partial class HomeViewModel : ViewModelBase
 
             this.syncContext.Post(() => notificationUpdateTimer.Start());
         }
+        catch (ATNetworkErrorException ex)
+        {
+            if (ex.AtError?.Detail?.Error == "ExpiredToken")
+            {
+                this.syncContext.Post(() => rootNavigationService.Navigate<LoginPage>());
+                return;
+            }
+        }
         catch (Exception ex)
         {
             logger.LogError(ex, "Failed to fetch user info!");
@@ -143,7 +160,9 @@ public partial class HomeViewModel : ViewModelBase
 
     private async Task UpdateProfileAsync()
     {
-        profile = (await this.protocol.Actor.GetProfileAsync(protocol.Session.Did)
+        var protocol = protocolService.Protocol;
+
+        profile = (await protocol.GetProfileAsync(protocol.AuthSession.Session.Did)
             .ConfigureAwait(false))
             .HandleResult();
 
@@ -153,11 +172,13 @@ public partial class HomeViewModel : ViewModelBase
 
     private async Task UpdateNotificationsAsync()
     {
-        var notifications = (await this.protocol.Notification.GetUnreadCountAsync()
+        var protocol = protocolService.Protocol;
+
+        var notifications = (await protocol.GetUnreadCountAsync()
             .ConfigureAwait(false))
             .HandleResult();
 
-        NotificationCount = notifications.Count;
+        NotificationCount = (int)notifications.Count;
     }
 
     private async void OnNotificationTimerTick(object sender, object e)

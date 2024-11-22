@@ -1,11 +1,11 @@
 ﻿using System.Diagnostics;
-using FishyFlip.Models;
+using FishyFlip.Lexicon;
 
 namespace UniSky.ViewModels.Posts;
 
 public abstract partial class PostEmbedViewModel : ViewModelBase
 {
-    public PostEmbedViewModel(Embed embed)
+    public PostEmbedViewModel(ATObject embed)
     {
         Debug.WriteLine(embed?.Type);
     }

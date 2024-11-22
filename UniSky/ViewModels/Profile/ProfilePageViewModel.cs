@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using FishyFlip.Lexicon;
+using FishyFlip.Lexicon.App.Bsky.Actor;
 using FishyFlip.Models;
 using FishyFlip.Tools;
 using Humanizer;
@@ -48,21 +50,26 @@ public partial class ProfilePageViewModel : ProfileViewModel
 
     public ProfilePageViewModel() : base() { }
 
-    public ProfilePageViewModel(FeedProfile profile, IProtocolService protocolService) : base(profile)
+    public ProfilePageViewModel(ATObject profile, IProtocolService protocolService)
+        : base(profile)
     {
-        BannerUrl = profile.Banner;
-        FollowerCount = profile.FollowersCount;
-        FollowingCount = profile.FollowsCount;
-        PostCount = profile.PostsCount;
+        if (profile is ProfileViewDetailed detailed)
+        {
+            Populate(detailed);
+        }
+        else
+        {
+            _ = Task.Run(LoadAsync);
+        }
 
         Feeds =
         [
-            new ProfileFeedViewModel(AuthorFeedFilterType.PostsNoReplies, profile, protocolService),
-            new ProfileFeedViewModel(AuthorFeedFilterType.PostsWithReplies, profile, protocolService),
-            new ProfileFeedViewModel(AuthorFeedFilterType.PostsWithMedia, profile, protocolService)
+            new ProfileFeedViewModel("posts_no_replies", profile, protocolService),
+            new ProfileFeedViewModel("posts_with_replies", profile, protocolService),
+            new ProfileFeedViewModel("posts_with_media", profile, protocolService)
         ];
 
-        _ = Task.Run(LoadAsync);
+        // TODO: calculate the brightness of the banner image
     }
 
     private async Task LoadAsync()
@@ -72,13 +79,18 @@ public partial class ProfilePageViewModel : ProfileViewModel
         var protocol = Ioc.Default.GetRequiredService<IProtocolService>()
             .Protocol;
 
-        var profile = (await protocol.Actor.GetProfileAsync(this.id).ConfigureAwait(false))
+        var profile = (await protocol.GetProfileAsync(this.id).ConfigureAwait(false))
             .HandleResult();
 
+        Populate(profile);
+    }
+
+    private void Populate(ProfileViewDetailed profile)
+    {
         BannerUrl = profile.Banner;
-        FollowerCount = profile.FollowersCount;
-        FollowingCount = profile.FollowsCount;
-        PostCount = profile.PostsCount;
+        FollowerCount = (int)profile.FollowersCount;
+        FollowingCount = (int)profile.FollowsCount;
+        PostCount = (int)profile.PostsCount;
     }
 
     protected override void OnLoadingChanged(bool value)

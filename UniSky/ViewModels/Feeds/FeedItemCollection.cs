@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
+using FishyFlip.Lexicon.App.Bsky.Feed;
 using FishyFlip.Models;
 using FishyFlip.Tools;
 using UniSky.Services;
@@ -24,7 +26,7 @@ public class FeedItemCollection : ObservableCollection<PostViewModel>, ISupportI
     private readonly FeedType type;
     private readonly ATUri uri;
     private readonly ATDid did;
-    private readonly AuthorFeedFilterType filterType;
+    private readonly string filterType;
     private readonly IProtocolService protocolService;
     private string cursor;
 
@@ -36,7 +38,7 @@ public class FeedItemCollection : ObservableCollection<PostViewModel>, ISupportI
         this.protocolService = protocolService;
     }
 
-    public FeedItemCollection(ProfileFeedViewModel parent, FeedType type, ATDid did, AuthorFeedFilterType filterType, IProtocolService protocolService)
+    public FeedItemCollection(ProfileFeedViewModel parent, FeedType type, ATDid did, string filterType, IProtocolService protocolService)
     {
         this.parent = parent;
         this.type = type;
@@ -91,12 +93,12 @@ public class FeedItemCollection : ObservableCollection<PostViewModel>, ISupportI
 
         try
         {
-            FeedViewPost[] posts;
+            List<FeedViewPost> posts;
             switch (type)
             {
                 case FeedType.Following:
                     {
-                        var list = (await service.Feed.GetTimelineAsync(count, this.cursor)
+                        var list = (await service.GetTimelineAsync(limit: count, cursor: this.cursor)
                             .ConfigureAwait(false))
                             .HandleResult();
 
@@ -107,7 +109,7 @@ public class FeedItemCollection : ObservableCollection<PostViewModel>, ISupportI
                     }
                 case FeedType.Custom:
                     {
-                        var list = (await service.Feed.GetFeedAsync(uri, count, this.cursor)
+                        var list = (await service.GetFeedAsync(uri, limit: count, cursor: this.cursor)
                             .ConfigureAwait(false))
                             .HandleResult();
 
@@ -118,7 +120,7 @@ public class FeedItemCollection : ObservableCollection<PostViewModel>, ISupportI
                     }
                 case FeedType.Author:
                     {
-                        var list = (await service.Feed.GetAuthorFeedAsync(did, filterType, limit: count, cursor: this.cursor)
+                        var list = (await service.GetAuthorFeedAsync(did, filter: filterType, limit: count, cursor: this.cursor)
                             .ConfigureAwait(false))
                             .HandleResult();
 
@@ -137,10 +139,10 @@ public class FeedItemCollection : ObservableCollection<PostViewModel>, ISupportI
                     this.Add(new PostViewModel(item));
             });
 
-            if (posts.Length == 0)
+            if (posts.Count == 0)
                 HasMoreItems = false;
 
-            return new LoadMoreItemsResult() { Count = (uint)posts.Length };
+            return new LoadMoreItemsResult() { Count = (uint)posts.Count };
         }
         catch (Exception ex)
         {

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using FishyFlip.Lexicon.App.Bsky.Actor;
 using FishyFlip.Tools;
 using Microsoft.Extensions.Logging;
 using UniSky.Services;
@@ -38,7 +39,7 @@ public partial class ComposeViewModel : ViewModelBase
 
         try
         {
-            var profile = (await protocol.Actor.GetProfileAsync(protocol.Session.Did)
+            var profile = (await protocol.GetProfileAsync(protocol.AuthSession.Session.Did)
                 .ConfigureAwait(false))
                 .HandleResult();
 

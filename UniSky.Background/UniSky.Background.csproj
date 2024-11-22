@@ -130,10 +130,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Libraries\FishyFlip\src\FishyFlip\FishyFlip.csproj">
-      <Project>{d05bc964-67d9-496f-9952-5fc5cb633161}</Project>
-      <Name>FishyFlip</Name>
-    </ProjectReference>
     <ProjectReference Include="..\UniSky.Models\UniSky.Models.csproj">
       <Project>{7491ea1a-e1b7-469c-a3c2-5202aa14ce26}</Project>
       <Name>UniSky.Models</Name>

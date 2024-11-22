@@ -105,7 +105,8 @@
                             Margin="60,8,8,8"
                             Grid.ColumnSpan="2"
                             Grid.Row="1"
-                            VerticalAlignment="Bottom">
+                            VerticalAlignment="Bottom"
+                            RequestedTheme="Dark">
                     <TextBlock x:Name="ScrolledDisplayNameBlock"
                                Style="{ThemeResource SubtitleTextBlockStyle}" 
                                Text="{Binding Name}"

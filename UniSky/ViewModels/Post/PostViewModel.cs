@@ -1,15 +1,26 @@
-﻿using System.Threading;
+﻿using System;
+using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
+using FishyFlip.Lexicon;
+using FishyFlip.Lexicon.App.Bsky.Actor;
+using FishyFlip.Lexicon.App.Bsky.Embed;
+using FishyFlip.Lexicon.App.Bsky.Feed;
+using FishyFlip.Lexicon.Com.Atproto.Repo;
 using FishyFlip.Models;
 using FishyFlip.Tools;
 using Humanizer;
+using Org.BouncyCastle.Asn1.Cms;
+using UniSky.Helpers;
 using UniSky.Pages;
 using UniSky.Services;
-using UniSky.ViewModels.Feeds;
 using UniSky.ViewModels.Profiles;
+using Windows.ApplicationModel;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Animation;
 
@@ -18,6 +29,7 @@ namespace UniSky.ViewModels.Posts;
 public partial class PostViewModel : ViewModelBase
 {
     private readonly PostView view;
+    private readonly Post post;
 
     private ATUri like;
     private ATUri repost;
@@ -64,27 +76,32 @@ public partial class PostViewModel : ViewModelBase
     public PostViewModel(FeedViewPost feedPost)
         : this(feedPost.Post)
     {
-        if (feedPost.Reason is ReasonRepost { By: not null } repost)
+        if (feedPost.Reason is ReasonRepost { By: ProfileViewBasic { } by })
         {
-            RetweetedBy = new ProfileViewModel(repost.By);
+            RetweetedBy = new ProfileViewModel(by);
         }
 
-        if (feedPost.Reply is FeedViewPostReply { Parent: PostView { Author: not null } })
+        if (feedPost.Reply is ReplyRef { Parent: PostView { Author: ProfileViewBasic { } author } })
         {
-            ReplyTo = new ProfileViewModel(feedPost.Reply.Parent.Author);
+            ReplyTo = new ProfileViewModel(author);
         }
     }
 
     public PostViewModel(PostView view)
     {
+        if (view.Record is not Post post)
+            throw new InvalidOperationException();
+
         this.view = view;
+        this.post = post;
+
         Author = new ProfileViewModel(view.Author);
-        Text = view.Record.Text;
+        Text = post.Text;
         Embed = CreateEmbedViewModel(view.Embed);
 
-        LikeCount = view.LikeCount;
-        RetweetCount = view.RepostCount;
-        ReplyCount = view.ReplyCount;
+        LikeCount = (int)(view.LikeCount ?? 0);
+        RetweetCount = (int)(view.RepostCount ?? 0);
+        ReplyCount = (int)(view.ReplyCount ?? 0);
 
         if (view.Viewer is not null)
         {
@@ -119,7 +136,7 @@ public partial class PostViewModel : ViewModelBase
             IsLiked = false;
             LikeCount--;
 
-            _ = (await protocol.Repo.DeleteLikeAsync(like.Rkey).ConfigureAwait(false))
+            _ = (await protocol.Feed.DeleteLikeAsync(protocol.AuthSession.Session?.Did, like.Rkey).ConfigureAwait(false))
                 .HandleResult();
         }
         else
@@ -127,7 +144,8 @@ public partial class PostViewModel : ViewModelBase
             IsLiked = true;
             LikeCount++;
 
-            this.like = (await protocol.Repo.CreateLikeAsync(view.Cid, view.Uri).ConfigureAwait(false))
+
+            this.like = (await protocol.CreateLikeAsync(new StrongRef(view.Uri, view.Cid)).ConfigureAwait(false))
                 .HandleResult()?.Uri;
         }
     }
@@ -141,6 +159,63 @@ public partial class PostViewModel : ViewModelBase
         service.Navigate<ProfilePage>(this.view.Author, new ContinuumNavigationTransitionInfo() { ExitElement = element });
     }
 
+    [RelayCommand]
+    private void CopyLink()
+    {
+        var url = UrlHelpers.GetPostURL(this.view);
+        var uri = new Uri(url);
+
+        var attribute = HttpUtility.HtmlAttributeEncode(url);
+        var escaped = HttpUtility.HtmlEncode(url);
+
+        var package = new DataPackage();
+        package.SetWebLink(uri);
+        package.SetText(url);
+        package.SetHtmlFormat($"<a href=\"{attribute}\">{escaped}</a>");
+
+        Clipboard.SetContent(package);
+    }
+
+    [RelayCommand]
+    private void CopyText()
+    {
+        var package = new DataPackage();
+        package.SetText(this.post.Text);
+
+        // TODO: parse facets to HTML
+        // package.SetHtmlFormat(this.post.Text); 
+
+        // TODO: parse facets to RTF
+        // package.SetRtf(this.post.Text);
+
+        Clipboard.SetContent(package);
+    }
+
+    [RelayCommand]
+    private void Share()
+    {
+        void OnDataRequested(DataTransferManager sender, DataRequestedEventArgs args)
+        {
+            var url = UrlHelpers.GetPostURL(this.view);
+            var uri = new Uri(url);
+
+            var attribute = HttpUtility.HtmlAttributeEncode(url);
+            var escaped = HttpUtility.HtmlEncode(url);
+
+            var request = args.Request;
+            request.Data.Properties.Title = $"@{Author.Handle} on BlueSky";
+
+            request.Data.SetText(post.Text);
+            request.Data.SetWebLink(uri);
+            request.Data.SetHtmlFormat($"<a href=\"{attribute}\">{escaped}</a>");
+        }
+
+        var manager = DataTransferManager.GetForCurrentView();
+        manager.DataRequested += OnDataRequested;
+
+        DataTransferManager.ShowShareUI();
+    }
+
     private string ToNumberString(int n)
     {
         if (n == 0)
@@ -149,20 +224,18 @@ public partial class PostViewModel : ViewModelBase
         return n.ToMetric(decimals: 2);
     }
 
-    private PostEmbedViewModel CreateEmbedViewModel(Embed embed)
+    private PostEmbedViewModel CreateEmbedViewModel(ATObject embed)
     {
         if (embed is null)
             return null;
 
+        Debug.WriteLine(embed.GetType());
+
         return embed switch
         {
-            ImageViewEmbed images => new PostEmbedImagesViewModel(images),
-            VideoViewEmbed video => new PostEmbedVideoViewModel(video),
+            ViewImages images => new PostEmbedImagesViewModel(images),
+            ViewVideo video => new PostEmbedVideoViewModel(video),
             _ => null
-            //RecordViewEmbed record => record.Record switch
-            //{
-            //    PostViewEmbed
-            //},
         };
     }
 }
