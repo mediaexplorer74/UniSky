@@ -11,7 +11,8 @@
     xmlns:extensions="using:UniSky.Extensions"
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance Type=viewmodels:FeedsViewModel}"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    NavigationCacheMode="Enabled">
 
     <Grid x:Name="RootGrid">
         <Pivot x:Name="FeedsPivot"

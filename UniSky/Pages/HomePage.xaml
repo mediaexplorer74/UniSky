@@ -12,7 +12,8 @@
     xmlns:converters="using:UniSky.Converters"
     mc:Ignorable="d"
     DataContext="{x:Bind ViewModel}"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    NavigationCacheMode="Required">
 
     <Page.Resources>
         <ExponentialEase x:Key="EaseMove" EasingMode="EaseOut" Exponent="7"/>
