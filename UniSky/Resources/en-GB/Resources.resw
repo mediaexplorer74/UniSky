@@ -150,4 +150,10 @@
   <data name="ReplyingToRun.Text" xml:space="preserve">
     <value>Replying to</value>
   </data>
+  <data name="AppName" xml:space="preserve">
+    <value>Unisky</value>
+  </data>
+  <data name="AppTitle.Text" xml:space="preserve">
+    <value>Unisky</value>
+  </data>
 </root>

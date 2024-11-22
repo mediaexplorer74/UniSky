@@ -322,6 +322,7 @@
                         </Viewbox>
 
                         <TextBlock x:Name="AppTitleTextBlock"
+                                   x:Uid="AppTitle"
                                    Style="{StaticResource CaptionTextBlockStyle}" 
                                    Text="Unisky"
                                    VerticalAlignment="Center" 

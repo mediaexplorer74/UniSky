@@ -132,4 +132,7 @@
   <data name="PostRetweetButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>Retweet</value>
   </data>
+  <data name="AppTitle.Text" xml:space="preserve">
+    <value>Twitter</value>
+  </data>
 </root>

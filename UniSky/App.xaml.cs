@@ -40,14 +40,14 @@ sealed partial class App : Application
 
         this.ConfigureServices();
 
-        ResourceContext.SetGlobalQualifierValue("Custom", "Twitter", ResourceQualifierPersistence.None);
+        ResourceContext.SetGlobalQualifierValue("Custom", "Twitter", ResourceQualifierPersistence.LocalMachine);
     }
 
     private void ConfigureServices()
     {
         var collection = new ServiceCollection();
         collection.AddLogging(c => c.AddDebug()
-        .SetMinimumLevel(LogLevel.Trace));
+            .SetMinimumLevel(LogLevel.Trace));
 
         //collection.AddSingleton(s => new ApplicationDatasto(ApplicationData.Current));
 
