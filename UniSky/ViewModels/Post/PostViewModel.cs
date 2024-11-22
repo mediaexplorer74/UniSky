@@ -136,7 +136,7 @@ public partial class PostViewModel : ViewModelBase
             IsLiked = false;
             LikeCount--;
 
-            _ = (await protocol.Feed.DeleteLikeAsync(protocol.AuthSession.Session?.Did, like.Rkey).ConfigureAwait(false))
+            _ = (await protocol.Feed.DeleteLikeAsync(like.Rkey).ConfigureAwait(false))
                 .HandleResult();
         }
         else

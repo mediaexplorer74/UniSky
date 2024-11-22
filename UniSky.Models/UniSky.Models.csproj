@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FishyFlipDX" Version="2.2.0-alpha.50" />
+    <PackageReference Include="FishyFlip" Version="3.1.0-alpha.0" />
     <PackageReference Include="System.Text.Json" Version="8.0.5" />
   </ItemGroup>
 

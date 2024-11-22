@@ -367,7 +367,11 @@
                             <Button.Flyout>
                                 <MenuFlyout w1809:Placement="BottomEdgeAlignedRight"
                                             not1809:Placement="Bottom">
-                                    <MenuFlyoutItem Text="Share" Icon="Share" Command="{Binding ShareCommand}"/>
+                                    <MenuFlyoutItem Text="Share" Command="{Binding ShareCommand}">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xE72D;" FontFamily="{StaticResource SymbolThemeFontFamily}"/>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
                                     <MenuFlyoutItem Text="Copy Text" Icon="Copy" Command="{Binding CopyTextCommand}"/>
                                     <MenuFlyoutItem Text="Copy Link" Icon="Link" Command="{Binding CopyLinkCommand}"/>
                                     <MenuFlyoutSeparator/>
