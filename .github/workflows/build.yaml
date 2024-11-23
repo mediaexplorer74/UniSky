@@ -16,7 +16,6 @@ jobs:
     strategy:
       matrix:
         configuration: [Release]
-        platform: [x64, x86, ARM, ARM64]
 
     runs-on: windows-latest
 
@@ -37,9 +36,8 @@ jobs:
 
     # Restore the application to populate the obj folder with RuntimeIdentifiers
     - name: Restore NuGet Packages
-      run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration /p:Platform=$env:Platform
+      run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration /p:Platform=x64
       env:
-        Platform: ${{ matrix.platform }}
         Configuration: ${{ matrix.configuration }}
 
     # Decode the base 64 encoded pfx and save the Signing_Certificate
@@ -51,13 +49,12 @@ jobs:
 
     # Create the app package by building and packaging the project
     - name: Build App Packages
-      run: msbuild $env:ProjectFile_Name /p:Configuration=$env:Configuration /p:Platform=$env:Platform /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:Appx_Bundle /p:AppxBundlePlatforms="$env:Platform" /p:PackageCertificateKeyFile=GitHubActionsWorkflow.pfx /p:AppxPackageDir="$env:Appx_Package_Dir" /p:GenerateAppxPackageOnBuild=true
+      run: msbuild $env:ProjectFile_Name /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:Appx_Bundle /p:AppxBundlePlatforms="x86|x64|ARM|ARM64" /p:PackageCertificateKeyFile=GitHubActionsWorkflow.pfx /p:AppxPackageDir="$env:Appx_Package_Dir" /p:GenerateAppxPackageOnBuild=true
       env:
         Appx_Bundle: Never
         Appx_Package_Build_Mode: SideloadOnly
         Appx_Package_Dir: Packages\
         Configuration: ${{ matrix.configuration }}
-        Platform: ${{ matrix.platform }}
 
     # Remove the pfx
     - name: Cleanup
@@ -67,7 +64,10 @@ jobs:
     - name: Upload Appx Package
       uses: actions/upload-artifact@v4
       with:
-        name: AppxPackage-${{ matrix.configuration }}-${{ matrix.platform }}
+        name: AppxPackage-${{ matrix.configuration }}
         path: |
           ${{ env.Project_Name }}\\Packages
-          ${{ env.Project_Name }}\\bin\\${{ matrix.platform }}\\${{ matrix.configuration }}\\ilc\\${{ env.Project_Name }}.pdb 
+          ${{ env.Project_Name }}\\bin\\x86\\${{ matrix.configuration }}\\ilc\\${{ env.Project_Name }}.pdb 
+          ${{ env.Project_Name }}\\bin\\x64\\${{ matrix.configuration }}\\ilc\\${{ env.Project_Name }}.pdb 
+          ${{ env.Project_Name }}\\bin\\ARM\\${{ matrix.configuration }}\\ilc\\${{ env.Project_Name }}.pdb 
+          ${{ env.Project_Name }}\\bin\\ARM64\\${{ matrix.configuration }}\\ilc\\${{ env.Project_Name }}.pdb 
