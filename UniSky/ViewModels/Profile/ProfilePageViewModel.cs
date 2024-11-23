@@ -18,6 +18,7 @@ using UniSky.ViewModels.Profiles;
 using Windows.Foundation.Metadata;
 using Windows.Phone;
 using Windows.UI.ViewManagement;
+using Windows.UI.Xaml;
 
 namespace UniSky.ViewModels.Profile;
 
@@ -36,6 +37,16 @@ public partial class ProfilePageViewModel : ProfileViewModel
     [NotifyPropertyChangedFor(nameof(Posts))]
     private int postCount;
 
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ShowBio))]
+    private string bio;
+
+    [ObservableProperty]
+    private ProfileFeedViewModel selectedFeed;
+
+    public Visibility ShowBio
+        => !string.IsNullOrWhiteSpace(Bio) ? Visibility.Visible : Visibility.Collapsed;
+
     public string Followers
         => FollowerCount.ToMetric(decimals: 2);
     public string Following
@@ -43,10 +54,7 @@ public partial class ProfilePageViewModel : ProfileViewModel
     public string Posts
         => PostCount.ToMetric(decimals: 2);
 
-    public ObservableCollection<FeedViewModel> Feeds { get; }
-
-    public FeedViewModel SelectedFeed
-        => Feeds[0];
+    public ObservableCollection<ProfileFeedViewModel> Feeds { get; }
 
     public ProfilePageViewModel() : base() { }
 
@@ -64,10 +72,12 @@ public partial class ProfilePageViewModel : ProfileViewModel
 
         Feeds =
         [
-            new ProfileFeedViewModel("posts_no_replies", profile, protocolService),
-            new ProfileFeedViewModel("posts_with_replies", profile, protocolService),
-            new ProfileFeedViewModel("posts_with_media", profile, protocolService)
+            new ProfileFeedViewModel(this, "posts_no_replies", profile, protocolService),
+            new ProfileFeedViewModel(this, "posts_with_replies", profile, protocolService),
+            new ProfileFeedViewModel(this, "posts_with_media", profile, protocolService)
         ];
+
+        SelectedFeed = Feeds[0];
 
         // TODO: calculate the brightness of the banner image
     }
@@ -91,6 +101,7 @@ public partial class ProfilePageViewModel : ProfileViewModel
         FollowerCount = (int)profile.FollowersCount;
         FollowingCount = (int)profile.FollowsCount;
         PostCount = (int)profile.PostsCount;
+        Bio = profile.Description?.Trim();
     }
 
     protected override void OnLoadingChanged(bool value)
@@ -116,4 +127,8 @@ public partial class ProfilePageViewModel : ProfileViewModel
         });
     }
 
+    internal void Select(ProfileFeedViewModel profileFeedViewModel)
+    {
+        SelectedFeed = profileFeedViewModel;
+    }
 }

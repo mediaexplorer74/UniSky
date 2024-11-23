@@ -9,7 +9,7 @@ public interface INavigationService
 {
     bool CanGoBack { get; }
     bool CanGoForward { get; }
-    Frame Frame { get; set; }
+    Frame Frame { set; }
 
     event NavigatedEventHandler Navigated;
     event NavigationFailedEventHandler NavigationFailed;

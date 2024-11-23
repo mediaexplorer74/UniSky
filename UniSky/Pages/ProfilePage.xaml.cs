@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using FishyFlip.Lexicon;
 using FishyFlip.Lexicon.App.Bsky.Actor;
@@ -8,31 +9,41 @@ using Microsoft.Graphics.Canvas.Effects;
 using Microsoft.Toolkit.Uwp.UI.Animations.Expressions;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
 using UniSky.Services;
+using UniSky.ViewModels;
 using UniSky.ViewModels.Profile;
 using Windows.UI.Composition;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using EF = Microsoft.Toolkit.Uwp.UI.Animations.Expressions.ExpressionFunctions;
 
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
-
 namespace UniSky.Pages;
 
-/// <summary>
-/// An empty page that can be used on its own or navigated to within a Frame.
-/// </summary>
 public sealed partial class ProfilePage : Page
 {
+    private const string PROGRESS_NODE = "progress";
+    private const string PIXELS_TO_MOVE_NODE = "pixelsToMove";
+    private const string SCALE_FACTOR_NODE = "scaleFactor";
+    private const string TOTAL_SIZE_NODE = "totalSize";
+    private const string HEADER_SIZE_NODE = "headerSize";
+    private const string FOOTER_SIZE_NODE = "footerSize";
+    private const string STICKY_SIZE_NODE = "stickySize";
+    private const string TEXT_SIZE_NODE = "textSize";
+    private const string IMAGE_SIZE_NODE = "imageSize";
+
     private Compositor _compositor;
     private CompositionPropertySet _props;
     private CompositionPropertySet _scrollerPropertySet;
     private Visual _headerGrid;
     private Visual _profileImage;
+    private Visual _profileContainer;
     private Visual _textContainer;
+    private Visual _subTextContainer;
+    private Visual _scrolledDisplayNameContainer;
     private SpriteVisual _blurredBackgroundImageVisual;
 
     public ProfilePage()
@@ -54,9 +65,10 @@ public sealed partial class ProfilePage : Page
         safeAreaService.SafeAreaUpdated += OnSafeAreaUpdated;
     }
 
-    private void OnSafeAreaUpdated(object sender, SafeAreaUpdatedEventArgs e)
+    protected override void OnNavigatedFrom(NavigationEventArgs e)
     {
-        UpdateSizeDependentProperties();
+        var safeAreaService = Ioc.Default.GetRequiredService<ISafeAreaService>();
+        safeAreaService.SafeAreaUpdated -= OnSafeAreaUpdated;
     }
 
     private void Page_Loaded(object sender, RoutedEventArgs e)
@@ -67,33 +79,49 @@ public sealed partial class ProfilePage : Page
         // Update the ZIndex of the header container so that the header is above the items when scrolling
         var headerPresenter = (UIElement)VisualTreeHelper.GetParent((UIElement)RootList.Header);
         var headerContainer = (UIElement)VisualTreeHelper.GetParent(headerPresenter);
-        Canvas.SetZIndex((UIElement)headerContainer, 1);
+        Canvas.SetZIndex(headerContainer, 1);
 
         // Get the PropertySet that contains the scroll values from the ScrollViewer
         _scrollerPropertySet = ElementCompositionPreview.GetScrollViewerManipulationPropertySet(scrollViewer);
         _compositor = _scrollerPropertySet.Compositor;
 
+        // snag all the element visuals
         _headerGrid = ElementCompositionPreview.GetElementVisual(HeaderGrid);
         _profileImage = ElementCompositionPreview.GetElementVisual(ProfileImage);
+        _profileContainer = ElementCompositionPreview.GetElementVisual(ProfileContainer);
         _textContainer = ElementCompositionPreview.GetElementVisual(TextContainer);
+        _subTextContainer = ElementCompositionPreview.GetElementVisual(SubTextContainer);
+        _scrolledDisplayNameContainer = ElementCompositionPreview.GetElementVisual(ScrolledDisplayNameContainer);
+
+        // offset doesn't always work so enable translation on a few of these
+        ElementCompositionPreview.SetIsTranslationEnabled(ProfileImage, true);
+        ElementCompositionPreview.SetIsTranslationEnabled(ScrolledDisplayNameContainer, true);
+
+        // create the background visual that will host the blur for the header image
         _blurredBackgroundImageVisual = _compositor.CreateSpriteVisual();
 
+        // properties, most of these get updated when the size changes
         _props = _compositor.CreatePropertySet();
-        _props.InsertScalar("progress", 0);
-        _props.InsertScalar("scaleFactor", 0.375f);
+        _props.InsertScalar(PROGRESS_NODE, 0);
 
         UpdateSizeDependentProperties();
 
-        // Get references to our property sets for use with ExpressionNodes
+        // grab the properties of the scroll view
         var scrollingProperties = _scrollerPropertySet.GetSpecializedReference<ManipulationPropertySetReferenceNode>();
-        var props = _props.GetReference();
-        var progressNode = props.GetScalarProperty("progress");
-        var clampSizeNode = props.GetScalarProperty("clampSize");
-        var scaleFactorNode = props.GetScalarProperty("scaleFactor");
-        var sizeNode = props.GetScalarProperty("size");
-        var headerSizeNode = props.GetScalarProperty("headerSize");
 
-        // Create a blur effect to be animated based on scroll position
+        var props = _props.GetReference();
+        var progressNode = props.GetScalarProperty(PROGRESS_NODE);
+        var pixelsToMoveNode = props.GetScalarProperty(PIXELS_TO_MOVE_NODE);
+        var scaleFactorNode = props.GetScalarProperty(SCALE_FACTOR_NODE);
+
+        var totalSizeNode = props.GetScalarProperty(TOTAL_SIZE_NODE);
+
+        var headerSizeNode = props.GetScalarProperty(HEADER_SIZE_NODE);
+        var footerSizeNode = props.GetScalarProperty(FOOTER_SIZE_NODE);
+        var stickySizeNode = props.GetScalarProperty(STICKY_SIZE_NODE);
+        var textSizeNode = props.GetScalarProperty(TEXT_SIZE_NODE);
+        var imageSizeNode = props.GetScalarProperty(IMAGE_SIZE_NODE);
+
         var blurEffect = new GaussianBlurEffect()
         {
             Name = "blur",
@@ -111,70 +139,85 @@ public sealed partial class ProfilePage : Page
         _blurredBackgroundImageVisual.Brush = blurBrush;
         ElementCompositionPreview.SetElementChildVisual(ProfileBanner, _blurredBackgroundImageVisual);
 
-        ExpressionNode progressAnimation = EF.Clamp(-scrollingProperties.Translation.Y / clampSizeNode, 0, 1);
-        _props.StartAnimation("progress", progressAnimation);
+        // animate the progress value
+        var progressAnimation = EF.Clamp(-scrollingProperties.Translation.Y / pixelsToMoveNode, 0, 1);
+        _props.StartAnimation(PROGRESS_NODE, progressAnimation);
 
-        ExpressionNode blurAnimation = EF.Lerp(0, 20, progressNode);
+        // animate the blurriness with respect to progress
+        var blurAnimation = EF.Lerp(0, 20, progressNode);
         _blurredBackgroundImageVisual.Brush.Properties.StartAnimation("blur.BlurAmount", blurAnimation);
 
-        Visual profileContainer = ElementCompositionPreview.GetElementVisual(ProfileContainer);
-        ScalarNode headerTranslationAnimation = EF.Conditional(progressNode < 1, 0, -scrollingProperties.Translation.Y - clampSizeNode);
-        profileContainer.StartAnimation("Offset.Y", headerTranslationAnimation);
+        // move everything with the scroll viewer, make it sticky
+        var headerTranslationAnimation = EF.Conditional(progressNode < 1, 0, -scrollingProperties.Translation.Y - pixelsToMoveNode);
+        _profileContainer.StartAnimation("Offset.Y", headerTranslationAnimation);
 
-        ScalarNode headerGridTranslationAnimation = EF.Min(clampSizeNode, sizeNode - headerSizeNode) * progressNode;
-        ScalarNode headerScaleAnimation = EF.Lerp(1, 1.25f, EF.Clamp(scrollingProperties.Translation.Y / 50, 0, 1));
-
+        // move the header image with relation to the scroll amount, making sure to not overlap the sticky section
+        var headerGridTranslationAnimation = (EF.Min(pixelsToMoveNode, totalSizeNode - headerSizeNode - stickySizeNode)) * progressNode;
         _headerGrid.StartAnimation("Offset.Y", headerGridTranslationAnimation);
+
+        // create a springy effect when overscrolled
+        var headerScaleAnimation = EF.Lerp(1, 1.25f, EF.Clamp(scrollingProperties.Translation.Y / 50, 0, 1));
         _headerGrid.StartAnimation("Scale.X", headerScaleAnimation);
         _headerGrid.StartAnimation("Scale.Y", headerScaleAnimation);
 
-        ScalarNode scaleAnimation = EF.Lerp(1, scaleFactorNode, progressNode);
-        ScalarNode translateAnimation = EF.Lerp(0, clampSizeNode, progressNode);
+        // move the profile image to the bottom of the sticky header
+        var imageOffset = footerSizeNode + EF.Max(0, textSizeNode - imageSizeNode - 16); // 16 == margin.top + margin.bottom
+        var translateAnimation = EF.Vector3(0, EF.Lerp(0, imageOffset, progressNode), 0);
+        _profileImage.StartAnimation("Translation", translateAnimation);
+
+        // scale the profile image down
+        var scaleAnimation = EF.Lerp(1, scaleFactorNode, progressNode);
         _profileImage.StartAnimation("Scale.X", scaleAnimation);
         _profileImage.StartAnimation("Scale.Y", scaleAnimation);
-        _profileImage.StartAnimation("Offset.Y", translateAnimation);
 
-        ElementCompositionPreview.SetIsTranslationEnabled(TextContainer, true);
-
-        ScalarNode textOpacityAnimation = EF.Clamp(1 - (progressNode * 1.5f), 0, 1);
-        ScalarNode textTranslateAnimation = EF.Lerp(0, 64, progressNode);
+        // fade out the original text
+        var textOpacityAnimation = EF.Clamp(1 - (progressNode * 1.5f), 0, 1);
         _textContainer.StartAnimation("Opacity", textOpacityAnimation);
-        _textContainer.StartAnimation("Translation", EF.Vector3(-textTranslateAnimation, 0, 0));
 
-        Visual scrolledDisplayNameContainer = ElementCompositionPreview.GetElementVisual(ScrolledDisplayNameContainer);
-        ScalarNode scrolledTextOpacityAnimation = EF.Clamp((progressNode - 0.5f) * 2f, 0, 1);
-        scrolledDisplayNameContainer.StartAnimation("Offset.Y", translateAnimation);
-        scrolledDisplayNameContainer.StartAnimation("Opacity", scrolledTextOpacityAnimation);
+        // fade in and scroll up newly aligned text to replace the old ones
+        var scrolledTextOpacityAnimation = EF.Clamp((progressNode - 0.5f) * 2f, 0, 1);
+        var scrolledTextTranslateAnimation = EF.Vector3(0, EF.Lerp(0, footerSizeNode, progressNode), 0);
+        _scrolledDisplayNameContainer.StartAnimation("Translation", scrolledTextTranslateAnimation);
+        _scrolledDisplayNameContainer.StartAnimation("Opacity", scrolledTextOpacityAnimation);
     }
 
     private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
     {
-        if (_props == null)
-            return;
+        UpdateSizeDependentProperties();
+    }
 
+    private void OnSafeAreaUpdated(object sender, SafeAreaUpdatedEventArgs e)
+    {
         UpdateSizeDependentProperties();
     }
 
     private void UpdateSizeDependentProperties()
     {
+        if (ProfileContainer.ActualHeight == 0)
+            return;
+
         var safeAreaService = Ioc.Default.GetRequiredService<ISafeAreaService>();
 
         var titleBarHeight = (float)safeAreaService.State.Bounds.Top;
-        var size = (float)ProfileContainer.ActualHeight;
-        var clampHeight = (float)(52 + titleBarHeight);
-        var pixelsToMove = (float)(size - clampHeight);
+        var stickyHeight = (float)StickyFooter.ActualHeight;
+        var totalSize = (float)ProfileContainer.ActualHeight;
+        var clampHeight = (float)(52 + titleBarHeight) + stickyHeight;
+        var pixelsToMove = (float)(totalSize - clampHeight);
 
         if (_props != null)
         {
-            _props.InsertScalar("size", size);
-            _props.InsertScalar("clampSize", pixelsToMove);
-            _props.InsertScalar("headerOffset", clampHeight);
-            _props.InsertScalar("headerSize", (float)HeaderGrid.ActualHeight);
+            _props.InsertScalar(TOTAL_SIZE_NODE, totalSize);
+            _props.InsertScalar(PIXELS_TO_MOVE_NODE, pixelsToMove);
+            _props.InsertScalar(STICKY_SIZE_NODE, stickyHeight);
+            _props.InsertScalar(HEADER_SIZE_NODE, (float)HeaderGrid.ActualHeight);
+            _props.InsertScalar(FOOTER_SIZE_NODE, (float)SubTextContainer.ActualHeight);
+            _props.InsertScalar(IMAGE_SIZE_NODE, (float)ProfileImage.ActualHeight);
+            _props.InsertScalar(TEXT_SIZE_NODE, (float)TextContainer.ActualHeight);
+            _props.InsertScalar(SCALE_FACTOR_NODE, (float)(44.0 / ProfileImage.ActualHeight));
         }
 
         if (_blurredBackgroundImageVisual != null)
             _blurredBackgroundImageVisual.Size = new Vector2((float)ProfileBanner.ActualWidth, (float)ProfileBanner.ActualHeight);
-
         if (_headerGrid != null)
             _headerGrid.CenterPoint = new Vector3((float)(HeaderGrid.ActualWidth / 2), (float)HeaderGrid.ActualHeight, 0);
         if (_textContainer != null)
@@ -185,6 +228,8 @@ public sealed partial class ProfilePage : Page
 
     private void ProfileContainer_Tapped(object sender, TappedRoutedEventArgs e)
     {
+        if (e.Handled) return;
+
         var scrollView = RootList.FindDescendant<ScrollViewer>();
         if (scrollView is null)
             return;

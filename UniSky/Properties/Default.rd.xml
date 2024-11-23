@@ -23,7 +23,7 @@
 
     <Namespace Name="UniSky.ViewModels" Activate="Required Public" />
     
-    <Namespace Name="Microsoft.Toolkit.Uwp.UI.Animations.Expressions" Dynamic="Required All" />
+    <Namespace Name="Microsoft.Toolkit.Uwp.UI.Animations.Expressions" Dynamic="Required PublicAndInternal" />
   
     <!--<Assembly Name="Microsoft.Toolkit.Uwp.Notifications" Dynamic="Required All" />-->
   </Application>

@@ -25,9 +25,9 @@ public class SafeAreaUpdatedEventArgs : EventArgs
 
 internal class SafeAreaService : ISafeAreaService
 {
-    private CoreWindow _window;
-    private ApplicationView _applicationView;
-    private CoreApplicationView _coreApplicationView;
+    private readonly CoreWindow _window;
+    private readonly ApplicationView _applicationView;
+    private readonly CoreApplicationView _coreApplicationView;
 
     private SafeAreaInfo _state;
 

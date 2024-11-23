@@ -22,10 +22,10 @@
                     <ResourceDictionary.ThemeDictionaries>
                         <ResourceDictionary x:Key="Dark">
                             <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush" Color="#FF080808" />
-                            <SolidColorBrush x:Key="SystemControlSeparatorBrush" Color="{ThemeResource SystemBaseLowColor}"/>
+                            <SolidColorBrush x:Key="SystemControlSeparatorBrush" Color="#FF404040"/>
                         </ResourceDictionary>
                         <ResourceDictionary x:Key="Default">
-                            <SolidColorBrush x:Key="SystemControlSeparatorBrush" Color="{ThemeResource SystemBaseLowColor}"/>
+                            <SolidColorBrush x:Key="SystemControlSeparatorBrush" Color="#FFDEDEDE"/>
                         </ResourceDictionary>
                     </ResourceDictionary.ThemeDictionaries>
 

@@ -103,6 +103,8 @@ public partial class HomeViewModel : ViewModelBase
 
         var protocol = new ATProtocolBuilder()
             .WithLogger(atLogger)
+            .EnableAutoRenewSession(true)
+            .WithSessionRefreshInterval(TimeSpan.FromMinutes(30))
             .Build();
 
         protocolService.SetProtocol(protocol);
@@ -265,9 +267,9 @@ public partial class HomeViewModel : ViewModelBase
     internal void UpdateChecked()
     {
         this.OnPropertyChanged(nameof(HomeSelected),
-        nameof(SearchSelected),
-        nameof(NotificationsSelected),
-        nameof(ChatSelected),
-        nameof(ProfileSelected));
+            nameof(SearchSelected),
+            nameof(NotificationsSelected),
+            nameof(ChatSelected),
+            nameof(ProfileSelected));
     }
 }
