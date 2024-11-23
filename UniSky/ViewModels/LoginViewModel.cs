@@ -70,7 +70,8 @@ public partial class LoginViewModel : ViewModelBase
         }
         catch (Exception ex)
         {
-            Error = new ExceptionViewModel(ex);
+            syncContext.Post(() =>
+                 Error = new ExceptionViewModel(ex));
         }
     }
 
