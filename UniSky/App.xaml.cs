@@ -40,7 +40,7 @@ sealed partial class App : Application
 
         this.ConfigureServices();
 
-        ResourceContext.SetGlobalQualifierValue("Custom", "Twitter", ResourceQualifierPersistence.LocalMachine);
+        // ResourceContext.SetGlobalQualifierValue("Custom", "Twitter", ResourceQualifierPersistence.LocalMachine);
     }
 
     private void ConfigureServices()
