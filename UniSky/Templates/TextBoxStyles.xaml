@@ -36,7 +36,13 @@
                                         <Setter Target="PlaceholderTextContentPresenter.Foreground" Value="{ThemeResource TextControlPlaceholderForegroundDisabled}"/>
                                     </VisualState.Setters>
                                 </VisualState>
-                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="Normal">
+
+                                    <VisualState.Setters>
+                                        <Setter Target="ContentElement.Foreground" Value="{ThemeResource TextControlForeground}"/>
+                                        <Setter Target="PlaceholderTextContentPresenter.Foreground" Value="{ThemeResource TextControlPlaceholderForeground}"/>
+                                    </VisualState.Setters>
+                                </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
                         <Grid.ColumnDefinitions>

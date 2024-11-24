@@ -124,6 +124,15 @@ namespace UniSky.Controls.Sheet
         public static readonly DependencyProperty PrimaryButtonCommandProperty =
             DependencyProperty.Register("PrimaryButtonCommand", typeof(ICommand), typeof(SheetControl), new PropertyMetadata(null));
 
+        public bool IsPrimaryButtonEnabled
+        {
+            get { return (bool)GetValue(IsPrimaryButtonEnabledProperty); }
+            set { SetValue(IsPrimaryButtonEnabledProperty, value); }
+        }
+
+        public static readonly DependencyProperty IsPrimaryButtonEnabledProperty =
+            DependencyProperty.Register("IsPrimaryButtonEnabled", typeof(bool), typeof(SheetControl), new PropertyMetadata(true));
+
         public object SecondaryButtonContent
         {
             get => (object)GetValue(SecondaryButtonContentProperty);
@@ -160,13 +169,21 @@ namespace UniSky.Controls.Sheet
         public static readonly DependencyProperty SecondaryButtonCommandProperty =
             DependencyProperty.Register("SecondaryButtonCommand", typeof(ICommand), typeof(SheetControl), new PropertyMetadata(null));
 
+        public bool IsSecondaryButtonEnabled
+        {
+            get { return (bool)GetValue(IsSecondaryButtonEnabledProperty); }
+            set { SetValue(IsSecondaryButtonEnabledProperty, value); }
+        }
+
+        public static readonly DependencyProperty IsSecondaryButtonEnabledProperty =
+            DependencyProperty.Register("IsSecondaryButtonEnabled", typeof(bool), typeof(SheetControl), new PropertyMetadata(true));
+
         public event TypedEventHandler<SheetControl, RoutedEventArgs> Showing;
         public event TypedEventHandler<SheetControl, SheetHidingEventArgs> Hiding;
 
         public SheetControl()
         {
             this.DefaultStyleKey = typeof(SheetControl);
-            this.Loaded += OnLoaded;
         }
 
         internal void InvokeShowing()
@@ -182,10 +199,6 @@ namespace UniSky.Controls.Sheet
             await ev.WaitOnDeferral();
 
             return !ev.Cancel;
-        }
-
-        private void OnLoaded(object sender, RoutedEventArgs e)
-        {
         }
     }
 }

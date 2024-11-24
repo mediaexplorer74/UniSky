@@ -44,7 +44,8 @@
                                             Padding="{ThemeResource ButtonPadding}"
                                             Grid.Column="2"
                                             Visibility="{TemplateBinding PrimaryButtonVisibility}"
-                                            Command="{TemplateBinding PrimaryButtonCommand}">
+                                            Command="{TemplateBinding PrimaryButtonCommand}"
+                                            IsEnabled="{TemplateBinding IsPrimaryButtonEnabled}">
                                         <ContentPresenter x:Name="SheetPrimaryButtonPresenter"
                                                             Content="{TemplateBinding PrimaryButtonContent}"
                                                             ContentTemplate="{TemplateBinding PrimaryButtonContentTemplate}"/>
@@ -54,7 +55,8 @@
                                             Style="{ThemeResource TextBlockButtonStyle}"
                                             Grid.Column="0"
                                             Visibility="{TemplateBinding SecondaryButtonVisibility}"
-                                            Command="{TemplateBinding SecondaryButtonCommand}">
+                                            Command="{TemplateBinding SecondaryButtonCommand}"
+                                            IsEnabled="{TemplateBinding IsSecondaryButtonEnabled}">
                                         <ContentPresenter x:Name="SheetSecondaryButtonPresenter"
                                                         Content="{TemplateBinding SecondaryButtonContent}"
                                                         ContentTemplate="{TemplateBinding SecondaryButtonContentTemplate}"/>

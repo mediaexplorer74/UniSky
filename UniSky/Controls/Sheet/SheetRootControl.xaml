@@ -147,14 +147,14 @@
                                              To="1"
                                              Storyboard.TargetName="CompositionBackdropContainer"
                                              Storyboard.TargetProperty="Opacity"
-                                             Duration="00:00:00.5"
+                                             Duration="00:00:00.3"
                                              EasingFunction="{StaticResource ExponentialEaseEnter}"
                                              EnableDependentAnimation="True"/>
                             <DoubleAnimation From="0"
                                              To="1"
                                              Storyboard.TargetName="SheetBorder"
                                              Storyboard.TargetProperty="Opacity"
-                                             Duration="00:00:00.5"
+                                             Duration="00:00:00.3"
                                              EasingFunction="{StaticResource ExponentialEaseEnter}"
                                              EnableDependentAnimation="True"/>
                         </Storyboard>
@@ -206,14 +206,14 @@
                                              To="0"
                                              Storyboard.TargetName="CompositionBackdropContainer"
                                              Storyboard.TargetProperty="Opacity"
-                                             Duration="00:00:00.5"
+                                             Duration="00:00:00.3"
                                              EasingFunction="{StaticResource ExponentialEaseEnter}"
                                              EnableDependentAnimation="True"/>
                             <DoubleAnimation From="1"
                                              To="0"
                                              Storyboard.TargetName="SheetBorder"
                                              Storyboard.TargetProperty="Opacity"
-                                             Duration="00:00:00.5"
+                                             Duration="00:00:00.3"
                                              EasingFunction="{StaticResource ExponentialEaseEnter}"
                                              EnableDependentAnimation="True"/>
                         </Storyboard>

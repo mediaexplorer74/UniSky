@@ -55,13 +55,7 @@ namespace UniSky.Controls.Compose
             var deferral = e.GetDeferral();
             try
             {
-                var dialog = new MessageDialog("The current post will be lost!", "Discard post?");
-                var yesCommand = new UICommand("Yes");
-                var noCommand = new UICommand("No");
-                dialog.Commands.Add(yesCommand);
-                dialog.Commands.Add(noCommand);
-
-                if ((await dialog.ShowAsync()) == noCommand)
+                if (ViewModel.IsDirty && await new ComposeDiscardDraftDialog().ShowAsync() != ContentDialogResult.Primary)
                 {
                     e.Cancel = true;
                     return;
