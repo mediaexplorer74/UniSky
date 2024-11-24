@@ -72,4 +72,12 @@ public sealed partial class FeedsPage : Page
 
         scrollView.ChangeView(0, 0, null);
     }
+
+    private async void RefreshAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+    {
+        if (FeedsPivot.SelectedItem is not FeedViewModel feedVm)
+            return;
+
+        await feedVm.RefreshAsync();
+    }
 }
