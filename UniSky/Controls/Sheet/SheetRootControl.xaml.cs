@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using Microsoft.Toolkit.Uwp.UI;
+using Microsoft.Toolkit.Uwp.UI.Extensions;
 using UniSky.Pages;
 using UniSky.Services;
 using Windows.Foundation;
@@ -55,7 +58,13 @@ namespace UniSky.Controls.Sheet
 
         protected override Size ArrangeOverride(Size finalSize)
         {
-            TotalHeight = finalSize.Height;
+            if (finalSize.Width > 620)
+                TotalHeight = 64;
+            else
+                TotalHeight = finalSize.Height;
+
+            SheetRoot.Height = Math.Max(0, finalSize.Height - (SheetBorder.Margin.Top + SheetBorder.Margin.Bottom));
+
             return base.ArrangeOverride(finalSize);
         }
 
@@ -91,20 +100,9 @@ namespace UniSky.Controls.Sheet
         private void OnSafeAreaUpdated(object sender, SafeAreaUpdatedEventArgs e)
         {
             TitleBar.Height = e.SafeArea.Bounds.Top;
+            SheetBorder.Margin = new Thickness(0, 16 + e.SafeArea.Bounds.Top, 0, 0);
+            SheetRoot.Height = Math.Max(0, ActualHeight - (SheetBorder.Margin.Top + SheetBorder.Margin.Bottom));
             HostControl.Margin = new Thickness(e.SafeArea.Bounds.Left, 0, e.SafeArea.Bounds.Right, e.SafeArea.Bounds.Bottom);
-        }
-
-        private void SheetStates_CurrentStateChanged(object sender, VisualStateChangedEventArgs e)
-        {
-            if (e.NewState.Name == "Open")
-            {
-
-            }
-
-            if (e.NewState.Name == "Closed")
-            {
-
-            }
         }
 
         private async void RefreshContainer_RefreshRequested(MUXC.RefreshContainer sender, MUXC.RefreshRequestedEventArgs args)
@@ -112,6 +110,20 @@ namespace UniSky.Controls.Sheet
             var deferral = args.GetDeferral();
             await HideSheetAsync();
             deferral.Complete();
+        }
+
+        private void HideSheetStoryboard_Completed(object sender, object e)
+        {
+            if (SheetRoot.Child is SheetControl control)
+                SheetRoot.Child = null;
+
+            Effects.SetShadow(SheetBorder, null);
+        }
+
+        private void ShowSheetStoryboard_Completed(object sender, object e)
+        {
+            CommonShadow.CastTo = CompositionBackdropContainer;
+            Effects.SetShadow(SheetBorder, CommonShadow);
         }
     }
 }

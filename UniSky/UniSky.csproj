@@ -185,6 +185,16 @@
     <Compile Include="Helpers\Geometry\Parsers\CanvasGeometryParser.cs" />
     <Compile Include="Helpers\Geometry\Scalar.cs" />
     <Compile Include="Helpers\Geometry\Utils.cs" />
+    <Compile Include="Helpers\Shadows\AttachedCardShadow.cs" />
+    <Compile Include="Helpers\Shadows\AttachedDropShadow.cs" />
+    <Compile Include="Helpers\Shadows\AttachedShadowBase.cs" />
+    <Compile Include="Helpers\Shadows\AttachedShadowElementContext.cs" />
+    <Compile Include="Helpers\Shadows\Effects.cs" />
+    <Compile Include="Helpers\Shadows\IAlphaMaskProvider.cs" />
+    <Compile Include="Helpers\Shadows\IAttachedShadow.cs" />
+    <Compile Include="Helpers\Shadows\TypedResourceKey.cs" />
+    <Compile Include="Helpers\StringExtensions.cs" />
+    <Compile Include="Helpers\UIElementExtensions.cs" />
     <Compile Include="Helpers\UrlHelpers.cs" />
     <Compile Include="Pages\ProfilePage.xaml.cs">
       <DependentUpon>ProfilePage.xaml</DependentUpon>

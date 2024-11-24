@@ -186,37 +186,6 @@ namespace UniSky.Controls.Sheet
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (!DesignMode.DesignModeEnabled)
-            {
-                var safeAreaService = Ioc.Default.GetService<ISafeAreaService>();
-                if (safeAreaService != null)
-                    safeAreaService.SafeAreaUpdated += OnSafeAreaUpdated;
-            }
-        }
-
-        private void OnSafeAreaUpdated(object sender, SafeAreaUpdatedEventArgs e)
-        {
-            var sheetScrollViewer = (ScrollViewer)this.FindDescendantByName("SheetScrollViewer");
-            var rootGrid = (Grid)this.FindDescendantByName("RootGrid");
-
-            if (rootGrid != null && sheetScrollViewer != null)
-            {
-                sheetScrollViewer.Padding = new Thickness(0, 16 + e.SafeArea.Bounds.Top, 0, 0);
-                rootGrid.Height = Math.Max(0, ActualHeight - (sheetScrollViewer.Padding.Top + sheetScrollViewer.Padding.Bottom));
-            }
-        }
-
-        protected override Size ArrangeOverride(Size finalSize)
-        {
-            this.ApplyTemplate();
-
-            var sheetScrollViewer = (ScrollViewer)this.FindDescendantByName("SheetScrollViewer");
-            var rootGrid = (Grid)this.FindDescendantByName("RootGrid");
-
-            if (rootGrid != null && sheetScrollViewer != null)
-                rootGrid.Height = finalSize.Height - (sheetScrollViewer.Padding.Top + sheetScrollViewer.Padding.Bottom);
-
-            return base.ArrangeOverride(finalSize);
         }
     }
 }
