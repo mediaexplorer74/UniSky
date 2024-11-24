@@ -1,0 +1,97 @@
+﻿<UserControl
+    x:Class="UniSky.Controls.Sheet.SheetRootControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UniSky.Controls.Sheet"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:media="using:Microsoft.Toolkit.Uwp.UI.Media"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+    <UserControl.Resources>
+        <ExponentialEase x:Key="ExponentialEaseEnter"
+                         EasingMode="EaseOut"
+                         Exponent="7"/>
+        <ExponentialEase x:Key="ExponentialEaseExit"
+                         EasingMode="EaseIn"
+                         Exponent="5"/>
+        <Storyboard x:Key="ShowSheetStoryboard"
+                    x:Name="ShowSheetStoryboard">
+            <DoubleAnimation x:Name="ShowDoubleAnimation"
+                             To="0"
+                             Storyboard.TargetName="SheetTransform"
+                             Storyboard.TargetProperty="Y"
+                             Duration="00:00:00.5"
+                             EasingFunction="{StaticResource ExponentialEaseEnter}"/>
+            <DoubleAnimation From="1"
+                             To="0.9"
+                             Storyboard.TargetName="ContentScale"
+                             Storyboard.TargetProperty="ScaleX"
+                             Duration="00:00:00.5"
+                             EasingFunction="{StaticResource ExponentialEaseEnter}"/>
+            <DoubleAnimation From="1"
+                             To="0.9"
+                             Storyboard.TargetName="ContentScale"
+                             Storyboard.TargetProperty="ScaleY"
+                             Duration="00:00:00.5"
+                             EasingFunction="{StaticResource ExponentialEaseEnter}"/>
+            <DoubleAnimation From="0"
+                             To="10"
+                             Storyboard.TargetName="BlurBrush"
+                             Storyboard.TargetProperty="Amount"
+                             Duration="00:00:00.5"
+                             EasingFunction="{StaticResource ExponentialEaseEnter}"
+                             EnableDependentAnimation="True"/>
+        </Storyboard>
+        <Storyboard x:Key="HideSheetStoryboard"
+                    x:Name="HideSheetStoryboard">
+            <DoubleAnimation x:Name="HideDoubleAnimation"
+                             To="0"
+                             Storyboard.TargetName="SheetTransform"
+                             Storyboard.TargetProperty="Y"
+                             Duration="00:00:00.5"
+                             EasingFunction="{StaticResource ExponentialEaseEnter}"/>
+            <DoubleAnimation From="0.9"
+                             To="1"
+                             Storyboard.TargetName="ContentScale"
+                             Storyboard.TargetProperty="ScaleX"
+                             Duration="00:00:00.5"
+                             EasingFunction="{StaticResource ExponentialEaseEnter}"/>
+            <DoubleAnimation From="0.9"
+                             To="1"
+                             Storyboard.TargetName="ContentScale"
+                             Storyboard.TargetProperty="ScaleY"
+                             Duration="00:00:00.5"
+                             EasingFunction="{StaticResource ExponentialEaseEnter}"/>
+            <DoubleAnimation From="10"
+                             To="0"
+                             Storyboard.TargetName="BlurBrush"
+                             Storyboard.TargetProperty="Amount"
+                             Duration="00:00:00.5"
+                             EasingFunction="{StaticResource ExponentialEaseEnter}"
+                             EnableDependentAnimation="True"/>
+        </Storyboard>
+    </UserControl.Resources>
+
+    <Grid Background="{x:Bind Background}">
+        <Border Child="{x:Bind ContentElement}"
+                RenderTransformOrigin="0.5,0.5">
+            <Border.RenderTransform>
+                <ScaleTransform x:Name="ContentScale" ScaleX="1" ScaleY="1"/>
+            </Border.RenderTransform>
+        </Border>
+
+        <Border x:Name="CompositionBackdropContainer"
+                IsHitTestVisible="False">
+            <Border.Background>
+                <media:BackdropBlurBrush x:Name="BlurBrush" Amount="0" />
+            </Border.Background>
+        </Border>
+
+        <local:SheetHostControl x:Name="HostControl">
+            <local:SheetHostControl.RenderTransform>
+                <TranslateTransform x:Name="SheetTransform" Y="0"/>
+            </local:SheetHostControl.RenderTransform>
+        </local:SheetHostControl>
+    </Grid>
+</UserControl>

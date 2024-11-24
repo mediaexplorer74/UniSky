@@ -146,6 +146,12 @@
     <Compile Include="Controls\ConstrainedBox\AspectRatioConstraint.cs" />
     <Compile Include="Controls\ConstrainedBox\ConstrainedBox.cs" />
     <Compile Include="Controls\ConstrainedBox\ConstrainedBox.Properties.cs" />
+    <Compile Include="Controls\Sheet\SheetHostControl.xaml.cs">
+      <DependentUpon>SheetHostControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Sheet\SheetRootControl.xaml.cs">
+      <DependentUpon>SheetRootControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Converters\Static.cs" />
     <Compile Include="DataTemplates\PostEmbedTemplateSelector.cs" />
     <Compile Include="Extensions\HairlineBorder.cs" />
@@ -347,6 +353,14 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="Controls\Compose\ComposeDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Sheet\SheetHostControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Sheet\SheetRootControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
