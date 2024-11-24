@@ -51,7 +51,8 @@ public class FeedItemCollection : ObservableCollection<PostViewModel>, ISupportI
 
     public async Task RefreshAsync()
     {
-        await semaphore.WaitAsync();
+        // already refreshing
+        if (!await semaphore.WaitAsync(10)) return;
 
         try
         {
@@ -139,7 +140,7 @@ public class FeedItemCollection : ObservableCollection<PostViewModel>, ISupportI
                     this.Add(new PostViewModel(item));
             });
 
-            if (posts.Count == 0)
+            if (posts.Count == 0 || string.IsNullOrWhiteSpace(this.cursor))
                 HasMoreItems = false;
 
             return new LoadMoreItemsResult() { Count = (uint)posts.Count };
