@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using FishyFlip.Lexicon.App.Bsky.Actor;
 using FishyFlip.Lexicon.App.Bsky.Feed;
@@ -41,8 +42,8 @@ public partial class FeedsViewModel : ViewModelBase
     [RelayCommand]
     public async Task Post()
     {
-        Window.Current.Content.FindDescendant<SheetRootControl>()
-            .ShowSheet(typeof(ProfilePage), (await protocolService.Protocol.GetProfileAsync(protocolService.Protocol.Session.Did)).HandleResult());
+        var sheetsService = Ioc.Default.GetRequiredService<ISheetService>();
+        await sheetsService.ShowAsync<ComposeSheet>();
     }
 
     private async Task LoadAsync()

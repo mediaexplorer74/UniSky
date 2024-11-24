@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.Input;
 using FishyFlip.Lexicon.App.Bsky.Actor;
 using FishyFlip.Tools;
 using Microsoft.Extensions.Logging;
@@ -29,6 +31,13 @@ public partial class ComposeViewModel : ViewModelBase
         this.logger = logger;
 
         Task.Run(LoadAsync);
+    }
+
+    [RelayCommand]
+    private async Task Hide()
+    {
+        var sheetService = Ioc.Default.GetRequiredService<ISheetService>();
+        await sheetService.TryCloseAsync();
     }
 
     private async Task LoadAsync()
