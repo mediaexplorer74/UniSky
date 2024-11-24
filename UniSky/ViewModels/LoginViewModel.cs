@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FishyFlip;
+using FishyFlip.Lexicon.Com.Atproto.Server;
 using FishyFlip.Models;
+using FishyFlip.Tools;
 using UniSky.Extensions;
 using UniSky.Helpers;
 using UniSky.Models;
@@ -58,9 +60,12 @@ public partial class LoginViewModel : ViewModelBase
                 .WithInstanceUrl(new Uri(Host));
 
             using var protocol = builder.Build();
-            var session = await protocol.AuthenticateWithPasswordAsync(Username, Password, CancellationToken.None)
-                .ConfigureAwait(false);
 
+            var createSession = (await protocol.CreateSessionAsync(Username, Password, cancellationToken: CancellationToken.None)
+                .ConfigureAwait(false))
+                .HandleResult();
+
+            var session = new Session(createSession.Did, createSession.DidDoc, createSession.Handle, createSession.Email, createSession.AccessJwt, createSession.RefreshJwt);
             var loginModel = this.loginService.SaveLogin(normalisedHost, Username, Password);
             var sessionModel = new SessionModel(true, normalisedHost, session);
 
