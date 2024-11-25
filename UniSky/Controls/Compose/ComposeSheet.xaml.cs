@@ -40,7 +40,13 @@ namespace UniSky.Controls.Compose
             this.InitializeComponent();
             this.ViewModel = ActivatorUtilities.CreateInstance<ComposeViewModel>(Ioc.Default);
             this.Showing += OnShowing;
+            this.Shown += OnShown;
             this.Hiding += OnHiding;
+        }
+
+        private void OnShown(SheetControl sender, RoutedEventArgs args)
+        {
+            PrimaryTextBox.Focus(FocusState.Programmatic);
         }
 
         private void OnShowing(SheetControl sender, RoutedEventArgs e)

@@ -179,7 +179,9 @@ namespace UniSky.Controls.Sheet
             DependencyProperty.Register("IsSecondaryButtonEnabled", typeof(bool), typeof(SheetControl), new PropertyMetadata(true));
 
         public event TypedEventHandler<SheetControl, RoutedEventArgs> Showing;
+        public event TypedEventHandler<SheetControl, RoutedEventArgs> Shown;
         public event TypedEventHandler<SheetControl, SheetHidingEventArgs> Hiding;
+        public event TypedEventHandler<SheetControl, RoutedEventArgs> Hidden;
 
         public SheetControl()
         {
@@ -199,6 +201,16 @@ namespace UniSky.Controls.Sheet
             await ev.WaitOnDeferral();
 
             return !ev.Cancel;
+        }
+
+        internal void InvokeShown()
+        {
+            Shown?.Invoke(this, new RoutedEventArgs());
+        }
+
+        internal void InvokeHidden()
+        {
+            Hidden?.Invoke(this, new RoutedEventArgs());
         }
     }
 }

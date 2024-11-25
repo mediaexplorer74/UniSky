@@ -112,18 +112,26 @@ namespace UniSky.Controls.Sheet
             deferral.Complete();
         }
 
+        private void ShowSheetStoryboard_Completed(object sender, object e)
+        {
+            if (SheetRoot.Child is SheetControl control)
+            {
+                control.InvokeShown();
+            }
+
+            CommonShadow.CastTo = CompositionBackdropContainer;
+            Effects.SetShadow(SheetBorder, CommonShadow);
+        }
+
         private void HideSheetStoryboard_Completed(object sender, object e)
         {
             if (SheetRoot.Child is SheetControl control)
+            {
+                control.InvokeHidden();
                 SheetRoot.Child = null;
+            }
 
             Effects.SetShadow(SheetBorder, null);
-        }
-
-        private void ShowSheetStoryboard_Completed(object sender, object e)
-        {
-            CommonShadow.CastTo = CompositionBackdropContainer;
-            Effects.SetShadow(SheetBorder, CommonShadow);
         }
     }
 }

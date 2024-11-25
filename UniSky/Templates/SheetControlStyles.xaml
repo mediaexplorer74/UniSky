@@ -41,7 +41,6 @@
 
                                     <Button x:Name="PrimaryButton"
                                             Style="{ThemeResource AccentButtonStyle}"
-                                            Padding="{ThemeResource ButtonPadding}"
                                             Grid.Column="2"
                                             Visibility="{TemplateBinding PrimaryButtonVisibility}"
                                             Command="{TemplateBinding PrimaryButtonCommand}"
