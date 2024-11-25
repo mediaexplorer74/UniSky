@@ -131,7 +131,6 @@
 
                         <Button x:Name="FollowButton"
                                 Style="{ThemeResource AccentButtonStyle}"
-                                Padding="{ThemeResource ButtonPadding}"
                                 Grid.Column="1"
                                 Grid.RowSpan="2"
                                 VerticalAlignment="Center">
