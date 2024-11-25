@@ -16,7 +16,6 @@ namespace UniSky.Converters
             => !x;
         public static bool NotNull(object x)
             => x is not null;
-
         public static bool NotNullOrWhiteSpace(string s)
             => !string.IsNullOrWhiteSpace(s);
     }

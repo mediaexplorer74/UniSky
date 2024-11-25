@@ -79,13 +79,17 @@ namespace UniSky.Controls.Compose
 
         private void OnInputPaneShowing(InputPane sender, InputPaneVisibilityEventArgs args)
         {
-            ContentGrid.Padding = new Thickness(0, 0, 0, args.OccludedRect.Top - args.OccludedRect.Bottom);
+            if (ActualWidth > 620) return;
+
+            ContentGrid.Padding = new Thickness(0, 0, 0, args.OccludedRect.Height);
             args.EnsuredFocusedElementInView = true;
         }
 
         private void OnInputPaneHiding(InputPane sender, InputPaneVisibilityEventArgs args)
         {
-            ContentGrid.Padding = new Thickness(0, 0, 0, args.OccludedRect.Top - args.OccludedRect.Bottom);
+            if (ActualWidth > 620) return;
+
+            ContentGrid.Padding = new Thickness(0, 0, 0, args.OccludedRect.Height);
             args.EnsuredFocusedElementInView = true;
         }
 

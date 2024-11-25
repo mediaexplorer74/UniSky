@@ -22,15 +22,18 @@
                         <FeedTemplates xmlns="using:UniSky.Templates"/>
 
                         <!-- Controls -->
-                        <ResourceDictionary Source="/Templates/SheetControlStyles.xaml"/>
+                        <ResourceDictionary Source="/Controls/Sheet/SheetControl.xaml"/>
+                        <ResourceDictionary Source="/Controls/RadialProgressBar/RadialProgressBar.xaml"/>
                     </ResourceDictionary.MergedDictionaries>
                     <ResourceDictionary.ThemeDictionaries>
                         <ResourceDictionary x:Key="Dark">
                             <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush" Color="#FF080808" />
                             <SolidColorBrush x:Key="SystemControlSeparatorBrush" Color="#FF404040"/>
+                            <Color x:Key="SystemListExtraLowColor">#10FFFFFF</Color>
                         </ResourceDictionary>
                         <ResourceDictionary x:Key="Default">
                             <SolidColorBrush x:Key="SystemControlSeparatorBrush" Color="#FFDEDEDE"/>
+                            <Color x:Key="SystemListExtraLowColor">#10000000</Color>
                         </ResourceDictionary>
                     </ResourceDictionary.ThemeDictionaries>
 
@@ -47,6 +50,9 @@
 
                     <x:Double x:Key="ControlContentThemeFontSize">14</x:Double>
                     <x:Double x:Key="ContentControlFontSize">14</x:Double>
+
+                    <SolidColorBrush x:Key="SystemControlBackgroundListExtraLowBrush"
+                                     Color="{ThemeResource SystemListExtraLowColor}"/>
 
                     <Style TargetType="sheets:SheetControl" BasedOn="{StaticResource DefaultSheetControlStyle}"/>
                 </ResourceDictionary>

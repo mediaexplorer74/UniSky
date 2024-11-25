@@ -13,6 +13,8 @@ using UniSky.Services;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Composition;
+using Windows.UI.Core;
+using Windows.UI.Core.Preview;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -58,12 +60,16 @@ namespace UniSky.Controls.Sheet
 
         protected override Size ArrangeOverride(Size finalSize)
         {
-            if (finalSize.Width > 620)
+            if (!double.IsInfinity(HostControl.MaxHeight))
+            {
                 TotalHeight = 64;
+                SheetRoot.Height = Math.Max(0, HostControl.MaxHeight - (SheetBorder.Margin.Top + SheetBorder.Margin.Bottom) - (HostControl.Margin.Top + HostControl.Margin.Bottom));
+            }
             else
+            {
                 TotalHeight = finalSize.Height;
-
-            SheetRoot.Height = Math.Max(0, finalSize.Height - (SheetBorder.Margin.Top + SheetBorder.Margin.Bottom));
+                SheetRoot.Height = Math.Max(0, finalSize.Height - (SheetBorder.Margin.Top + SheetBorder.Margin.Bottom) - (HostControl.Margin.Top + HostControl.Margin.Bottom));
+            }
 
             return base.ArrangeOverride(finalSize);
         }
@@ -76,8 +82,18 @@ namespace UniSky.Controls.Sheet
             VisualStateManager.GoToState(this, "Open", true);
 
             Window.Current.SetTitleBar(TitleBar);
+
             var safeAreaService = Ioc.Default.GetRequiredService<ISafeAreaService>();
             safeAreaService.SafeAreaUpdated += OnSafeAreaUpdated;
+
+            var systemNavigationManager = SystemNavigationManager.GetForCurrentView();
+            systemNavigationManager.BackRequested += OnBackRequested;
+        }
+
+        private async void OnBackRequested(object sender, BackRequestedEventArgs e)
+        {
+            e.Handled = true;
+            await HideSheetAsync();
         }
 
         internal async Task<bool> HideSheetAsync()
@@ -94,6 +110,9 @@ namespace UniSky.Controls.Sheet
             var safeAreaService = Ioc.Default.GetRequiredService<ISafeAreaService>();
             safeAreaService.SafeAreaUpdated -= OnSafeAreaUpdated;
 
+            var systemNavigationManager = SystemNavigationManager.GetForCurrentView();
+            systemNavigationManager.BackRequested -= OnBackRequested;
+
             return true;
         }
 
@@ -101,8 +120,16 @@ namespace UniSky.Controls.Sheet
         {
             TitleBar.Height = e.SafeArea.Bounds.Top;
             SheetBorder.Margin = new Thickness(0, 16 + e.SafeArea.Bounds.Top, 0, 0);
-            SheetRoot.Height = Math.Max(0, ActualHeight - (SheetBorder.Margin.Top + SheetBorder.Margin.Bottom));
             HostControl.Margin = new Thickness(e.SafeArea.Bounds.Left, 0, e.SafeArea.Bounds.Right, e.SafeArea.Bounds.Bottom);
+
+            if (!double.IsInfinity(HostControl.MaxHeight))
+            {
+                SheetRoot.Height = Math.Max(0, HostControl.MaxHeight - (SheetBorder.Margin.Top + SheetBorder.Margin.Bottom) - (HostControl.Margin.Top + HostControl.Margin.Bottom));
+            }
+            else
+            {
+                SheetRoot.Height = Math.Max(0, ActualHeight - (SheetBorder.Margin.Top + SheetBorder.Margin.Bottom) - (HostControl.Margin.Top + HostControl.Margin.Bottom));
+            }
         }
 
         private async void RefreshContainer_RefreshRequested(MUXC.RefreshContainer sender, MUXC.RefreshRequestedEventArgs args)

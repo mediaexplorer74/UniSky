@@ -20,9 +20,12 @@ public partial class ComposeViewModel : ViewModelBase
 {
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanPost))]
+    [NotifyPropertyChangedFor(nameof(Characters))]
     private string _text;
     [ObservableProperty]
     private string _avatarUrl;
+    [ObservableProperty]
+    private int maxCharacters;
 
     private readonly IProtocolService protocolService;
     private readonly ILogger<ComposeViewModel> logger;
@@ -30,10 +33,11 @@ public partial class ComposeViewModel : ViewModelBase
     // TODO: this but better
     public bool IsDirty
         => !string.IsNullOrEmpty(Text);
-
     // TODO: ditto
     public bool CanPost
-        => !string.IsNullOrEmpty(Text);
+        => !string.IsNullOrEmpty(Text) && Text.Length <= 300;
+    public int Characters
+        => Text?.Length ?? 0;
 
     public ComposeViewModel(
         IProtocolService protocolService,
@@ -41,6 +45,8 @@ public partial class ComposeViewModel : ViewModelBase
     {
         this.protocolService = protocolService;
         this.logger = logger;
+
+        this.MaxCharacters = 300;
 
         Task.Run(LoadAsync);
     }
