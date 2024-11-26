@@ -37,7 +37,7 @@
             <Grid.Background>
                 <SolidColorBrush Opacity="0.2" Color="{ThemeResource SystemErrorTextColor}"/>
             </Grid.Background>
-            
+
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
@@ -61,42 +61,93 @@
                      VerticalAlignment="Top"
                      Background="Transparent"
                      IsIndeterminate="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
-        
-        <UserControl Margin="12"
-                     Grid.Row="1"
+
+        <UserControl Grid.Row="1"
                      HorizontalAlignment="Stretch"
                      HorizontalContentAlignment="Stretch"
                      VerticalAlignment="Stretch"
                      VerticalContentAlignment="Stretch"
                      IsEnabled="{x:Bind converters:Static.Not(ViewModel.IsLoading), Mode=OneWay}">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Ellipse Width="64" 
-                         Height="64"
-                         Margin="0,0,8,0"
-                         Grid.RowSpan="2"
-                         VerticalAlignment="Top">
-                    <Ellipse.Fill>
-                        <ImageBrush>
-                            <ImageBrush.ImageSource>
-                                <BitmapImage UriSource="{Binding AvatarUrl}"
-                                             DecodePixelWidth="48"
-                                             DecodePixelHeight="48"
-                                             DecodePixelType="Logical"/>
-                            </ImageBrush.ImageSource>
-                        </ImageBrush>
-                    </Ellipse.Fill>
-                </Ellipse>
-                <TextBox x:Name="PrimaryTextBox"
-                         Style="{StaticResource BorderlessTextBoxStyle}"
-                         Grid.Column="1"
-                         Text="{x:Bind ViewModel.Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                         PlaceholderText="What's happening?" 
-                         MaxLength="300" />
-            </Grid>
+            <ScrollViewer HorizontalScrollMode="Disabled"
+                          VerticalScrollMode="Auto"
+                          IsVerticalScrollChainingEnabled="True"
+                          IsVerticalRailEnabled="True"
+                          Padding="12">
+                <StackPanel>
+                    <Grid x:Name="ReplyContainer"
+                          x:Load="{x:Bind ViewModel.HasReply}"
+                          Margin="0,0,0,8"
+                          BorderBrush="{ThemeResource SystemControlSeparatorBrush}"
+                          extensions:HairlineBorder.Thickness="0,0,0,1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Ellipse Width="42" 
+                                 Height="42"
+                                 Margin="0,0,8,0"
+                                 VerticalAlignment="Top">
+                            <Ellipse.Fill>
+                                <ImageBrush>
+                                    <ImageBrush.ImageSource>
+                                        <BitmapImage UriSource="{Binding ReplyTo.Author.AvatarUrl}"
+                                                     DecodePixelWidth="48"
+                                                     DecodePixelHeight="48"
+                                                     DecodePixelType="Logical"/>
+                                    </ImageBrush.ImageSource>
+                                </ImageBrush>
+                            </Ellipse.Fill>
+                        </Ellipse>
+                        <StackPanel Grid.Column="1"
+                                    Margin="0,0,0,8">
+                            <TextBlock Foreground="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"                  
+                                       VerticalAlignment="Top">                
+                                 <Run Text="{x:Bind ViewModel.ReplyTo.Author.Name, Mode=OneWay}"           
+                                      FontWeight="Bold"                        
+                                      Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}"/>                    
+                                 <Run Text="{x:Bind ViewModel.ReplyTo.Author.Handle, Mode=OneWay}"/>
+                            </TextBlock>
+
+                            <TextBlock x:Name="MainContent"
+                                       x:Load="{x:Bind converters:Static.NotNullOrWhiteSpace(ViewModel.ReplyTo.Text)}"
+                                       Text="{x:Bind ViewModel.ReplyTo.Text}"
+                                       TextWrapping="Wrap"
+                                       TextTrimming="CharacterEllipsis"
+                                       MaxLines="4"
+                                       Margin="0,0,0,4"
+                                       VerticalAlignment="Top"/>
+                        </StackPanel>
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Ellipse Width="64" 
+                                 Height="64"
+                                 Margin="0,0,8,0"
+                                 VerticalAlignment="Top">
+                            <Ellipse.Fill>
+                                <ImageBrush>
+                                    <ImageBrush.ImageSource>
+                                        <BitmapImage UriSource="{Binding AvatarUrl}"
+                                                     DecodePixelWidth="48"
+                                                     DecodePixelHeight="48"
+                                                     DecodePixelType="Logical"/>
+                                    </ImageBrush.ImageSource>
+                                </ImageBrush>
+                            </Ellipse.Fill>
+                        </Ellipse>
+                        <TextBox x:Name="PrimaryTextBox"
+                                 Style="{StaticResource BorderlessTextBoxStyle}"
+                                 Grid.Column="1"
+                                 Text="{x:Bind ViewModel.Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                 PlaceholderText="What's happening?" 
+                                 MaxLength="300" />
+                    </Grid>
+
+                </StackPanel>
+            </ScrollViewer>
         </UserControl>
 
         <Grid x:Name="FooterContainer"

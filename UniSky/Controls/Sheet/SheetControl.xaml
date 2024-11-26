@@ -3,7 +3,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:UniSky"
     xmlns:sheets="using:UniSky.Controls.Sheet"
-    xmlns:extensions="using:UniSky.Extensions">
+    xmlns:extensions="using:UniSky.Extensions" 
+    xmlns:w1709="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 5)">
 
     <Style x:Key="DefaultSheetControlStyle" TargetType="sheets:SheetControl">
         <Setter Property="Template">
@@ -45,6 +46,9 @@
                                             Visibility="{TemplateBinding PrimaryButtonVisibility}"
                                             Command="{TemplateBinding PrimaryButtonCommand}"
                                             IsEnabled="{TemplateBinding IsPrimaryButtonEnabled}">
+                                        <w1709:Button.KeyboardAccelerators>
+                                            <w1709:KeyboardAccelerator Modifiers="Control" Key="Enter"/>
+                                        </w1709:Button.KeyboardAccelerators>
                                         <ContentPresenter x:Name="SheetPrimaryButtonPresenter"
                                                             Content="{TemplateBinding PrimaryButtonContent}"
                                                             ContentTemplate="{TemplateBinding PrimaryButtonContentTemplate}"/>
@@ -56,6 +60,9 @@
                                             Visibility="{TemplateBinding SecondaryButtonVisibility}"
                                             Command="{TemplateBinding SecondaryButtonCommand}"
                                             IsEnabled="{TemplateBinding IsSecondaryButtonEnabled}">
+                                        <w1709:Button.KeyboardAccelerators>
+                                            <w1709:KeyboardAccelerator Key="Escape"/>
+                                        </w1709:Button.KeyboardAccelerators>
                                         <ContentPresenter x:Name="SheetSecondaryButtonPresenter"
                                                         Content="{TemplateBinding SecondaryButtonContent}"
                                                         ContentTemplate="{TemplateBinding SecondaryButtonContentTemplate}"/>

@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using UniSky.Controls.Sheet;
 using UniSky.ViewModels.Compose;
+using UniSky.ViewModels.Posts;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Popups;
@@ -38,22 +39,30 @@ namespace UniSky.Controls.Compose
              : base()
         {
             this.InitializeComponent();
-            this.ViewModel = ActivatorUtilities.CreateInstance<ComposeViewModel>(Ioc.Default);
             this.Showing += OnShowing;
             this.Shown += OnShown;
             this.Hiding += OnHiding;
         }
 
-        private void OnShown(SheetControl sender, RoutedEventArgs args)
-        {
-            PrimaryTextBox.Focus(FocusState.Programmatic);
-        }
-
-        private void OnShowing(SheetControl sender, RoutedEventArgs e)
+        private void OnShowing(SheetControl sender, SheetShowingEventArgs e)
         {
             var inputPane = InputPane.GetForCurrentView();
             inputPane.Showing += OnInputPaneShowing;
             inputPane.Hiding += OnInputPaneHiding;
+
+            if (e.Parameter is PostViewModel replyTo)
+            {
+                this.ViewModel = ActivatorUtilities.CreateInstance<ComposeViewModel>(Ioc.Default, replyTo);
+            }
+            else
+            {
+                this.ViewModel = ActivatorUtilities.CreateInstance<ComposeViewModel>(Ioc.Default);
+            }
+        }
+
+        private void OnShown(SheetControl sender, RoutedEventArgs args)
+        {
+            PrimaryTextBox.Focus(FocusState.Programmatic);
         }
 
         private async void OnHiding(SheetControl sender, SheetHidingEventArgs e)

@@ -22,6 +22,16 @@ using Windows.UI.Xaml.Media;
 
 namespace UniSky.Controls.Sheet
 {
+    public class SheetShowingEventArgs : RoutedEventArgs
+    {
+        public object Parameter { get; }
+
+        public SheetShowingEventArgs(object parameter)
+        {
+            Parameter = parameter;
+        }
+    }
+
     public class SheetHidingEventArgs : RoutedEventArgs
     {
         private Deferral _deferral;
@@ -178,7 +188,7 @@ namespace UniSky.Controls.Sheet
         public static readonly DependencyProperty IsSecondaryButtonEnabledProperty =
             DependencyProperty.Register("IsSecondaryButtonEnabled", typeof(bool), typeof(SheetControl), new PropertyMetadata(true));
 
-        public event TypedEventHandler<SheetControl, RoutedEventArgs> Showing;
+        public event TypedEventHandler<SheetControl, SheetShowingEventArgs> Showing;
         public event TypedEventHandler<SheetControl, RoutedEventArgs> Shown;
         public event TypedEventHandler<SheetControl, SheetHidingEventArgs> Hiding;
         public event TypedEventHandler<SheetControl, RoutedEventArgs> Hidden;
@@ -188,9 +198,9 @@ namespace UniSky.Controls.Sheet
             this.DefaultStyleKey = typeof(SheetControl);
         }
 
-        internal void InvokeShowing()
+        internal void InvokeShowing(object parameter)
         {
-            Showing?.Invoke(this, new RoutedEventArgs());
+            Showing?.Invoke(this, new SheetShowingEventArgs(parameter));
         }
 
         internal async Task<bool> InvokeHidingAsync()

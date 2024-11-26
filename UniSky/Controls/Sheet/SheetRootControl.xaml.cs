@@ -74,10 +74,10 @@ namespace UniSky.Controls.Sheet
             return base.ArrangeOverride(finalSize);
         }
 
-        internal void ShowSheet(SheetControl control)
+        internal void ShowSheet(SheetControl control, object parameter)
         {
             SheetRoot.Child = control;
-            control.InvokeShowing();
+            control.InvokeShowing(parameter);
 
             VisualStateManager.GoToState(this, "Open", true);
 

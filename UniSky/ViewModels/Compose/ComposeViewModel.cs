@@ -8,11 +8,13 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using FishyFlip.Lexicon.App.Bsky.Actor;
 using FishyFlip.Lexicon.App.Bsky.Feed;
+using FishyFlip.Lexicon.Com.Atproto.Repo;
 using FishyFlip.Tools;
 using Microsoft.Extensions.Logging;
 using UniSky.Extensions;
 using UniSky.Services;
 using UniSky.ViewModels.Error;
+using UniSky.ViewModels.Posts;
 
 namespace UniSky.ViewModels.Compose;
 
@@ -27,6 +29,10 @@ public partial class ComposeViewModel : ViewModelBase
     [ObservableProperty]
     private int maxCharacters;
 
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasReply))]
+    private PostViewModel replyTo;
+
     private readonly IProtocolService protocolService;
     private readonly ILogger<ComposeViewModel> logger;
 
@@ -39,20 +45,24 @@ public partial class ComposeViewModel : ViewModelBase
     public int Characters
         => Text?.Length ?? 0;
 
-    public ComposeViewModel(
-        IProtocolService protocolService,
-        ILogger<ComposeViewModel> logger)
+    public bool HasReply
+        => ReplyTo != null;
+
+    public ComposeViewModel(IProtocolService protocolService,
+                            ILogger<ComposeViewModel> logger,
+                            PostViewModel replyTo = null)
     {
         this.protocolService = protocolService;
         this.logger = logger;
 
+        this.ReplyTo = replyTo;
         this.MaxCharacters = 300;
 
         Task.Run(LoadAsync);
     }
 
     [RelayCommand]
-    private async Task Post()
+    private async Task PostAsync()
     {
         Error = null;
         using var ctx = this.GetLoadingContext();
@@ -61,7 +71,28 @@ public partial class ComposeViewModel : ViewModelBase
         {
             var text = Text;
 
-            var post = (await protocolService.Protocol.CreatePostAsync(new Post(text))
+            ReplyRefDef replyRef = null;
+            if (ReplyTo != null)
+            {
+                var replyPost = ReplyTo.View;
+                var replyRecord = (await protocolService.Protocol.GetRecordAsync(replyPost.Uri.Did, replyPost.Uri.Collection, replyPost.Uri.Rkey, replyPost.Cid)
+                    .ConfigureAwait(false))
+                    .HandleResult();
+
+                if (replyRecord.Value is not Post replyPostFetched)
+                    throw new InvalidOperationException();
+
+                var replyPostReplyDef = replyPostFetched.Reply;
+
+                replyRef = new ReplyRefDef()
+                {
+                    Root = replyPostReplyDef?.Root ?? new StrongRef() { Uri = replyPost.Uri, Cid = replyPost.Cid },
+                    Parent = new StrongRef() { Uri = replyPost.Uri, Cid = replyPost.Cid }
+                };
+            }
+
+            var postModel = new Post(text, reply: replyRef);
+            var post = (await protocolService.Protocol.CreatePostAsync(postModel)
                 .ConfigureAwait(false))
                 .HandleResult();
 

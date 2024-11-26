@@ -316,7 +316,8 @@
                         <Button x:Name="RepliesButton"
                                 x:Uid="PostReplyButton"
                                 Grid.Column="0"
-                                Style="{StaticResource FeedItemActionButtonStyle}">
+                                Style="{StaticResource FeedItemActionButtonStyle}"
+                                Command="{x:Bind ReplyCommand}">
                             <StackPanel Orientation="Horizontal">
                                 <Viewbox Height="14">
                                     <TextBlock>&#xE97A;</TextBlock>

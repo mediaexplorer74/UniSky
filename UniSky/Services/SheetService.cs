@@ -18,10 +18,10 @@ namespace UniSky.Services
             this.sheetRoot = Window.Current.Content.FindDescendant<SheetRootControl>();
         }
 
-        public async Task ShowAsync<T>() where T : SheetControl, new()
+        public async Task ShowAsync<T>(object parameter = null) where T : SheetControl, new()
         {
             var control = new T();
-            sheetRoot.ShowSheet(control);
+            sheetRoot.ShowSheet(control, parameter);
         }
 
         /// <summary>
