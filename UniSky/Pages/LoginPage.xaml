@@ -139,8 +139,7 @@
                     
                     <Button Content="Login"
                             TabIndex="2"
-                            Style="{ThemeResource AccentButtonStyle}" 
-                            Padding="{ThemeResource ButtonPadding}"
+                            Style="{ThemeResource AccentButtonStyle}"
                             Grid.Column="2"
                             HorizontalAlignment="Right"
                             MinWidth="100"

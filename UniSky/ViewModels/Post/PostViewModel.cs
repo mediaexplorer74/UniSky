@@ -14,7 +14,6 @@ using FishyFlip.Lexicon.Com.Atproto.Repo;
 using FishyFlip.Models;
 using FishyFlip.Tools;
 using Humanizer;
-using Org.BouncyCastle.Asn1.Cms;
 using UniSky.Helpers;
 using UniSky.Pages;
 using UniSky.Services;
@@ -57,11 +56,22 @@ public partial class PostViewModel : ViewModelBase
     [ObservableProperty]
     private ProfileViewModel retweetedBy;
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ShowReplyContainer))]
     private ProfileViewModel replyTo;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasEmbed))]
     private PostEmbedViewModel embed;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ShowReplyContainer))]
+    private bool hasParent;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(Borders))]
+    private bool hasChild;
+    public Thickness Borders
+        => HasChild ? new Thickness() : new Thickness(0, 0, 0, 1);
 
     public string Likes
         => ToNumberString(LikeCount);
@@ -73,9 +83,16 @@ public partial class PostViewModel : ViewModelBase
     public bool HasEmbed
         => Embed != null;
 
-    public PostViewModel(FeedViewPost feedPost)
+    public bool ShowReplyContainer
+        => ReplyTo != null && !HasParent;
+    public bool ShowReplyLine
+        => HasChild;
+
+    public PostViewModel(FeedViewPost feedPost, bool hasParent = false)
         : this(feedPost.Post)
     {
+        HasParent = hasParent;
+
         if (feedPost.Reason is ReasonRepost { By: ProfileViewBasic { } by })
         {
             RetweetedBy = new ProfileViewModel(by);
@@ -87,13 +104,15 @@ public partial class PostViewModel : ViewModelBase
         }
     }
 
-    public PostViewModel(PostView view)
+    public PostViewModel(PostView view, bool hasChild = false)
     {
         if (view.Record is not Post post)
             throw new InvalidOperationException();
 
         this.view = view;
         this.post = post;
+
+        HasChild = hasChild;
 
         Author = new ProfileViewModel(view.Author);
         Text = post.Text;

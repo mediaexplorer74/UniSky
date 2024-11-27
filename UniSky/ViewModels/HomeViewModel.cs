@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using FishyFlip;
 using FishyFlip.Events;
 using FishyFlip.Lexicon.App.Bsky.Actor;
 using FishyFlip.Lexicon.App.Bsky.Notification;
+using FishyFlip.Lexicon.Com.Atproto.Server;
 using FishyFlip.Models;
 using FishyFlip.Tools;
 using Microsoft.Extensions.Logging;
@@ -132,10 +134,29 @@ public partial class HomeViewModel : ViewModelBase
 
         try
         {
-            var session = await protocol.AuthenticateWithPasswordSessionAsync(sessionModel.Session);
-            var refreshSession = await protocol.RefreshAuthSessionAsync();
+            // to ensure the session gets refreshed properly:
+            // - initially authenticate the client with the refresh token
+            // - refresh the sesssion
+            // - reauthenticate with the new session
 
-            await protocol.AuthenticateWithPasswordSessionAsync(refreshSession);
+            var sessionRefresh = sessionModel.Session.Session;
+            var authSessionRefresh = new AuthSession(
+                new Session(sessionRefresh.Did, sessionRefresh.DidDoc, sessionRefresh.Handle, null, sessionRefresh.RefreshJwt, sessionRefresh.RefreshJwt));
+
+            await protocol.AuthenticateWithPasswordSessionAsync(authSessionRefresh);
+            var refreshSession = (await protocol.RefreshSessionAsync().ConfigureAwait(false))
+                .HandleResult();
+
+            var authSession2 = new AuthSession(
+                    new Session(refreshSession.Did, refreshSession.DidDoc, refreshSession.Handle, null, refreshSession.AccessJwt, refreshSession.RefreshJwt));
+            var session2 = await protocol.AuthenticateWithPasswordSessionAsync(authSession2).ConfigureAwait(false);
+
+            if (session2 == null)
+                throw new InvalidOperationException("Authentication failed!");
+
+            var sessionModel2 = new SessionModel(true, sessionModel.Service, authSession2.Session, authSession2);
+            var sessionService = Ioc.Default.GetRequiredService<SessionService>();
+            sessionService.SaveSession(sessionModel2);
 
             protocolService.SetProtocol(protocol);
         }

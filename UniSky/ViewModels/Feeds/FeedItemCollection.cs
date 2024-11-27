@@ -28,6 +28,8 @@ public class FeedItemCollection : ObservableCollection<PostViewModel>, ISupportI
     private readonly ATDid did;
     private readonly string filterType;
     private readonly IProtocolService protocolService;
+    private readonly HashSet<string> ids = [];
+
     private string cursor;
 
     public FeedItemCollection(FeedViewModel parent, FeedType type, ATUri uri, IProtocolService protocolService)
@@ -51,11 +53,13 @@ public class FeedItemCollection : ObservableCollection<PostViewModel>, ISupportI
 
     public async Task RefreshAsync()
     {
-        await semaphore.WaitAsync();
+        // already refreshing
+        if (!await semaphore.WaitAsync(10)) return;
 
         try
         {
             this.cursor = null;
+            this.ids.Clear();
             await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => this.Clear());
             await InternalLoadMoreItemsAsync(25);
         }
@@ -136,10 +140,30 @@ public class FeedItemCollection : ObservableCollection<PostViewModel>, ISupportI
             await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 foreach (var item in posts)
-                    this.Add(new PostViewModel(item));
+                {
+                    if (item.Reply is null || item.Reason is ReasonRepost)
+                    {
+                        if (!ids.Contains(item.Post.Cid))
+                            Add(new PostViewModel(item));
+                    }
+                    else
+                    {
+                        var reply = item.Reply;
+                        var root = (PostView)reply.Root;
+                        var parent = (PostView)reply.Parent;
+
+                        if (!ids.Contains(parent.Cid))
+                        {
+                            Add(new PostViewModel(parent, true));
+                            Add(new PostViewModel(item, true));
+
+                            ids.Add(parent.Cid);
+                        }
+                    }
+                }
             });
 
-            if (posts.Count == 0)
+            if (posts.Count == 0 || string.IsNullOrWhiteSpace(this.cursor))
                 HasMoreItems = false;
 
             return new LoadMoreItemsResult() { Count = (uint)posts.Count };
