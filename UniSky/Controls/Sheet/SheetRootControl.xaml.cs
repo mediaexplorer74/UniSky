@@ -35,8 +35,8 @@ namespace UniSky.Controls.Sheet
     {
         public FrameworkElement ContentElement
         {
-            get { return (FrameworkElement)GetValue(ContentElementProperty); }
-            set { SetValue(ContentElementProperty, value); }
+            get => (FrameworkElement)GetValue(ContentElementProperty);
+            set => SetValue(ContentElementProperty, value);
         }
 
         public static readonly DependencyProperty ContentElementProperty =
@@ -44,8 +44,8 @@ namespace UniSky.Controls.Sheet
 
         public double TotalHeight
         {
-            get { return (double)GetValue(TotalHeightProperty); }
-            set { SetValue(TotalHeightProperty, value); }
+            get => (double)GetValue(TotalHeightProperty);
+            set => SetValue(TotalHeightProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for TotalHeight.  This enables animation, styling, binding, etc...

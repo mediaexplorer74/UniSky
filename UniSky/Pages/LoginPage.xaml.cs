@@ -22,8 +22,8 @@ public sealed partial class LoginPage : Page
 {
     public LoginViewModel ViewModel
     {
-        get { return (LoginViewModel)GetValue(ViewModelProperty); }
-        set { SetValue(ViewModelProperty, value); }
+        get => (LoginViewModel)GetValue(ViewModelProperty);
+        set => SetValue(ViewModelProperty, value);
     }
 
     public static readonly DependencyProperty ViewModelProperty =

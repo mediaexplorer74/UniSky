@@ -23,8 +23,8 @@ public sealed partial class FeedsPage : Page
 {
     public FeedsViewModel ViewModel
     {
-        get { return (FeedsViewModel)GetValue(ViewModelProperty); }
-        set { SetValue(ViewModelProperty, value); }
+        get => (FeedsViewModel)GetValue(ViewModelProperty);
+        set => SetValue(ViewModelProperty, value);
     }
 
     public static readonly DependencyProperty ViewModelProperty =

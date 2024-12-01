@@ -43,8 +43,8 @@ namespace Microsoft.Toolkit.Uwp.UI
         /// </remarks>
         public bool IsMasked
         {
-            get { return (bool)GetValue(IsMaskedProperty); }
-            set { SetValue(IsMaskedProperty, value); }
+            get => (bool)GetValue(IsMaskedProperty);
+            set => SetValue(IsMaskedProperty, value);
         }
 
         /// <summary>
@@ -77,8 +77,8 @@ namespace Microsoft.Toolkit.Uwp.UI
         /// </summary>
         public FrameworkElement CastTo
         {
-            get { return (FrameworkElement)GetValue(CastToProperty); }
-            set { SetValue(CastToProperty, value); }
+            get => (FrameworkElement)GetValue(CastToProperty);
+            set => SetValue(CastToProperty, value);
         }
 
         /// <summary>

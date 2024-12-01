@@ -92,8 +92,8 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         /// </summary>
         public double Thickness
         {
-            get { return (double)GetValue(ThicknessProperty); }
-            set { SetValue(ThicknessProperty, value); }
+            get => (double)GetValue(ThicknessProperty);
+            set => SetValue(ThicknessProperty, value);
         }
 
         /// <summary>
@@ -106,8 +106,8 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         /// </summary>
         public Brush Outline
         {
-            get { return (Brush)GetValue(OutlineProperty); }
-            set { SetValue(OutlineProperty, value); }
+            get => (Brush)GetValue(OutlineProperty);
+            set => SetValue(OutlineProperty, value);
         }
 
         /// <summary>

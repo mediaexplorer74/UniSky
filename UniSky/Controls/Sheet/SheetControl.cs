@@ -136,8 +136,8 @@ namespace UniSky.Controls.Sheet
 
         public bool IsPrimaryButtonEnabled
         {
-            get { return (bool)GetValue(IsPrimaryButtonEnabledProperty); }
-            set { SetValue(IsPrimaryButtonEnabledProperty, value); }
+            get => (bool)GetValue(IsPrimaryButtonEnabledProperty);
+            set => SetValue(IsPrimaryButtonEnabledProperty, value);
         }
 
         public static readonly DependencyProperty IsPrimaryButtonEnabledProperty =
@@ -181,8 +181,8 @@ namespace UniSky.Controls.Sheet
 
         public bool IsSecondaryButtonEnabled
         {
-            get { return (bool)GetValue(IsSecondaryButtonEnabledProperty); }
-            set { SetValue(IsSecondaryButtonEnabledProperty, value); }
+            get => (bool)GetValue(IsSecondaryButtonEnabledProperty);
+            set => SetValue(IsSecondaryButtonEnabledProperty, value);
         }
 
         public static readonly DependencyProperty IsSecondaryButtonEnabledProperty =

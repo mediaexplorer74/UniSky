@@ -28,8 +28,8 @@ namespace UniSky.Controls.Compose
     {
         public ComposeViewModel ViewModel
         {
-            get { return (ComposeViewModel)GetValue(ViewModelProperty); }
-            set { SetValue(ViewModelProperty, value); }
+            get => (ComposeViewModel)GetValue(ViewModelProperty);
+            set => SetValue(ViewModelProperty, value);
         }
 
         public static readonly DependencyProperty ViewModelProperty =

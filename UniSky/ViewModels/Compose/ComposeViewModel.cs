@@ -70,26 +70,7 @@ public partial class ComposeViewModel : ViewModelBase
         try
         {
             var text = Text;
-
-            ReplyRefDef replyRef = null;
-            if (ReplyTo != null)
-            {
-                var replyPost = ReplyTo.View;
-                var replyRecord = (await protocolService.Protocol.GetRecordAsync(replyPost.Uri.Did, replyPost.Uri.Collection, replyPost.Uri.Rkey, replyPost.Cid)
-                    .ConfigureAwait(false))
-                    .HandleResult();
-
-                if (replyRecord.Value is not Post replyPostFetched)
-                    throw new InvalidOperationException();
-
-                var replyPostReplyDef = replyPostFetched.Reply;
-
-                replyRef = new ReplyRefDef()
-                {
-                    Root = replyPostReplyDef?.Root ?? new StrongRef() { Uri = replyPost.Uri, Cid = replyPost.Cid },
-                    Parent = new StrongRef() { Uri = replyPost.Uri, Cid = replyPost.Cid }
-                };
-            }
+            var replyRef = await GetReplyDefAsync().ConfigureAwait(false);
 
             var postModel = new Post(text, reply: replyRef);
             var post = (await protocolService.Protocol.CreatePostAsync(postModel)
@@ -101,8 +82,33 @@ public partial class ComposeViewModel : ViewModelBase
         }
         catch (Exception ex)
         {
-            syncContext.Post(() => Error = new ExceptionViewModel(ex));
+            this.SetErrored(ex);
         }
+    }
+
+    private async Task<ReplyRefDef> GetReplyDefAsync()
+    {
+        ReplyRefDef replyRef = null;
+        if (ReplyTo == null)
+            return replyRef;
+
+        var replyPost = ReplyTo.View;
+        var replyRecord = (await protocolService.Protocol.GetRecordAsync(replyPost.Uri.Did, replyPost.Uri.Collection, replyPost.Uri.Rkey, replyPost.Cid)
+            .ConfigureAwait(false))
+            .HandleResult();
+
+        if (replyRecord.Value is not Post replyPostFetched)
+            throw new InvalidOperationException("Trying to reply to something that isn't a post?");
+
+        var replyPostReplyDef = replyPostFetched.Reply;
+
+        replyRef = new ReplyRefDef()
+        {
+            Root = replyPostReplyDef?.Root ?? new StrongRef() { Uri = replyPost.Uri, Cid = replyPost.Cid },
+            Parent = new StrongRef() { Uri = replyPost.Uri, Cid = replyPost.Cid }
+        };
+
+        return replyRef;
     }
 
     [RelayCommand]
