@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using UniSky.Extensions;
 using UniSky.Helpers.Localisation;
+using UniSky.Pages;
 using UniSky.Services;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -64,7 +65,15 @@ sealed partial class App : Application
 
         Ioc.Default.ConfigureServices(collection.BuildServiceProvider());
         Configurator.Formatters.Register("en", (locale) => new ShortTimespanFormatter("en"));
-   }
+    }
+
+    protected override void OnActivated(IActivatedEventArgs args)
+    {
+        if (args is ProtocolActivatedEventArgs e)
+        {
+            this.OnProtocolActivated(e);
+        }
+    }
 
     /// <summary>
     /// Invoked when the application is launched normally by the end user.  Other entry points
@@ -106,6 +115,21 @@ sealed partial class App : Application
             // Ensure the current window is active
             Window.Current.Activate();
         }
+    }
+
+    private void OnProtocolActivated(ProtocolActivatedEventArgs e)
+    {
+        Hairline.Initialize();
+        if (Window.Current.Content is not Frame rootFrame)
+        {
+            rootFrame = new Frame();
+            rootFrame.NavigationFailed += OnNavigationFailed;
+            rootFrame.Navigate(typeof(RootPage));
+            Window.Current.Content = rootFrame;
+        }
+
+        // Ensure the current window is active
+        Window.Current.Activate();
     }
 
     /// <summary>

@@ -20,6 +20,7 @@
                         <ResourceDictionary Source="/Templates/NavigationViewStyles.xaml"/>
                         <ResourceDictionary Source="/Templates/ButtonStyles.xaml"/>
                         <ResourceDictionary Source="/Templates/TextBoxStyles.xaml"/>
+                        <ResourceDictionary Source="/Templates/RichTextBlockStyles.xaml"/>
                         <ResourceDictionary Source="/Templates/MediaTransportControlsStyles.xaml"/>
 
                         <!-- Templates -->
