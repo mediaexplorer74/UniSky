@@ -4,8 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using Humanizer.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using UniSky.Extensions;
+using UniSky.Helpers.Localisation;
 using UniSky.Services;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -55,9 +58,12 @@ sealed partial class App : Application
         collection.AddSingleton<INavigationServiceLocator, NavigationServiceLocator>();
         collection.AddSingleton<IProtocolService, ProtocolService>();
         collection.AddSingleton<ISafeAreaService, SafeAreaService>();
+        collection.AddSingleton<ISheetService, SheetService>();
 
         Ioc.Default.ConfigureServices(collection.BuildServiceProvider());
-    }
+
+        Configurator.Formatters.Register("en", (locale) => new ShortTimespanFormatter("en"));
+   }
 
     /// <summary>
     /// Invoked when the application is launched normally by the end user.  Other entry points
@@ -66,6 +72,8 @@ sealed partial class App : Application
     /// <param name="e">Details about the launch request and process.</param>
     protected override void OnLaunched(LaunchActivatedEventArgs e)
     {
+        Hairline.Initialize();
+
         // Do not repeat app initialization when the Window already has content,
         // just ensure that the window is active
         if (Window.Current.Content is not Frame rootFrame)
