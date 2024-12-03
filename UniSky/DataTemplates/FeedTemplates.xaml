@@ -196,7 +196,7 @@
     <DataTemplate x:Key="FeedItemContentTemplate"
                   x:DataType="posts:PostViewModel">
         <StackPanel BorderBrush="{StaticResource SystemControlSeparatorBrush}"
-                    extensions:HairlineBorder.Thickness="0,0,0,1"
+                    extensions:HairlineBorder.Thickness="{x:Bind Borders}"
                     HorizontalAlignment="Stretch"
                     Padding="12,8,12,4">
 
@@ -222,7 +222,7 @@
             </Grid>
 
             <Grid x:Name="ReplyContainer"
-                  x:Load="{x:Bind converters:Static.NotNull(ReplyTo)}"
+                  x:Load="{x:Bind ShowReplyContainer}"
                   Margin="34,0,0,4">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -248,28 +248,37 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <Button Command="{x:Bind OpenProfileCommand}"
-                        CommandParameter="{Binding ElementName=ProfileEllipse}"
-                        Style="{ThemeResource CleanButtonStyle}"
-                        Padding="0"
-                        Margin="0,0,12,0"
-                        Grid.RowSpan="4"
-                        VerticalAlignment="Top">
-                    <Ellipse x:Name="ProfileEllipse"
-                             Width="42" 
-                             Height="42">
-                        <Ellipse.Fill>
-                            <ImageBrush>
-                                <ImageBrush.ImageSource>
-                                    <BitmapImage UriSource="{Binding Author.AvatarUrl}"
-                                                 DecodePixelWidth="42"
-                                                 DecodePixelHeight="42"
-                                                 DecodePixelType="Logical"/>
-                                </ImageBrush.ImageSource>
-                            </ImageBrush>
-                        </Ellipse.Fill>
-                    </Ellipse>
-                </Button>
+                <Grid Margin="0,0,12,0"
+                      Grid.RowSpan="4">
+                    <Button Command="{x:Bind OpenProfileCommand}"
+                            CommandParameter="{Binding ElementName=ProfileEllipse}"
+                            Style="{ThemeResource CleanButtonStyle}"
+                            Padding="0"
+                            VerticalAlignment="Top">
+                        <Ellipse x:Name="ProfileEllipse"
+                                 Width="42" 
+                                 Height="42">
+                            <Ellipse.Fill>
+                                <ImageBrush>
+                                    <ImageBrush.ImageSource>
+                                        <BitmapImage UriSource="{Binding Author.AvatarUrl}"
+                                                     DecodePixelWidth="42"
+                                                     DecodePixelHeight="42"
+                                                     DecodePixelType="Logical"/>
+                                    </ImageBrush.ImageSource>
+                                </ImageBrush>
+                            </Ellipse.Fill>
+                        </Ellipse>
+                    </Button>
+
+                    <Border x:Name="ReplyLine"
+                            x:Load="{x:Bind ShowReplyLine}"
+                            BorderThickness="2,0,0,0"
+                            BorderBrush="{StaticResource SystemControlSeparatorBrush}"
+                            Grid.RowSpan="4"
+                            Margin="0,48,0,-8"
+                            HorizontalAlignment="Center"/>
+                </Grid>
 
                 <StackPanel Grid.Column="1">
                     <TextBlock Foreground="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"                  
