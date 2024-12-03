@@ -15,6 +15,7 @@ using UniSky.Extensions;
 using UniSky.Services;
 using UniSky.ViewModels.Error;
 using UniSky.ViewModels.Posts;
+using Windows.ApplicationModel.DataTransfer;
 
 namespace UniSky.ViewModels.Compose;
 
@@ -137,5 +138,29 @@ public partial class ComposeViewModel : ViewModelBase
             logger.LogError(ex, "Failed to fetch user info!");
             this.SetErrored(ex);
         }
+    }
+
+    internal bool HandlePaste()
+    {
+        var dataPackageView = Clipboard.GetContent();
+        if (dataPackageView.Contains(StandardDataFormats.StorageItems) ||
+            dataPackageView.Contains(StandardDataFormats.Bitmap) ||
+            dataPackageView.Contains("DeviceIndependentBitmapV5"))
+        {
+            Task.Run(DoPasteAsync);
+            return true;
+        }
+
+        return false;
+    }
+
+    private async Task DoPasteAsync()
+    {
+        var dataPackageView = Clipboard.GetContent();
+        if (dataPackageView.Contains("DeviceIndependentBitmapV5"))
+        {
+
+        }
+
     }
 }

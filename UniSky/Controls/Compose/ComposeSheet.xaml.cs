@@ -44,6 +44,9 @@ namespace UniSky.Controls.Compose
             this.Hiding += OnHiding;
         }
 
+        public bool Not(bool b, bool a)
+            => !a && !b;
+
         private void OnShowing(SheetControl sender, SheetShowingEventArgs e)
         {
             var inputPane = InputPane.GetForCurrentView();
@@ -102,7 +105,9 @@ namespace UniSky.Controls.Compose
             args.EnsuredFocusedElementInView = true;
         }
 
-        public bool Not(bool b, bool a)
-            => !a && !b;
+        private void PrimaryTextBox_Paste(object sender, TextControlPasteEventArgs e)
+        {
+            e.Handled = ViewModel.HandlePaste();            
+        }
     }
 }

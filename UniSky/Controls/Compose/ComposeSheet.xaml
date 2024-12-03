@@ -7,7 +7,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:converters="using:UniSky.Converters"
-    xmlns:extensions="using:UniSky.Extensions" xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls" xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:extensions="using:UniSky.Extensions"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls" 
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="320"
     Style="{StaticResource DefaultSheetControlStyle}"
     DataContext="{x:Bind ViewModel, Mode=OneWay}"
@@ -134,15 +136,16 @@
                         </Ellipse.Fill>
                     </Ellipse>
                     <TextBox x:Name="PrimaryTextBox"
-                             Style="{StaticResource BorderlessTextBoxStyle}"
                              Grid.Column="1"
-                             Text="{x:Bind ViewModel.Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                             Style="{StaticResource BorderlessTextBoxStyle}"
                              ScrollViewer.VerticalScrollMode="Disabled"
                              ScrollViewer.HorizontalScrollMode="Disabled"
                              ScrollViewer.IsDeferredScrollingEnabled="False"
                              VerticalAlignment="Stretch"
+                             Text="{x:Bind ViewModel.Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                              PlaceholderText="What's happening?" 
-                             MaxLength="300" />
+                             MaxLength="300" 
+                             Paste="PrimaryTextBox_Paste"/>
                 </Grid>
             </Grid>
         </ScrollViewer>
