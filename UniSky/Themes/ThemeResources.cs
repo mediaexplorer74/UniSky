@@ -10,10 +10,8 @@ namespace UniSky.Themes
     {
         public ThemeResources()
         {
-            //var theme = Ioc.Default.GetRequiredService<IThemeService>()
-            //    .GetTheme();
-
-            var theme = AppTheme.Performance;
+            var theme = Ioc.Default.GetRequiredService<IThemeService>()
+                .GetTheme();
 
             Uri uri = theme switch
             {
