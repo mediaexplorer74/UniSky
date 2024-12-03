@@ -11,79 +11,73 @@
             <Setter.Value>
                 <ControlTemplate TargetType="sheets:SheetControl">
                     <Grid>
-                        <ScrollViewer x:Name="SheetScrollViewer"
-                                      HorizontalScrollMode="Disabled"
-                                      VerticalScrollMode="Enabled"
-                                      IsVerticalScrollChainingEnabled="True"
-                                      IsVerticalRailEnabled="True">
-                            <Grid x:Name="RootGrid"
+                        <Grid x:Name="RootGrid"
                                   Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="42"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="42"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
 
-                                <Grid Background="{ThemeResource SystemControlBackgroundListLowBrush}"
+                            <Grid Background="{ThemeResource SystemControlBackgroundListLowBrush}"
                                       BorderBrush="{ThemeResource SystemControlSeparatorBrush}"
-                                      extensions:HairlineBorder.Thickness="0,0,0,1"
+                                      extensions:Hairline.BorderThickness="0,0,0,1"
                                       Padding="8,0">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
 
-                                    <ContentPresenter x:Name="SheetTitlePresenter"
+                                <ContentPresenter x:Name="SheetTitlePresenter"
                                                       Grid.ColumnSpan="3"
                                                       VerticalAlignment="Center"
                                                       HorizontalAlignment="Center"
                                                       Content="{TemplateBinding TitleContent}"
                                                       ContentTemplate="{TemplateBinding TitleContentTemplate}"/>
 
-                                    <Button x:Name="PrimaryButton"
+                                <Button x:Name="PrimaryButton"
                                             Style="{ThemeResource AccentButtonStyle}"
                                             Grid.Column="2"
                                             Visibility="{TemplateBinding PrimaryButtonVisibility}"
                                             Command="{TemplateBinding PrimaryButtonCommand}"
                                             IsEnabled="{TemplateBinding IsPrimaryButtonEnabled}">
-                                        <w1709:Button.KeyboardAccelerators>
-                                            <w1709:KeyboardAccelerator Modifiers="Control" Key="Enter"/>
-                                        </w1709:Button.KeyboardAccelerators>
-                                        <ContentPresenter x:Name="SheetPrimaryButtonPresenter"
+                                    <w1709:Button.KeyboardAccelerators>
+                                        <w1709:KeyboardAccelerator Modifiers="Control" Key="Enter"/>
+                                    </w1709:Button.KeyboardAccelerators>
+                                    <ContentPresenter x:Name="SheetPrimaryButtonPresenter"
                                                             Content="{TemplateBinding PrimaryButtonContent}"
                                                             ContentTemplate="{TemplateBinding PrimaryButtonContentTemplate}"/>
-                                    </Button>
+                                </Button>
 
-                                    <Button x:Name="SecondaryButton"
+                                <Button x:Name="SecondaryButton"
                                             Style="{ThemeResource TextBlockButtonStyle}"
                                             Grid.Column="0"
                                             Visibility="{TemplateBinding SecondaryButtonVisibility}"
                                             Command="{TemplateBinding SecondaryButtonCommand}"
                                             IsEnabled="{TemplateBinding IsSecondaryButtonEnabled}">
-                                        <w1709:Button.KeyboardAccelerators>
-                                            <w1709:KeyboardAccelerator Key="Escape"/>
-                                        </w1709:Button.KeyboardAccelerators>
-                                        <ContentPresenter x:Name="SheetSecondaryButtonPresenter"
+                                    <w1709:Button.KeyboardAccelerators>
+                                        <w1709:KeyboardAccelerator Key="Escape"/>
+                                    </w1709:Button.KeyboardAccelerators>
+                                    <ContentPresenter x:Name="SheetSecondaryButtonPresenter"
                                                         Content="{TemplateBinding SecondaryButtonContent}"
                                                         ContentTemplate="{TemplateBinding SecondaryButtonContentTemplate}"/>
-                                    </Button>
-                                </Grid>
+                                </Button>
+                            </Grid>
 
-                                <Border BorderThickness="0,2,0,0"
+                            <Border BorderThickness="0,2,0,0"
                                         BorderBrush="{ThemeResource SystemControlSeparatorBrush}"
                                         Margin="0,4,0,0"
                                         Width="48"/>
 
-                                <ContentPresenter x:Name="SheetContentPresenter"
-                                                  Grid.Row="1"
-                                                  HorizontalAlignment="Stretch"
-                                                  VerticalAlignment="Stretch"
-                                                  HorizontalContentAlignment="Stretch"
-                                                  VerticalContentAlignment="Stretch"
-                                                  Content="{TemplateBinding SheetContent}"
-                                                  ContentTemplate="{TemplateBinding SheetContentTemplate}"/>
-                            </Grid>
-                        </ScrollViewer>
+                            <ContentPresenter x:Name="SheetContentPresenter"
+                                             Grid.Row="1"
+                                             HorizontalAlignment="Stretch"
+                                             VerticalAlignment="Stretch"
+                                             HorizontalContentAlignment="Stretch"
+                                             VerticalContentAlignment="Stretch"
+                                             Content="{TemplateBinding SheetContent}"
+                                             ContentTemplate="{TemplateBinding SheetContentTemplate}"/>
+                        </Grid>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

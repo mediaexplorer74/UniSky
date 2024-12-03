@@ -40,6 +40,9 @@ public partial class PostViewModel : ViewModelBase
     private ProfileViewModel author;
 
     [ObservableProperty]
+    private string date;
+
+    [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(Likes))]
     private int likeCount;
     [ObservableProperty]
@@ -122,6 +125,10 @@ public partial class PostViewModel : ViewModelBase
         Text = post.Text;
         Embed = CreateEmbedViewModel(view.Embed);
 
+        var timeSinceIndex = DateTime.Now - (view.IndexedAt.Value.ToLocalTime());
+        var date = timeSinceIndex.Humanize(1, minUnit: Humanizer.Localisation.TimeUnit.Second);
+        Date = date;
+        
         LikeCount = (int)(view.LikeCount ?? 0);
         RetweetCount = (int)(view.RepostCount ?? 0);
         ReplyCount = (int)(view.ReplyCount ?? 0);

@@ -46,24 +46,36 @@
                 Background="#80000000">
         </Border>
 
-        <Border x:Name="HostControl"
-                Visibility="Collapsed">
-            <Border.RenderTransform>
-                <TranslateTransform x:Name="SheetTransform" Y="0"/>
-            </Border.RenderTransform>
 
-            <muxc:RefreshContainer x:Name="RefreshContainer"
-                                   RefreshRequested="RefreshContainer_RefreshRequested">
-                <muxc:RefreshContainer.Visualizer>
-                    <muxc:RefreshVisualizer Opacity="0"/>
-                </muxc:RefreshContainer.Visualizer>
-                <Border x:Name="SheetBorder"
-                        BorderBrush="{ThemeResource SystemControlSeparatorBrush}"
-                        ui:Effects.Shadow="{StaticResource CommonShadow}">
-                    <Border x:Name="SheetRoot" />
-                </Border>
-            </muxc:RefreshContainer>
-        </Border>
+        <muxc:RefreshContainer x:Name="RefreshContainer"
+                                RefreshRequested="RefreshContainer_RefreshRequested">
+            <muxc:RefreshContainer.Visualizer>
+                <muxc:RefreshVisualizer Opacity="0"/>
+            </muxc:RefreshContainer.Visualizer>
+                <ScrollViewer HorizontalScrollMode="Disabled"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Stretch"
+                              VerticalContentAlignment="Stretch"
+                              HorizontalContentAlignment="Stretch"
+                              VerticalScrollMode="Enabled"
+                              VerticalScrollBarVisibility="Hidden"
+                              IsVerticalScrollChainingEnabled="True"
+                              IsVerticalRailEnabled="True"
+                              IsDeferredScrollingEnabled="False">
+                <Grid>
+                    <Border x:Name="HostControl">
+                        <Border.RenderTransform>
+                            <TranslateTransform x:Name="SheetTransform" Y="0"/>
+                        </Border.RenderTransform>
+                        <Border x:Name="SheetBorder"
+                                BorderBrush="{ThemeResource SystemControlSeparatorBrush}"
+                                ui:Effects.Shadow="{StaticResource CommonShadow}">
+                            <Border x:Name="SheetRoot"/>
+                        </Border>
+                    </Border>
+                </Grid>
+            </ScrollViewer>
+         </muxc:RefreshContainer>
 
         <Border x:Name="TitleBar"
                 Visibility="Collapsed"
@@ -81,7 +93,7 @@
                         <Setter Target="HostControl.MaxWidth" Value="Infinity"/>
                         <Setter Target="HostControl.MaxHeight" Value="Infinity"/>
                         <Setter Target="HostControl.Padding" Value="0,0,0,0"/>
-                        <Setter Target="SheetBorder.(extensions:HairlineBorder.Thickness)" Value="0"/>
+                        <Setter Target="SheetBorder.(extensions:Hairline.BorderThickness)" Value="0"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Medium">
@@ -95,7 +107,7 @@
                         <Setter Target="HostControl.MaxWidth" Value="600"/>
                         <Setter Target="HostControl.MaxHeight" Value="400"/>
                         <Setter Target="HostControl.Padding" Value="40,0,0,0"/>
-                        <Setter Target="SheetBorder.(extensions:HairlineBorder.Thickness)" Value="1"/>
+                        <Setter Target="SheetBorder.(extensions:Hairline.BorderThickness)" Value="1"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -104,7 +116,7 @@
                     <VisualState.Storyboard>
                         <Storyboard x:Name="ShowSheetStoryboard"
                                     Completed="ShowSheetStoryboard_Completed">
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HostControl"
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RefreshContainer"
                                                            Storyboard.TargetProperty="Visibility">
                                 <DiscreteObjectKeyFrame KeyTime="00:00:00.0" Value="Visible"/>
                             </ObjectAnimationUsingKeyFrames>
@@ -164,7 +176,7 @@
                     <VisualState.Storyboard>
                         <Storyboard x:Name="HideSheetStoryboard"
                                     Completed="HideSheetStoryboard_Completed">
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HostControl"
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RefreshContainer"
                                                            Storyboard.TargetProperty="Visibility">
                                 <DiscreteObjectKeyFrame KeyTime="00:00:00.5" Value="Collapsed"/>
                             </ObjectAnimationUsingKeyFrames>

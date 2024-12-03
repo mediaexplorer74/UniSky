@@ -215,8 +215,8 @@
 
     <DataTemplate x:Key="FeedItemContentTemplate"
                   x:DataType="posts:PostViewModel">
-        <StackPanel BorderBrush="{StaticResource SystemControlSeparatorBrush}"
-                    extensions:HairlineBorder.Thickness="{x:Bind Borders}"
+        <StackPanel BorderBrush="{StaticResource SystemControlRevealSeparatorBrush}"
+                    extensions:Hairline.BorderThickness="{x:Bind Borders}"
                     HorizontalAlignment="Stretch"
                     Padding="12,8,12,4">
 
@@ -304,14 +304,28 @@
                 </Grid>
 
                 <StackPanel Grid.Column="1">
-                    <TextBlock Foreground="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"                  
-                               VerticalAlignment="Top">                
-                         <Run Text="{x:Bind Author.Name, Mode=OneWay}"           
-                              FontWeight="Bold"                        
-                              Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}"/>                    
-                         <Run Text="{x:Bind Author.Handle, Mode=OneWay}"/>
-                    </TextBlock>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Foreground="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"                  
+                                   VerticalAlignment="Top"
+                                   TextTrimming="CharacterEllipsis">                
+                             <Run Text="{x:Bind Author.Name, Mode=OneWay}"           
+                                  FontWeight="Bold"                        
+                                  Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}"/>                    
+                             <Run Text="{x:Bind Author.Handle, Mode=OneWay}"/>
+                        </TextBlock>
 
+                        <TextBlock x:Name="DateBlock"
+                                   x:Phase="4"
+                                   Grid.Column="1"
+                                   Margin="4,0,0,0"
+                                   Foreground="{ThemeResource SystemControlForegroundBaseLowBrush}"
+                                   Typography.NumeralAlignment="Tabular"
+                                   Text="{x:Bind Date}"/>
+                    </Grid>
                     <TextBlock x:Name="MainContent"
                                x:Load="{x:Bind converters:Static.NotNullOrWhiteSpace(Text)}"
                                Text="{x:Bind Text}"

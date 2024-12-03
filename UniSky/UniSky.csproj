@@ -156,7 +156,7 @@
     </Compile>
     <Compile Include="Converters\Static.cs" />
     <Compile Include="DataTemplates\PostEmbedTemplateSelector.cs" />
-    <Compile Include="Extensions\HairlineBorder.cs" />
+    <Compile Include="Extensions\Hairline.cs" />
     <Compile Include="Extensions\SynchronizationContextExtensions.cs" />
     <Compile Include="Helpers\Composition\BirdAnimation.cs" />
     <Compile Include="Helpers\Geometry\CanvasPathBuilderExtensions.cs" />
@@ -189,6 +189,7 @@
     <Compile Include="Helpers\Geometry\Parsers\CanvasGeometryParser.cs" />
     <Compile Include="Helpers\Geometry\Scalar.cs" />
     <Compile Include="Helpers\Geometry\Utils.cs" />
+    <Compile Include="Helpers\Localisation\ShortTimespanFormatter.cs" />
     <Compile Include="Helpers\Shadows\AttachedCardShadow.cs" />
     <Compile Include="Helpers\Shadows\AttachedDropShadow.cs" />
     <Compile Include="Helpers\Shadows\AttachedShadowBase.cs" />
