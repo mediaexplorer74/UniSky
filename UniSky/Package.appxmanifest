@@ -47,6 +47,14 @@
         </uap:DefaultTile >
         <uap:SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="#0085ff" />
       </uap:VisualElements>
+      <Extensions>
+        <uap:Extension Category="windows.protocol">
+          <uap:Protocol Name="unisky">
+            <uap:DisplayName>Unisky</uap:DisplayName>
+            <uap:Logo>Assets\Square44x44Logo.png</uap:Logo>
+          </uap:Protocol>
+        </uap:Extension>
+      </Extensions>
     </Application>
   </Applications>
 
