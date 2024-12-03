@@ -14,6 +14,7 @@ using FishyFlip.Lexicon.Com.Atproto.Repo;
 using FishyFlip.Models;
 using FishyFlip.Tools;
 using Humanizer;
+using UniSky.Controls.Compose;
 using UniSky.Helpers;
 using UniSky.Pages;
 using UniSky.Services;
@@ -37,6 +38,9 @@ public partial class PostViewModel : ViewModelBase
     private string text;
     [ObservableProperty]
     private ProfileViewModel author;
+
+    [ObservableProperty]
+    private string date;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(Likes))]
@@ -88,6 +92,9 @@ public partial class PostViewModel : ViewModelBase
     public bool ShowReplyLine
         => HasChild;
 
+    public Post Post => post;
+    public PostView View => view;
+
     public PostViewModel(FeedViewPost feedPost, bool hasParent = false)
         : this(feedPost.Post)
     {
@@ -118,6 +125,10 @@ public partial class PostViewModel : ViewModelBase
         Text = post.Text;
         Embed = CreateEmbedViewModel(view.Embed);
 
+        var timeSinceIndex = DateTime.Now - (view.IndexedAt.Value.ToLocalTime());
+        var date = timeSinceIndex.Humanize(1, minUnit: Humanizer.Localisation.TimeUnit.Second);
+        Date = date;
+        
         LikeCount = (int)(view.LikeCount ?? 0);
         RetweetCount = (int)(view.RepostCount ?? 0);
         ReplyCount = (int)(view.ReplyCount ?? 0);
@@ -139,7 +150,7 @@ public partial class PostViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private async Task Like()
+    private async Task LikeAsync()
     {
         var protocol = Ioc.Default.GetRequiredService<IProtocolService>()
             .Protocol;
@@ -173,6 +184,14 @@ public partial class PostViewModel : ViewModelBase
             .GetNavigationService("Home");
 
         service.Navigate<ProfilePage>(this.view.Author, new ContinuumNavigationTransitionInfo() { ExitElement = element });
+    }
+
+
+    [RelayCommand]
+    private async Task ReplyAsync()
+    {
+        var service = Ioc.Default.GetRequiredService<ISheetService>();
+        await service.ShowAsync<ComposeSheet>(this);
     }
 
     [RelayCommand]

@@ -172,7 +172,7 @@
                         HorizontalAlignment="Stretch" 
                         VerticalAlignment="Stretch" 
                         MaxWidth="600"
-                        BorderBrush="{StaticResource SystemControlSeparatorBrush}"
+                        BorderBrush="{StaticResource SystemControlRevealSeparatorBrush}"
                         ui:UIElementExtensions.ClipToBounds="True">
                     <Frame x:Name="NavigationFrame"
                            HorizontalAlignment="Stretch">
@@ -364,7 +364,7 @@
                     </VisualState.StateTriggers>
 
                     <VisualState.Setters>
-                        <Setter Target="FrameContainer.(extensions:HairlineBorder.Thickness)" Value="0"/>
+                        <Setter Target="FrameContainer.(extensions:Hairline.BorderThickness)" Value="0"/>
                         <Setter Target="NavView.PaneDisplayMode" Value="LeftMinimal"/>
                         <Setter Target="FooterNavigation.Visibility" Value="Visible"/>
                     </VisualState.Setters>
@@ -375,7 +375,7 @@
                     </VisualState.StateTriggers>
 
                     <VisualState.Setters>
-                        <Setter Target="FrameContainer.(extensions:HairlineBorder.Thickness)" Value="1,0"/>
+                        <Setter Target="FrameContainer.(extensions:Hairline.BorderThickness)" Value="1,0"/>
                         <Setter Target="NavView.PaneDisplayMode" Value="LeftCompact"/>
                         <Setter Target="FooterNavigation.Visibility" Value="Collapsed"/>
                     </VisualState.Setters>

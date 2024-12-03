@@ -18,7 +18,6 @@
     </d:Page.DataContext>
 
     <Grid>
-
         <ListView x:Name="RootList"
               ItemsSource="{Binding SelectedFeed.Items}" 
               ItemTemplate="{StaticResource FeedItemContentTemplate}"
@@ -30,6 +29,7 @@
             <ListView.Resources>
                 <SolidColorBrush Color="Transparent" x:Key="ListViewItemRevealBackground"/>
                 <SolidColorBrush Color="Transparent" x:Key="ListViewItemBackgroundPointerOver"/>
+                <Thickness x:Key="ListViewItemRevealBorderThemeThickness">0</Thickness>
             </ListView.Resources>
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
@@ -39,8 +39,8 @@
             </ListView.ItemContainerStyle>
             <ListView.Header>
                 <Grid x:Name="ProfileContainer"
-                      extensions:HairlineBorder.Thickness="0,0,0,1"
-                      BorderBrush="{StaticResource SystemControlSeparatorBrush}"
+                      extensions:Hairline.BorderThickness="0,0,0,1"
+                      BorderBrush="{StaticResource SystemControlRevealSeparatorBrush}"
                       Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}"
                       SizeChanged="Page_SizeChanged">
                     <Grid.RowDefinitions>
@@ -153,8 +153,8 @@
                     <Grid x:Name="StickyFooter"
                           Grid.Row="3"
                           Grid.ColumnSpan="3"
-                          BorderBrush="{ThemeResource SystemControlSeparatorBrush}"
-                          extensions:HairlineBorder.Thickness="0,1,0,0">
+                          BorderBrush="{ThemeResource SystemControlRevealSeparatorBrush}"
+                          extensions:Hairline.BorderThickness="0,1,0,0">
                         <ItemsControl ItemsSource="{Binding Feeds}"
                                       Margin="2,0">
                             <ItemsControl.ItemsPanel>
@@ -164,14 +164,16 @@
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate x:DataType="profile:ProfileFeedViewModel">
-                                    <RadioButton Content="{Binding Name}" 
-                                                 GroupName="ProfileFeedSelection"
-                                                 Style="{ThemeResource FooterRadioButtonRevealStyle}"
-                                                 FontSize="{ThemeResource ContentControlFontSize}"
-                                                 FontFamily="{ThemeResource ContentControlThemeFontFamily}"
-                                                 IsChecked="{Binding Selected, Mode=TwoWay}"
-                                                 Padding="10,8"
-                                                 Margin="0,0,2,0"/>
+                                    <Border Margin="0,0,6,0">
+                                        <RadioButton Content="{Binding Name}" 
+                                                     GroupName="ProfileFeedSelection"
+                                                     Style="{ThemeResource FooterRadioButtonRevealStyle}"
+                                                     FontSize="{ThemeResource ContentControlFontSize}"
+                                                     FontFamily="{ThemeResource ContentControlThemeFontFamily}"
+                                                     IsChecked="{Binding Selected, Mode=TwoWay}"
+                                                     Padding="10,8"
+                                                     extensions:Hairline.Margin="0,-1,0,-1"/>
+                                    </Border>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
