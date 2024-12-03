@@ -54,7 +54,6 @@ jobs:
         $xml = [System.Xml.XmlDocument]::new()
         $xml.Load($file)
 
-        # use the url from the `xmlns:rescap` declaration
         $node = $xml.GetElementsByTagName("Identity", "http://schemas.microsoft.com/appx/manifest/foundation/windows10")[0]
         $version = [System.Version]::Parse($node.GetAttribute("Version"))
         $version = [System.Version]::new($version.Major, $version.Minor, $version.Build, $epoch.TotalMinutes);
