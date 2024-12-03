@@ -392,7 +392,7 @@
       <Version>8.3.2</Version>
     </PackageReference>
     <PackageReference Include="FishyFlip">
-      <Version>3.1.0-alpha.0</Version>
+      <Version>3.1.0-alpha.7</Version>
     </PackageReference>
     <PackageReference Include="Humanizer.Core">
       <Version>2.14.1</Version>
