@@ -47,6 +47,20 @@ jobs:
         $certificatePath = "GitHubActionsWorkflow.pfx"
         [IO.File]::WriteAllBytes("$env:Project_Name/$certificatePath", $pfx_cert_byte)
 
+    - name: Adjust Package Version
+      run: |
+        $epoch = (Get-Date) - ([System.DateTime]::new(2024, 11, 01))
+        $file = (Resolve-Path "UniSky/Package.appxmanifest")
+        $xml = [System.Xml.XmlDocument]::new()
+        $xml.Load($file)
+
+        $node = $xml.GetElementsByTagName("Identity", "http://schemas.microsoft.com/appx/manifest/foundation/windows10")[0]
+        $version = [System.Version]::Parse($node.GetAttribute("Version"))
+        $version = [System.Version]::new($version.Major, $version.Minor, $version.Build, $epoch.TotalMinutes);
+        $node.SetAttribute("Version", $version.ToString())
+
+        $xml.Save($file)
+
     # Create the app package by building and packaging the project
     - name: Build App Packages
       run: msbuild $env:ProjectFile_Name /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:Appx_Bundle /p:AppxBundlePlatforms="x86|x64|ARM|ARM64" /p:PackageCertificateKeyFile=GitHubActionsWorkflow.pfx /p:AppxPackageDir="$env:Appx_Package_Dir" /p:GenerateAppxPackageOnBuild=true
@@ -67,7 +81,3 @@ jobs:
         name: AppxPackage-${{ matrix.configuration }}
         path: |
           ${{ env.Project_Name }}\\Packages
-          ${{ env.Project_Name }}\\bin\\x86\\${{ matrix.configuration }}\\ilc\\${{ env.Project_Name }}.pdb 
-          ${{ env.Project_Name }}\\bin\\x64\\${{ matrix.configuration }}\\ilc\\${{ env.Project_Name }}.pdb 
-          ${{ env.Project_Name }}\\bin\\ARM\\${{ matrix.configuration }}\\ilc\\${{ env.Project_Name }}.pdb 
-          ${{ env.Project_Name }}\\bin\\ARM64\\${{ matrix.configuration }}\\ilc\\${{ env.Project_Name }}.pdb 
