@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Uwp.UI;
@@ -52,6 +53,8 @@ namespace UniSky.Controls.Sheet
         public static readonly DependencyProperty TotalHeightProperty =
             DependencyProperty.Register("TotalHeight", typeof(double), typeof(SheetRootControl), new PropertyMetadata(0.0));
 
+        private SemaphoreSlim _hideSemaphore = new SemaphoreSlim(1, 1);
+
         public SheetRootControl()
         {
             this.InitializeComponent();
@@ -98,22 +101,32 @@ namespace UniSky.Controls.Sheet
 
         internal async Task<bool> HideSheetAsync()
         {
-            // TODO: allow deferrals
-            if (SheetRoot.Child is SheetControl control)
+            if (!await _hideSemaphore.WaitAsync(100))
+                return false;
+
+            try
             {
-                if (!await control.InvokeHidingAsync())
-                    return false;
+                // TODO: allow deferrals
+                if (SheetRoot.Child is SheetControl control)
+                {
+                    if (!await control.InvokeHidingAsync())
+                        return false;
+                }
+
+                VisualStateManager.GoToState(this, "Closed", true);
+
+                var safeAreaService = Ioc.Default.GetRequiredService<ISafeAreaService>();
+                safeAreaService.SafeAreaUpdated -= OnSafeAreaUpdated;
+
+                var systemNavigationManager = SystemNavigationManager.GetForCurrentView();
+                systemNavigationManager.BackRequested -= OnBackRequested;
+
+                return true;
             }
-
-            VisualStateManager.GoToState(this, "Closed", true);
-
-            var safeAreaService = Ioc.Default.GetRequiredService<ISafeAreaService>();
-            safeAreaService.SafeAreaUpdated -= OnSafeAreaUpdated;
-
-            var systemNavigationManager = SystemNavigationManager.GetForCurrentView();
-            systemNavigationManager.BackRequested -= OnBackRequested;
-
-            return true;
+            finally
+            {
+                _hideSemaphore.Release();
+            }
         }
 
         private void OnSafeAreaUpdated(object sender, SafeAreaUpdatedEventArgs e)
