@@ -74,9 +74,8 @@
                       VerticalScrollMode="Enabled"
                       IsVerticalScrollChainingEnabled="True"
                       IsVerticalRailEnabled="True"
-                      IsDeferredScrollingEnabled="False"
-                      Padding="12">
-            <Grid>
+                      IsDeferredScrollingEnabled="False">
+            <Grid Padding="12">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>

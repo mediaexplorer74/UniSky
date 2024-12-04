@@ -79,7 +79,7 @@ public partial class HomeViewModel : ViewModelBase
         => Page == HomePages.Profile;
 
     public HomeViewModel(
-        string session,
+        string profile,
         SessionService sessionService,
         INavigationServiceLocator navigationServiceLocator,
         IProtocolService protocolService,
@@ -89,13 +89,13 @@ public partial class HomeViewModel : ViewModelBase
         this.rootNavigationService = navigationServiceLocator.GetNavigationService("Root");
         this.homeNavigationService = navigationServiceLocator.GetNavigationService("Home");
 
-        if (!sessionService.TryFindSession(session, out var sessionModel))
+        if (!sessionService.TryFindSession(profile, out var sessionModel))
         {
             rootNavigationService.Navigate<LoginPage>();
             return;
         }
 
-        ApplicationData.Current.LocalSettings.Values["LastUsedUser"] = session;
+        ApplicationData.Current.LocalSettings.Values["LastUsedUser"] = profile;
 
         this.sessionService = sessionService;
         this.logger = logger;
@@ -134,31 +134,8 @@ public partial class HomeViewModel : ViewModelBase
 
         try
         {
-            // to ensure the session gets refreshed properly:
-            // - initially authenticate the client with the refresh token
-            // - refresh the sesssion
-            // - reauthenticate with the new session
-
-            var sessionRefresh = sessionModel.Session.Session;
-            var authSessionRefresh = new AuthSession(
-                new Session(sessionRefresh.Did, sessionRefresh.DidDoc, sessionRefresh.Handle, null, sessionRefresh.RefreshJwt, sessionRefresh.RefreshJwt));
-
-            await protocol.AuthenticateWithPasswordSessionAsync(authSessionRefresh);
-            var refreshSession = (await protocol.RefreshSessionAsync().ConfigureAwait(false))
-                .HandleResult();
-
-            var authSession2 = new AuthSession(
-                    new Session(refreshSession.Did, refreshSession.DidDoc, refreshSession.Handle, null, refreshSession.AccessJwt, refreshSession.RefreshJwt));
-            var session2 = await protocol.AuthenticateWithPasswordSessionAsync(authSession2).ConfigureAwait(false);
-
-            if (session2 == null)
-                throw new InvalidOperationException("Authentication failed!");
-
-            var sessionModel2 = new SessionModel(true, sessionModel.Service, authSession2.Session, authSession2);
-            var sessionService = Ioc.Default.GetRequiredService<SessionService>();
-            sessionService.SaveSession(sessionModel2);
-
-            protocolService.SetProtocol(protocol);
+            await RefreshSessionAsync(protocol)
+                .ConfigureAwait(false);
         }
         catch (Exception ex)
         {
@@ -176,19 +153,47 @@ public partial class HomeViewModel : ViewModelBase
 
             this.syncContext.Post(() => notificationUpdateTimer.Start());
         }
-        catch (ATNetworkErrorException ex)
+        catch (ATNetworkErrorException ex) when (ex is { AtError.Detail.Error: "ExpiredToken" })
         {
-            if (ex.AtError?.Detail?.Error == "ExpiredToken")
-            {
-                this.syncContext.Post(() => rootNavigationService.Navigate<LoginPage>());
-                return;
-            }
+            this.syncContext.Post(() => rootNavigationService.Navigate<LoginPage>());
+            return;
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "Failed to fetch user info!");
             this.SetErrored(ex);
         }
+    }
+
+    private async Task RefreshSessionAsync(ATProtocol protocol)
+    {
+        // to ensure the session gets refreshed properly:
+        // - initially authenticate the client with the refresh token
+        // - refresh the sesssion
+        // - reauthenticate with the new session
+
+        var sessionRefresh = sessionModel.Session.Session;
+        var authSessionRefresh = new AuthSession(
+            new Session(sessionRefresh.Did, sessionRefresh.DidDoc, sessionRefresh.Handle, null, sessionRefresh.RefreshJwt, sessionRefresh.RefreshJwt));
+
+        await protocol.AuthenticateWithPasswordSessionAsync(authSessionRefresh);
+        var refreshSession = (await protocol.RefreshSessionAsync()
+            .ConfigureAwait(false))
+            .HandleResult();
+
+        var authSession2 = new AuthSession(
+                new Session(refreshSession.Did, refreshSession.DidDoc, refreshSession.Handle, null, refreshSession.AccessJwt, refreshSession.RefreshJwt));
+        var session2 = await protocol.AuthenticateWithPasswordSessionAsync(authSession2)
+            .ConfigureAwait(false);
+
+        if (session2 == null)
+            throw new InvalidOperationException("Authentication failed!");
+
+        var sessionModel2 = new SessionModel(true, sessionModel.Service, authSession2.Session, authSession2);
+        var sessionService = Ioc.Default.GetRequiredService<SessionService>();
+        sessionService.SaveSession(sessionModel2);
+
+        protocolService.SetProtocol(protocol);
     }
 
     private async Task UpdateProfileAsync()

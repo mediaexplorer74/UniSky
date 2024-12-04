@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
@@ -19,6 +20,7 @@ using UniSky.Helpers;
 using UniSky.Pages;
 using UniSky.Services;
 using UniSky.ViewModels.Profiles;
+using UniSky.ViewModels.Text;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Xaml;
@@ -34,8 +36,6 @@ public partial class PostViewModel : ViewModelBase
     private ATUri like;
     private ATUri repost;
 
-    [ObservableProperty]
-    private string text;
     [ObservableProperty]
     private ProfileViewModel author;
 
@@ -74,8 +74,16 @@ public partial class PostViewModel : ViewModelBase
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(Borders))]
     private bool hasChild;
-    public Thickness Borders
-        => HasChild ? new Thickness() : new Thickness(0, 0, 0, 1);
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(Text))]
+    private RichTextViewModel richText;
+
+    public Post Post => post;
+    public PostView View => view;
+
+    public string Text
+        => string.Concat(RichText.Facets.Select(s => s.Text));
 
     public string Likes
         => ToNumberString(LikeCount);
@@ -91,9 +99,8 @@ public partial class PostViewModel : ViewModelBase
         => ReplyTo != null && !HasParent;
     public bool ShowReplyLine
         => HasChild;
-
-    public Post Post => post;
-    public PostView View => view;
+    public Thickness Borders
+        => HasChild ? new Thickness() : new Thickness(0, 0, 0, 1);
 
     public PostViewModel(FeedViewPost feedPost, bool hasParent = false)
         : this(feedPost.Post)
@@ -122,8 +129,10 @@ public partial class PostViewModel : ViewModelBase
         HasChild = hasChild;
 
         Author = new ProfileViewModel(view.Author);
-        Text = post.Text;
         Embed = CreateEmbedViewModel(view.Embed);
+
+        RichText = new RichTextViewModel(post.Text, post.Facets ?? []);
+        Debug.WriteLine(string.Concat(RichText.Facets.Select(f => f.Text)));
 
         var timeSinceIndex = DateTime.Now - (view.IndexedAt.Value.ToLocalTime());
         var date = timeSinceIndex.Humanize(1, minUnit: Humanizer.Localisation.TimeUnit.Second);

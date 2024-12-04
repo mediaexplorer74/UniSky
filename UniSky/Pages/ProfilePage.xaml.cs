@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using FishyFlip.Lexicon;
 using FishyFlip.Lexicon.App.Bsky.Actor;
@@ -56,10 +58,12 @@ public sealed partial class ProfilePage : Page
     {
         base.OnNavigatedTo(e);
 
-        if (e.Parameter is not (ProfileViewBasic or ProfileViewDetailed))
+        if (e.Parameter is not (ProfileViewBasic or ProfileViewDetailed or Uri))
             return;
 
-        if (e.Parameter is ATObject basic)
+        if (e.Parameter is Uri { Scheme: "unisky" } uri)
+            HandleUniskyProtocol(uri);
+        else if (e.Parameter is ATObject basic)
             this.DataContext = ActivatorUtilities.CreateInstance<ProfilePageViewModel>(Ioc.Default, basic);
 
         var safeAreaService = Ioc.Default.GetRequiredService<ISafeAreaService>();
@@ -70,6 +74,18 @@ public sealed partial class ProfilePage : Page
     {
         var safeAreaService = Ioc.Default.GetRequiredService<ISafeAreaService>();
         safeAreaService.SafeAreaUpdated -= OnSafeAreaUpdated;
+    }
+
+    private void HandleUniskyProtocol(Uri uri)
+    {
+        var path = uri.PathAndQuery.Split('/', StringSplitOptions.RemoveEmptyEntries);
+        if (path.Length < 2 || !string.Equals(path[0], "profile", StringComparison.InvariantCultureIgnoreCase))
+        {
+            this.Frame.Navigate(typeof(FeedsPage));
+        }
+
+        if (ATDid.TryCreate(path[1], out var did))
+            this.DataContext = ActivatorUtilities.CreateInstance<ProfilePageViewModel>(Ioc.Default, did);
     }
 
     private void Page_Loaded(object sender, RoutedEventArgs e)

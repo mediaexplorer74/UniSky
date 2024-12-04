@@ -47,16 +47,17 @@ public sealed partial class RootPage : Page
         Loaded += RootPage_Loaded;
     }
 
-    private void RootPage_Loaded(object sender, RoutedEventArgs e)
+    protected override void OnNavigatedTo(NavigationEventArgs e)
     {
+        base.OnNavigatedTo(e);
+
         var serviceLocator = Ioc.Default.GetRequiredService<INavigationServiceLocator>();
         var service = serviceLocator.GetNavigationService("Root");
         service.Frame = RootFrame;
 
         var sessionService = Ioc.Default.GetRequiredService<SessionService>();
         if (ApplicationData.Current.LocalSettings.Values.TryGetValue("LastUsedUser", out var userObj) &&
-            userObj is string user &&
-            sessionService.TryFindSession(user, out var session))
+            userObj is string user)
         {
             service.Navigate<HomePage>(user);
         }
@@ -64,7 +65,10 @@ public sealed partial class RootPage : Page
         {
             service.Navigate<LoginPage>();
         }
+    }
 
+    private void RootPage_Loaded(object sender, RoutedEventArgs e)
+    {
         BirdAnimation.RunBirdAnimation(SheetRoot);
     }
 }

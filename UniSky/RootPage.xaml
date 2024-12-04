@@ -8,7 +8,8 @@
     xmlns:viewmodels="using:UniSky.ViewModels"
     xmlns:pages="using:UniSky.Pages"
     xmlns:sheet="using:UniSky.Controls.Sheet"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    NavigationCacheMode="Required">
     <Page.DataContext>
         <viewmodels:RootViewModel/>
     </Page.DataContext>

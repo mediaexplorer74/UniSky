@@ -58,23 +58,31 @@ public partial class ProfilePageViewModel : ProfileViewModel
 
     public ProfilePageViewModel() : base() { }
 
-    public ProfilePageViewModel(ATObject profile, IProtocolService protocolService)
+    public ProfilePageViewModel(ATDid did)
+    {
+        this.id = did;
+
+        Feeds = [];
+        SelectedFeed = null;
+        Task.Run(LoadAsync);
+    }
+
+    public ProfilePageViewModel(ATObject profile)
         : base(profile)
     {
+        var protocol = Ioc.Default.GetRequiredService<IProtocolService>();
         if (profile is ProfileViewDetailed detailed)
         {
             Populate(detailed);
         }
-        else
-        {
-            _ = Task.Run(LoadAsync);
-        }
+
+        Task.Run(LoadAsync);
 
         Feeds =
         [
-            new ProfileFeedViewModel(this, "posts_no_replies", profile, protocolService),
-            new ProfileFeedViewModel(this, "posts_with_replies", profile, protocolService),
-            new ProfileFeedViewModel(this, "posts_with_media", profile, protocolService)
+            new ProfileFeedViewModel(this, "posts_no_replies", profile, protocol),
+            new ProfileFeedViewModel(this, "posts_with_replies", profile, protocol),
+            new ProfileFeedViewModel(this, "posts_with_media", profile, protocol)
         ];
 
         SelectedFeed = Feeds[0];
@@ -86,22 +94,36 @@ public partial class ProfilePageViewModel : ProfileViewModel
     {
         using var context = this.GetLoadingContext();
 
-        var protocol = Ioc.Default.GetRequiredService<IProtocolService>()
-            .Protocol;
-
-        var profile = (await protocol.GetProfileAsync(this.id).ConfigureAwait(false))
+        var protocol = Ioc.Default.GetRequiredService<IProtocolService>();
+        var profile = (await protocol.Protocol.GetProfileAsync(this.id).ConfigureAwait(false))
             .HandleResult();
 
-        Populate(profile);
+        syncContext.Post(() =>
+        {
+            if (Feeds.Count == 0)
+            {
+                Feeds.Add(new ProfileFeedViewModel(this, "posts_no_replies", profile, protocol));
+                Feeds.Add(new ProfileFeedViewModel(this, "posts_with_replies", profile, protocol));
+                Feeds.Add(new ProfileFeedViewModel(this, "posts_with_media", profile, protocol));
+
+                SelectedFeed = Feeds[0];
+            }
+
+            Populate(profile);
+        });
     }
 
     private void Populate(ProfileViewDetailed profile)
     {
-        BannerUrl = profile.Banner;
-        FollowerCount = (int)profile.FollowersCount;
-        FollowingCount = (int)profile.FollowsCount;
-        PostCount = (int)profile.PostsCount;
-        Bio = profile.Description?.Trim();
+        this.id = profile.Did;
+        this.AvatarUrl = profile.Avatar;
+        this.Name = profile.DisplayName;
+        this.Handle = $"@{profile.Handle}";
+        this.BannerUrl = profile.Banner;
+        this.FollowerCount = (int)profile.FollowersCount;
+        this.FollowingCount = (int)profile.FollowsCount;
+        this.PostCount = (int)profile.PostsCount;
+        this.Bio = profile.Description?.Trim();
     }
 
     protected override void OnLoadingChanged(bool value)
