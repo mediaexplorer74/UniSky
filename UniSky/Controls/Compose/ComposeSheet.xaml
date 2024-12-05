@@ -9,7 +9,8 @@
     xmlns:converters="using:UniSky.Converters"
     xmlns:extensions="using:UniSky.Extensions"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls" 
-    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls" 
+    xmlns:compose="using:UniSky.ViewModels.Compose"
     mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="320"
     Style="{StaticResource DefaultSheetControlStyle}"
     DataContext="{x:Bind ViewModel, Mode=OneWay}"
@@ -97,7 +98,7 @@
                                         VerticalAlignment="Top"
                                         ProfilePicture="{x:Bind ViewModel.ReplyTo.Author.AvatarUrl, Mode=OneWay}"/>
                     <StackPanel Grid.Column="1"
-                                    Margin="0,0,0,8">
+                                Margin="0,0,0,8">
                         <TextBlock Foreground="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"                  
                                        VerticalAlignment="Top">                
                                  <Run Text="{x:Bind ViewModel.ReplyTo.Author.Name, Mode=OneWay}"           
@@ -179,17 +180,17 @@
                             </Style>
                         </ListView.ItemContainerStyle>
                         <ListView.ItemTemplate>
-                            <DataTemplate>
+                            <DataTemplate x:DataType="compose:ComposeViewAttachmentViewModel">
                                 <Button Style="{ThemeResource CleanButtonStyle}"
-                                        Command="{Binding AddAltTextCommand}"
+                                        Command="{x:Bind AddAltTextCommand}"
                                         Padding="0">
-                                    <Grid MaxWidth="175" VerticalAlignment="Stretch">
+                                    <Grid Width="175" VerticalAlignment="Stretch">
                                         <Image VerticalAlignment="Center"
                                                HorizontalAlignment="Center" 
                                                Stretch="UniformToFill"
-                                               Source="{Binding Thumbnail}"/>
+                                               Source="{x:Bind Thumbnail, Mode=OneWay}"/>
                                         <Button Style="{ThemeResource CleanButtonStyle}"
-                                                Command="{Binding RemoveCommand}"
+                                                Command="{x:Bind RemoveCommand}"
                                                 VerticalAlignment="Top"
                                                 HorizontalAlignment="Right"
                                                 Margin="0,-16,-16,0">
@@ -203,6 +204,20 @@
                                                 </Viewbox>
                                             </Grid>
                                         </Button>
+
+                                        <Viewbox x:Name="ErrorBlock"
+                                                 x:Load="{x:Bind IsErrored, Mode=OneWay}"
+                                                 Width="32"
+                                                 Height="32">
+                                            <TextBlock FontFamily="{ThemeResource SymbolThemeFontFamily}">&#xE7BA;</TextBlock>
+                                        </Viewbox>
+
+                                        <ProgressRing VerticalAlignment="Center"
+                                                      HorizontalAlignment="Center"
+                                                      Width="32"
+                                                      Height="32"
+                                                      IsActive="{x:Bind IsLoading, Mode=OneWay}"/>
+
                                     </Grid>
                                 </Button>
                             </DataTemplate>

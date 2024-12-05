@@ -198,4 +198,13 @@
   <data name="E_UnableToAddVideoToImagePost" xml:space="preserve">
     <value>Can't add video when this post contains an image.</value>
   </data>
+  <data name="E_FileUnavailable" xml:space="preserve">
+    <value>Sorry, that file is unavailable.</value>
+  </data>
+  <data name="E_VideosUnsupported" xml:space="preserve">
+    <value>Sorry, videos are currently unsupported.</value>
+  </data>
+  <data name="UploadToBluesky" xml:space="preserve">
+    <value>Attach to post</value>
+  </data>
 </root>

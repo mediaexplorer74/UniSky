@@ -59,7 +59,7 @@ public partial class ComposeViewModel : ViewModelBase
         => (!string.IsNullOrEmpty(Text) || HasAttachments);
     // TODO: ditto
     public bool CanPost
-        => (!string.IsNullOrEmpty(Text) || HasAttachments) && Text.Length <= 300;
+        => (!string.IsNullOrEmpty(Text) || HasAttachments) && Text.Length <= 300 && !AttachedFiles.Any(a => a.IsLoading || a.IsErrored);
     public int Characters
         => Text?.Length ?? 0;
 
@@ -154,7 +154,11 @@ public partial class ComposeViewModel : ViewModelBase
                 .AsTask().ConfigureAwait(false);
 
             if (properties.Size > 1_000_000)
-                throw new InvalidOperationException("Attached image is too large!"); // useless, bad, awful
+            {
+                var e = new InvalidOperationException("Attached image is too large!");
+                image.SetErrored(e);
+                throw e;// useless, bad, awful, ideally never happens
+            }
 
             using var stream = await image.StorageFile.OpenStreamForReadAsync()
                 .ConfigureAwait(false);
@@ -189,7 +193,7 @@ public partial class ComposeViewModel : ViewModelBase
             var picker = new FileOpenPicker
             {
                 SuggestedStartLocation = PickerLocationId.PicturesLibrary,
-                CommitButtonText = $"Upload to Bluesky",
+                CommitButtonText = resources.GetString("UploadToBluesky"),
                 ViewMode = PickerViewMode.Thumbnail
             };
 
@@ -199,7 +203,7 @@ public partial class ComposeViewModel : ViewModelBase
             var files = await picker.PickMultipleFilesAsync();
             foreach (var file in files)
             {
-                await AddFileAsync(file, false);
+                AddFile(file, false);
             }
         }
         catch (Exception ex)
@@ -220,7 +224,7 @@ public partial class ComposeViewModel : ViewModelBase
             picker.PhotoSettings.AllowCropping = false;
 
             var file = await picker.CaptureFileAsync(CameraCaptureUIMode.Photo);
-            await AddFileAsync(file, false);
+            AddFile(file, false);
         }
         catch (Exception ex)
         {
@@ -260,25 +264,36 @@ public partial class ComposeViewModel : ViewModelBase
             dataPackageView.Contains(StandardDataFormats.Bitmap) ||
             dataPackageView.Contains("DeviceIndependentBitmapV5"))
         {
-            _ = DoPasteAsync();
+            _ = DoPasteAsync(dataPackageView);
             return true;
         }
 
         return false;
     }
 
-    private async Task DoPasteAsync()
+    internal bool HandleDrop(DataPackageView dataPackageView)
+    {
+        if (dataPackageView.Contains(StandardDataFormats.StorageItems) ||
+            dataPackageView.Contains(StandardDataFormats.Bitmap) ||
+            dataPackageView.Contains("DeviceIndependentBitmapV5"))
+        {
+            _ = DoPasteAsync(dataPackageView);
+            return true;
+        }
+
+        return false;
+    }
+
+    private async Task DoPasteAsync(DataPackageView dataPackageView)
     {
         try
         {
             this.SetErrored(null);
-
-            var dataPackageView = Clipboard.GetContent();
             if (dataPackageView.Contains("DeviceIndependentBitmapV5"))
             {
                 var data = (IRandomAccessStream)await dataPackageView.GetDataAsync("DeviceIndependentBitmapV5");
                 var file = await BitmapInterop.SaveBitmapToFileAsync(data);
-                await AddFileAsync(file, true);
+                AddFile(file, true);
 
                 return;
             }
@@ -287,7 +302,7 @@ public partial class ComposeViewModel : ViewModelBase
             {
                 var data = await dataPackageView.GetBitmapAsync();
                 var file = await BitmapInterop.SaveBitmapToFileAsync(data);
-                await AddFileAsync(file, true);
+                AddFile(file, true);
 
                 return;
             }
@@ -296,7 +311,7 @@ public partial class ComposeViewModel : ViewModelBase
             {
                 var items = await dataPackageView.GetStorageItemsAsync();
                 foreach (var file in items.OfType<IStorageFile>())
-                    await AddFileAsync(file, true);
+                    AddFile(file, false);
 
                 return;
             }
@@ -307,18 +322,17 @@ public partial class ComposeViewModel : ViewModelBase
         }
     }
 
-    private async Task AddFileAsync(IStorageFile storageFile, bool isTemporary)
+    private void AddFile(IStorageFile storageFile, bool isTemporary)
     {
         if (storageFile == null) return;
+
+        if (storageFile is IStorageFilePropertiesWithAvailability properties && !properties.IsAvailable)
+            throw new InvalidOperationException(resources.GetString("E_FileUnavailable"));
 
         // TODO: may not always cover webp/avif. dig into this.
         var type = storageFile.ContentType.StartsWith("image/") ? ComposeViewAttachmentType.Image :
                    storageFile.ContentType.StartsWith("video") ? ComposeViewAttachmentType.Video :
                    throw new InvalidOperationException(resources.GetString("E_NonImageOrVideo"));
-
-        var width = 0;
-        var height = 0;
-        var contentType = storageFile.ContentType;
 
         if (type == ComposeViewAttachmentType.Image)
         {
@@ -327,18 +341,6 @@ public partial class ComposeViewModel : ViewModelBase
 
             if (AttachedFiles.Where(t => t.AttachmentType == ComposeViewAttachmentType.Image).Count() + 1 > 4)
                 throw new InvalidOperationException(resources.GetString("E_TooManyPhotos"));
-
-            var newFile = await CompressImageAsync(storageFile);
-            if (isTemporary)
-            {
-                await TryDeleteTemporaryFile(storageFile);
-            }
-
-            storageFile = newFile.file;
-            width = newFile.width;
-            height = newFile.height;
-            contentType = newFile.contentType;
-            isTemporary = true;
         }
 
         if (type == ComposeViewAttachmentType.Video)
@@ -349,70 +351,14 @@ public partial class ComposeViewModel : ViewModelBase
             if (AttachedFiles.Where(t => t.AttachmentType == ComposeViewAttachmentType.Video).Count() + 1 > 1)
                 throw new InvalidOperationException(resources.GetString("E_TooManyVideos"));
 
-            throw new InvalidOperationException("Videos are currently unsupported.");
+            throw new InvalidOperationException(resources.GetString("E_VideosUnsupported"));
         }
 
-        AttachedFiles.Add(ActivatorUtilities.CreateInstance<ComposeViewAttachmentViewModel>(Ioc.Default, this, storageFile, type, isTemporary, width, height, contentType));
+        AttachedFiles.Add(ActivatorUtilities.CreateInstance<ComposeViewAttachmentViewModel>(Ioc.Default, this, storageFile, type, isTemporary));
     }
 
-    private async Task TryDeleteTemporaryFile(IStorageFile storageFile)
+    internal void UpdateLoading(ComposeViewAttachmentViewModel attachmentViewModel, bool value)
     {
-        try
-        {
-            await storageFile.DeleteAsync();
-        }
-        catch (Exception ex)
-        {
-            logger.LogWarning(ex, "Failed to delete temporary file.");
-        }
-    }
-
-    private async Task<(IStorageFile file, int width, int height, string contentType)> CompressImageAsync(IStorageFile input, int size = 2048)
-    {
-        var useHeif = CheckHeifSupport();
-        var output = await ApplicationData.Current.TemporaryFolder.CreateFileAsync($"{Guid.NewGuid()}.{(useHeif ? "heif" : "jpeg")}");
-        var contentType = useHeif ? "image/heif" : "image/jpeg";
-
-        double width, height;
-        using (var inputStream = await input.OpenAsync(FileAccessMode.Read))
-        using (var outputStream = await output.OpenAsync(FileAccessMode.ReadWrite))
-        {
-            var decoder = await BitmapDecoder.CreateAsync(inputStream);
-            width = (int)decoder.OrientedPixelWidth;
-            height = (int)decoder.OrientedPixelHeight;
-
-            SizeHelpers.Scale(ref width, ref height, size, size);
-
-            var encoder = await BitmapEncoder.CreateAsync(useHeif ? BitmapEncoder.HeifEncoderId : BitmapEncoder.JpegEncoderId, outputStream);
-            encoder.SetSoftwareBitmap(await decoder.GetSoftwareBitmapAsync());
-            encoder.BitmapTransform.ScaledWidth = (uint)Math.Ceiling(width);
-            encoder.BitmapTransform.ScaledHeight = (uint)Math.Ceiling(height);
-
-            await encoder.FlushAsync();
-        }
-
-        var properties = await output.GetBasicPropertiesAsync();
-        if (properties.Size > 1_000_000)
-        {
-            await output.DeleteAsync();
-
-            return await CompressImageAsync(input, (int)Math.Floor(size * 0.75));
-        }
-
-        return (output, (int)Math.Ceiling(width), (int)Math.Ceiling(height), contentType);
-    }
-
-    private static bool CheckHeifSupport()
-    {
-        if (!ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 7, 0))
-            return false;
-
-        foreach (var item in BitmapEncoder.GetEncoderInformationEnumerator())
-        {
-            if (item.CodecId == BitmapEncoder.HeifEncoderId)
-                return true;
-        }
-
-        return false;
+        OnPropertyChanged(nameof(CanPost));
     }
 }

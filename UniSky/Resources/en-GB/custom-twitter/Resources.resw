@@ -150,4 +150,7 @@
   <data name="E_UnableToAddVideoToImagePost" xml:space="preserve">
     <value>Can't add video when this tweet contains an image.</value>
   </data>
+  <data name="UploadToBluesky" xml:space="preserve">
+    <value>Attach to tweet</value>
+  </data>
 </root>
