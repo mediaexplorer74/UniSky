@@ -153,4 +153,13 @@
   <data name="UploadToBluesky" xml:space="preserve">
     <value>Attach to tweet</value>
   </data>
+  <data name="ComposePrimaryTextBox.PlaceholderText" xml:space="preserve">
+    <value>What's happening?</value>
+  </data>
+  <data name="ComposeSheetPrimaryText.Text" xml:space="preserve">
+    <value>Tweet</value>
+  </data>
+  <data name="ComposeSheetTitle.Text" xml:space="preserve">
+    <value>NEW TWEET</value>
+  </data>
 </root>

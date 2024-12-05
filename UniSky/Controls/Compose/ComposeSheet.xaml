@@ -18,13 +18,13 @@
     IsPrimaryButtonEnabled="{x:Bind ViewModel.CanPost, Mode=OneWay}"
     SecondaryButtonCommand="{x:Bind ViewModel.HideCommand}">
     <sheet:SheetControl.TitleContent>
-        <TextBlock Text="NEW POST"/>
+        <TextBlock x:Uid="ComposeSheetTitle" Text="NEW POST"/>
     </sheet:SheetControl.TitleContent>
     <sheet:SheetControl.PrimaryButtonContent>
-        <TextBlock Text="Post" Margin="8,0"/>
+        <TextBlock x:Uid="ComposeSheetPrimaryText" Text="Post" Margin="8,0"/>
     </sheet:SheetControl.PrimaryButtonContent>
     <sheet:SheetControl.SecondaryButtonContent>
-        <TextBlock Text="Cancel"/>
+        <TextBlock x:Uid="ComposeSheetSecondaryText" Text="Cancel"/>
     </sheet:SheetControl.SecondaryButtonContent>
 
     <Grid x:Name="ContentGrid">
@@ -140,6 +140,7 @@
                     </Ellipse>
                     
                     <TextBox x:Name="PrimaryTextBox"
+                             x:Uid="ComposePrimaryTextBox"
                              Grid.Column="1"
                              Style="{StaticResource BorderlessTextBoxStyle}"
                              ScrollViewer.VerticalScrollMode="Disabled"
