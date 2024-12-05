@@ -203,6 +203,6 @@ internal class SafeAreaService : ISafeAreaService
 
     private void OnThemeChanged(ThemeListener sender)
     {
-
+        SetTitlebarTheme(_state.Theme);
     }
 }
