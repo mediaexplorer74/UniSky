@@ -7,7 +7,10 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:converters="using:UniSky.Converters"
-    xmlns:extensions="using:UniSky.Extensions" xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls" xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:extensions="using:UniSky.Extensions"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls" 
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls" 
+    xmlns:compose="using:UniSky.ViewModels.Compose"
     mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="320"
     Style="{StaticResource DefaultSheetControlStyle}"
     DataContext="{x:Bind ViewModel, Mode=OneWay}"
@@ -15,13 +18,13 @@
     IsPrimaryButtonEnabled="{x:Bind ViewModel.CanPost, Mode=OneWay}"
     SecondaryButtonCommand="{x:Bind ViewModel.HideCommand}">
     <sheet:SheetControl.TitleContent>
-        <TextBlock Text="NEW POST"/>
+        <TextBlock x:Uid="ComposeSheetTitle" Text="NEW POST"/>
     </sheet:SheetControl.TitleContent>
     <sheet:SheetControl.PrimaryButtonContent>
-        <TextBlock Text="Post" Margin="8,0"/>
+        <TextBlock x:Uid="ComposeSheetPrimaryText" Text="Post" Margin="8,0"/>
     </sheet:SheetControl.PrimaryButtonContent>
     <sheet:SheetControl.SecondaryButtonContent>
-        <TextBlock Text="Cancel"/>
+        <TextBlock x:Uid="ComposeSheetSecondaryText" Text="Cancel"/>
     </sheet:SheetControl.SecondaryButtonContent>
 
     <Grid x:Name="ContentGrid">
@@ -77,10 +80,12 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Grid x:Name="ReplyContainer"
                       x:Load="{x:Bind ViewModel.HasReply}"
                       Margin="0,0,0,8"
+                      MinHeight="64"
                       BorderBrush="{ThemeResource SystemControlSeparatorBrush}"
                       extensions:Hairline.BorderThickness="0,0,0,1">
                     <Grid.ColumnDefinitions>
@@ -88,12 +93,12 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <muxc:PersonPicture Width="48" 
-                                            Height="48"
-                                            Margin="0,0,8,0"
-                                            VerticalAlignment="Top"
-                                            ProfilePicture="{x:Bind ViewModel.ReplyTo.Author.AvatarUrl, Mode=OneWay}"/>
+                                        Height="48"
+                                        Margin="0,0,8,0"
+                                        VerticalAlignment="Top"
+                                        ProfilePicture="{x:Bind ViewModel.ReplyTo.Author.AvatarUrl, Mode=OneWay}"/>
                     <StackPanel Grid.Column="1"
-                                    Margin="0,0,0,8">
+                                Margin="0,0,0,8">
                         <TextBlock Foreground="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"                  
                                        VerticalAlignment="Top">                
                                  <Run Text="{x:Bind ViewModel.ReplyTo.Author.Name, Mode=OneWay}"           
@@ -112,7 +117,8 @@
                                        VerticalAlignment="Top"/>
                     </StackPanel>
                 </Grid>
-                <Grid Grid.Row="1" MinHeight="150">
+                
+                <Grid Grid.Row="1" MinHeight="100">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
@@ -132,16 +138,92 @@
                             </ImageBrush>
                         </Ellipse.Fill>
                     </Ellipse>
+                    
                     <TextBox x:Name="PrimaryTextBox"
-                             Style="{StaticResource BorderlessTextBoxStyle}"
+                             x:Uid="ComposePrimaryTextBox"
                              Grid.Column="1"
-                             Text="{x:Bind ViewModel.Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                             Style="{StaticResource BorderlessTextBoxStyle}"
                              ScrollViewer.VerticalScrollMode="Disabled"
                              ScrollViewer.HorizontalScrollMode="Disabled"
                              ScrollViewer.IsDeferredScrollingEnabled="False"
                              VerticalAlignment="Stretch"
+                             Text="{x:Bind ViewModel.Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                              PlaceholderText="What's happening?" 
-                             MaxLength="300" />
+                             MaxLength="300" 
+                             Paste="PrimaryTextBox_Paste"/>
+                </Grid>
+
+                <Grid Grid.Row="2">
+                    <ListView x:Name="UploadsList"
+                              x:Load="{x:Bind ViewModel.HasAttachments, Mode=OneWay}"
+                              Margin="-12"
+                              Padding="12"
+                              Height="150"
+                              ItemsSource="{x:Bind ViewModel.AttachedFiles}"
+                              ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                              ScrollViewer.HorizontalScrollMode="Enabled"
+                              ScrollViewer.IsHorizontalRailEnabled="True"
+                              ScrollViewer.IsVerticalRailEnabled="False"
+                              ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                              ScrollViewer.VerticalScrollMode="Disabled"
+                              SelectionMode="None">
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ItemsStackPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem" BasedOn="{StaticResource DefaultListViewItemStyle}">
+                                <Setter Property="VerticalAlignment" Value="Stretch" />
+                                <Setter Property="VerticalContentAlignment" Value="Stretch" />
+                                <Setter Property="Margin" Value="0,0,12,0"/>
+                                <Setter Property="Padding" Value="0"/>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="compose:ComposeViewAttachmentViewModel">
+                                <Button Style="{ThemeResource CleanButtonStyle}"
+                                        Command="{x:Bind AddAltTextCommand}"
+                                        Padding="0">
+                                    <Grid Width="175" VerticalAlignment="Stretch">
+                                        <Image VerticalAlignment="Center"
+                                               HorizontalAlignment="Center" 
+                                               Stretch="UniformToFill"
+                                               Source="{x:Bind Thumbnail, Mode=OneWay}"/>
+                                        <Button Style="{ThemeResource CleanButtonStyle}"
+                                                Command="{x:Bind RemoveCommand}"
+                                                VerticalAlignment="Top"
+                                                HorizontalAlignment="Right"
+                                                Margin="0,-16,-16,0">
+                                            <Grid>
+                                                <Ellipse Width="32"
+                                                         Height="32"
+                                                         Fill="{ThemeResource SystemColorControlAccentBrush}"/>
+                                                <Viewbox Width="16"
+                                                         Height="16">
+                                                    <TextBlock FontFamily="{ThemeResource SymbolThemeFontFamily}">&#xE711;</TextBlock>
+                                                </Viewbox>
+                                            </Grid>
+                                        </Button>
+
+                                        <Viewbox x:Name="ErrorBlock"
+                                                 x:Load="{x:Bind IsErrored, Mode=OneWay}"
+                                                 Width="32"
+                                                 Height="32">
+                                            <TextBlock FontFamily="{ThemeResource SymbolThemeFontFamily}">&#xE7BA;</TextBlock>
+                                        </Viewbox>
+
+                                        <ProgressRing VerticalAlignment="Center"
+                                                      HorizontalAlignment="Center"
+                                                      Width="32"
+                                                      Height="32"
+                                                      IsActive="{x:Bind IsLoading, Mode=OneWay}"/>
+
+                                    </Grid>
+                                </Button>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
                 </Grid>
             </Grid>
         </ScrollViewer>
@@ -161,8 +243,13 @@
                         VerticalAlignment="Stretch"
                         Orientation="Horizontal">
                 <Button Style="{ThemeResource IconButtonStyle}"
+                        Content="&#xE722;"
+                        Margin="0,0,2,0"
+                        Command="{x:Bind ViewModel.TakePhotoCommand}"/>
+                <Button Style="{ThemeResource IconButtonStyle}"
                         Content="&#xEB9F;"
-                        Margin="0,0,2,0"/>
+                        Margin="0,0,2,0"
+                        Command="{x:Bind ViewModel.AddPhotoCommand}"/>
                 <Button Style="{ThemeResource IconButtonStyle}"
                         Content="&#xE714;"
                         Margin="0,0,2,0"/>

@@ -79,7 +79,13 @@ public abstract partial class ViewModelBase : ObservableObject
 
     protected virtual void SetErrored(Exception ex)
     {
-        this.syncContext.Post(o => this.Error = new ExceptionViewModel((Exception)o), ex);
+        this.syncContext.Post(o =>
+        {
+            if (ex != null)
+                this.Error = new ExceptionViewModel((Exception)o);
+            else
+                this.Error = null;
+        }, ex);
     }
 
     protected void OnPropertyChanged(params string[] names)

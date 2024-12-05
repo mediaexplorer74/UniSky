@@ -180,4 +180,43 @@
   <data name="TimeUnit_Year" xml:space="preserve">
     <value>yr</value>
   </data>
+  <data name="E_NonImageOrVideo" xml:space="preserve">
+    <value>Only image and video types are supported.</value>
+  </data>
+  <data name="E_ReplyToNonPost" xml:space="preserve">
+    <value>Trying to reply to something that isn't a post?</value>
+  </data>
+  <data name="E_TooManyPhotos" xml:space="preserve">
+    <value>Posts can contain at most four photos.</value>
+  </data>
+  <data name="E_TooManyVideos" xml:space="preserve">
+    <value>Posts can contain at most one video.</value>
+  </data>
+  <data name="E_UnableToAddImageToVideoPost" xml:space="preserve">
+    <value>Can't add image when this post contains a video.</value>
+  </data>
+  <data name="E_UnableToAddVideoToImagePost" xml:space="preserve">
+    <value>Can't add video when this post contains an image.</value>
+  </data>
+  <data name="ComposePrimaryTextBox.PlaceholderText" xml:space="preserve">
+    <value>What's going on?</value>
+  </data>
+  <data name="ComposeSheetPrimaryText.Text" xml:space="preserve">
+    <value>Post</value>
+  </data>
+  <data name="ComposeSheetSecondaryText.Text" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="ComposeSheetTitle.Text" xml:space="preserve">
+    <value>NEW POST</value>
+  </data>
+  <data name="E_FileUnavailable" xml:space="preserve">
+    <value>Sorry, that file is unavailable.</value>
+  </data>
+  <data name="E_VideosUnsupported" xml:space="preserve">
+    <value>Sorry, videos are currently unsupported.</value>
+  </data>
+  <data name="UploadToBluesky" xml:space="preserve">
+    <value>Attach to post</value>
+  </data>
 </root>

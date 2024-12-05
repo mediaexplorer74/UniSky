@@ -8,6 +8,8 @@ using Microsoft.Extensions.DependencyInjection;
 using UniSky.Controls.Sheet;
 using UniSky.ViewModels.Compose;
 using UniSky.ViewModels.Posts;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.ApplicationModel.Resources;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Popups;
@@ -26,6 +28,8 @@ namespace UniSky.Controls.Compose
 {
     public sealed partial class ComposeSheet : SheetControl
     {
+        private readonly ResourceLoader strings;
+
         public ComposeViewModel ViewModel
         {
             get => (ComposeViewModel)GetValue(ViewModelProperty);
@@ -42,13 +46,27 @@ namespace UniSky.Controls.Compose
             this.Showing += OnShowing;
             this.Shown += OnShown;
             this.Hiding += OnHiding;
+            this.Hidden += OnHidden;
+            this.strings = ResourceLoader.GetForCurrentView();
         }
+
+        public bool Not(bool b, bool a)
+            => !a && !b;
 
         private void OnShowing(SheetControl sender, SheetShowingEventArgs e)
         {
             var inputPane = InputPane.GetForCurrentView();
             inputPane.Showing += OnInputPaneShowing;
             inputPane.Hiding += OnInputPaneHiding;
+
+            if (Window.Current.Content is FrameworkElement element)
+            {
+                element.AllowDrop = true;
+                element.DragEnter += HandleDrag;
+                element.DragOver += HandleDrag;
+                element.DragLeave += HandleDrag;
+                element.Drop += HandleDrop;
+            }
 
             if (e.Parameter is PostViewModel replyTo)
             {
@@ -57,6 +75,22 @@ namespace UniSky.Controls.Compose
             else
             {
                 this.ViewModel = ActivatorUtilities.CreateInstance<ComposeViewModel>(Ioc.Default);
+            }
+        }
+
+        private void OnHidden(SheetControl sender, RoutedEventArgs args)
+        {
+            var inputPane = InputPane.GetForCurrentView();
+            inputPane.Showing -= OnInputPaneShowing;
+            inputPane.Hiding -= OnInputPaneHiding;
+
+            if (Window.Current.Content is FrameworkElement element)
+            {
+                element.AllowDrop = false;
+                element.DragEnter -= HandleDrag;
+                element.DragOver -= HandleDrag;
+                element.DragLeave -= HandleDrag;
+                element.Drop -= HandleDrop;
             }
         }
 
@@ -75,10 +109,6 @@ namespace UniSky.Controls.Compose
                     e.Cancel = true;
                     return;
                 }
-
-                var inputPane = InputPane.GetForCurrentView();
-                inputPane.Showing -= OnInputPaneShowing;
-                inputPane.Hiding -= OnInputPaneHiding;
             }
             finally
             {
@@ -102,7 +132,30 @@ namespace UniSky.Controls.Compose
             args.EnsuredFocusedElementInView = true;
         }
 
-        public bool Not(bool b, bool a)
-            => !a && !b;
+        private void HandleDrag(object sender, DragEventArgs e)
+        {
+            if (e.DataView.Contains(StandardDataFormats.Bitmap) ||
+                e.DataView.Contains(StandardDataFormats.StorageItems))
+            {
+                e.AcceptedOperation = DataPackageOperation.Copy;
+                e.DragUIOverride.Caption = strings.GetString("UploadToBluesky");
+                e.DragUIOverride.IsCaptionVisible = true;
+            }
+            else if (e.DataView.Contains(StandardDataFormats.Text) ||
+                     e.DataView.Contains(StandardDataFormats.WebLink))
+            {
+                e.AcceptedOperation = DataPackageOperation.Link;
+            }
+        }
+
+        private void HandleDrop(object sender, DragEventArgs e)
+        {
+            e.Handled = ViewModel.HandleDrop(e.DataView);
+        }
+
+        private void PrimaryTextBox_Paste(object sender, TextControlPasteEventArgs e)
+        {
+            e.Handled = ViewModel.HandlePaste();
+        }
     }
 }
