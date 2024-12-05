@@ -78,6 +78,7 @@ public partial class ComposeViewModel : ViewModelBase
         this.logger = logger;
         this.resources = ResourceLoader.GetForCurrentView();
 
+        this.Text = "";
         this.ReplyTo = replyTo;
         this.MaxCharacters = 300;
         this.AttachedFiles = [];
@@ -131,7 +132,7 @@ public partial class ComposeViewModel : ViewModelBase
                 .ConfigureAwait(false))
                 .HandleResult();
 
-            Text = null;
+            Text = "";
             syncContext.Post(async () => { await Hide(); });
         }
         catch (Exception ex)
@@ -304,6 +305,8 @@ public partial class ComposeViewModel : ViewModelBase
 
     private async Task AddFileAsync(IStorageFile storageFile, bool isTemporary)
     {
+        if (storageFile == null) return;
+
         // TODO: may not always cover webp/avif. dig into this.
         var type = storageFile.ContentType.StartsWith("image/") ? ComposeViewAttachmentType.Image :
                    storageFile.ContentType.StartsWith("video") ? ComposeViewAttachmentType.Video :
@@ -360,7 +363,7 @@ public partial class ComposeViewModel : ViewModelBase
         }
     }
 
-    private async Task<(IStorageFile file, int width, int height, string contentType)> CompressImageAsync(IStorageFile input)
+    private async Task<(IStorageFile file, int width, int height, string contentType)> CompressImageAsync(IStorageFile input, int size = 2048)
     {
         var useHeif = CheckHeifSupport();
         var output = await ApplicationData.Current.TemporaryFolder.CreateFileAsync($"{Guid.NewGuid()}.{(useHeif ? "heif" : "jpeg")}");
@@ -374,7 +377,7 @@ public partial class ComposeViewModel : ViewModelBase
             width = (int)decoder.PixelWidth;
             height = (int)decoder.PixelHeight;
 
-            SizeHelpers.Scale(ref width, ref height, 2048, 2048);
+            SizeHelpers.Scale(ref width, ref height, size, size);
 
             var encoder = await BitmapEncoder.CreateAsync(useHeif ? BitmapEncoder.HeifEncoderId : BitmapEncoder.JpegEncoderId, outputStream);
             encoder.SetSoftwareBitmap(await decoder.GetSoftwareBitmapAsync());
@@ -382,6 +385,14 @@ public partial class ComposeViewModel : ViewModelBase
             encoder.BitmapTransform.ScaledHeight = (uint)Math.Ceiling(height);
 
             await encoder.FlushAsync();
+        }
+
+        var properties = await output.GetBasicPropertiesAsync();
+        if (properties.Size > 1_000_000)
+        {
+            await output.DeleteAsync();
+
+            return await CompressImageAsync(input, (int)Math.Floor(size * 0.75));
         }
 
         return (output, (int)Math.Ceiling(width), (int)Math.Ceiling(height), contentType);
