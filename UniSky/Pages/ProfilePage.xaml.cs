@@ -74,6 +74,7 @@ public sealed partial class ProfilePage : Page
     {
         var safeAreaService = Ioc.Default.GetRequiredService<ISafeAreaService>();
         safeAreaService.SafeAreaUpdated -= OnSafeAreaUpdated;
+        safeAreaService.SetTitlebarTheme(ElementTheme.Default);
     }
 
     private void HandleUniskyProtocol(Uri uri)

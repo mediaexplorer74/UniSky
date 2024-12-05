@@ -380,16 +380,6 @@
                         <Setter Target="FooterNavigation.Visibility" Value="Collapsed"/>
                     </VisualState.Setters>
                 </VisualState>
-                <!--<VisualState x:Name="Wide">
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="1023" />
-                    </VisualState.StateTriggers>
-
-                    <VisualState.Setters>
-                        <Setter Target="NavView.PaneDisplayMode" Value="Left"/>
-                        <Setter Target="FooterNavigation.Visibility" Value="Collapsed"/>
-                    </VisualState.Setters>
-                </VisualState>-->
             </VisualStateGroup>
             <VisualStateGroup>
                 <VisualState x:Name="Active">

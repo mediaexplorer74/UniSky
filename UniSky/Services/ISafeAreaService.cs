@@ -1,4 +1,5 @@
 ﻿using System;
+using Windows.UI.Xaml;
 
 namespace UniSky.Services
 {
@@ -6,5 +7,7 @@ namespace UniSky.Services
     {
         SafeAreaInfo State { get; }
         event EventHandler<SafeAreaUpdatedEventArgs> SafeAreaUpdated;
+
+        void SetTitlebarTheme(ElementTheme theme);
     }
 }

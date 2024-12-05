@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Humanizer;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
@@ -13,10 +14,11 @@ using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace UniSky.Services;
 
-public record class SafeAreaInfo(bool HasTitleBar, bool IsActive, Thickness Bounds);
+public record class SafeAreaInfo(bool HasTitleBar, bool IsActive, Thickness Bounds, ElementTheme Theme);
 
 public class SafeAreaUpdatedEventArgs : EventArgs
 {
@@ -61,7 +63,7 @@ internal class SafeAreaService : ISafeAreaService
         titleBar.IsVisibleChanged
             += CoreTitleBar_IsVisibleChanged;
 
-        _state = new SafeAreaInfo(true, true, new Thickness());
+        _state = new SafeAreaInfo(true, true, new Thickness(), ElementTheme.Default);
     }
 
     public event EventHandler<SafeAreaUpdatedEventArgs> SafeAreaUpdated
@@ -151,6 +153,12 @@ internal class SafeAreaService : ISafeAreaService
         bottom += (float)(bounds.Bottom - visibleBounds.Bottom);
 
         _state = _state with { Bounds = new Thickness(left, top, right, bottom) };
+        _event?.Invoke(this, new SafeAreaUpdatedEventArgs() { SafeArea = _state });
+    }
+
+    public void SetTitlebarTheme(ElementTheme theme)
+    {
+        _state = _state with { Theme = theme };
         _event?.Invoke(this, new SafeAreaUpdatedEventArgs() { SafeArea = _state });
     }
 }

@@ -75,6 +75,7 @@ public sealed partial class HomePage : Page
             VisualStateManager.GoToState(this, "Inactive", true);
         }
 
+        AppTitleBar.RequestedTheme = e.SafeArea.Theme;
         Margin = new Thickness(e.SafeArea.Bounds.Left, 0, e.SafeArea.Bounds.Right, e.SafeArea.Bounds.Bottom);
     }
 
