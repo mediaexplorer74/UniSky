@@ -183,12 +183,26 @@ internal class SafeAreaService : ISafeAreaService
             appTitleBar.ButtonInactiveForegroundColor = Colors.DarkGray;
         }
 
+        if (ApiInformation.IsApiContractPresent(typeof(PhoneContract).FullName, 1))
+        {
+            var statusBar = StatusBar.GetForCurrentView();
+
+            if (actualTheme == ElementTheme.Dark)
+            {
+                statusBar.ForegroundColor = Colors.White;
+            }
+            else
+            {
+                statusBar.ForegroundColor = Colors.Black;
+            }
+        }
+
         _state = _state with { Theme = theme };
         _event?.Invoke(this, new SafeAreaUpdatedEventArgs() { SafeArea = _state });
     }
 
     private void OnThemeChanged(ThemeListener sender)
     {
-        
+
     }
 }
