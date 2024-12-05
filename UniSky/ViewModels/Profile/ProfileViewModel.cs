@@ -30,7 +30,10 @@ public partial class ProfileViewModel : ViewModelBase
         {
             this.id = profile.Did;
             this.AvatarUrl = profile.Avatar;
-            this.Name = profile.DisplayName;
+            this.Name = string.IsNullOrWhiteSpace(profile.DisplayName) ? 
+                profile.Handle.ToString() :
+                profile.DisplayName;
+
             this.Handle = $"@{profile.Handle}";
         }
 
@@ -38,7 +41,10 @@ public partial class ProfileViewModel : ViewModelBase
         {
             this.id = profileDetailed.Did;
             this.AvatarUrl = profileDetailed.Avatar;
-            this.Name = profileDetailed.DisplayName;
+            this.Name = string.IsNullOrWhiteSpace(profileDetailed.DisplayName) ? 
+                profileDetailed.Handle.ToString() :
+                profileDetailed.DisplayName;
+
             this.Handle = $"@{profileDetailed.Handle}";
         }
     }

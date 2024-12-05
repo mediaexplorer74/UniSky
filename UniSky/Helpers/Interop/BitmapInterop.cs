@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.DataTransfer;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.Streams;
@@ -156,6 +156,43 @@ public class BitmapInterop
     unsafe interface IMemoryBufferByteAccess
     {
         void GetBuffer(out byte* buffer, out uint capacity);
+    }
+
+    public static async Task<float> GetImageAverageBrightnessAsync(IRandomAccessStream stream)
+    {
+        static float RgbToLightness(double r, double g, double b)
+        {
+            float _R = (float)(r / 255f);
+            float _G = (float)(g / 255f);
+            float _B = (float)(b / 255f);
+
+            float _Min = Math.Min(Math.Min(_R, _G), _B);
+            float _Max = Math.Max(Math.Max(_R, _G), _B);
+            float _Delta = _Max - _Min;
+
+            float L = (float)((_Max + _Min) / 2.0f);
+
+            return L;
+        }
+
+        var decoder = await BitmapDecoder.CreateAsync(stream);
+        var transform = new BitmapTransform() { ScaledWidth = 1, ScaledHeight = 1, InterpolationMode = BitmapInterpolationMode.Fant };
+
+        using var bitmap = await decoder.GetSoftwareBitmapAsync(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied, transform, ExifOrientationMode.RespectExifOrientation, ColorManagementMode.ColorManageToSRgb);
+        using var buffer = bitmap.LockBuffer(BitmapBufferAccessMode.Read);
+        using var reference = buffer.CreateReference();
+
+        unsafe
+        {
+            ((IMemoryBufferByteAccess)reference).GetBuffer(out var raw, out var capacity);
+
+            var b = raw[0];
+            var g = raw[1];
+            var r = raw[2];
+            var a = raw[3];
+
+            return RgbToLightness(r, g, b);
+        }
     }
 
     public static async Task<StorageFile> SaveBitmapToFileAsync(RandomAccessStreamReference streamReference)

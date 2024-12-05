@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,11 +14,14 @@ using FishyFlip.Models;
 using FishyFlip.Tools;
 using Humanizer;
 using UniSky.Extensions;
+using UniSky.Helpers.Interop;
 using UniSky.Services;
 using UniSky.ViewModels.Feeds;
 using UniSky.ViewModels.Profiles;
 using Windows.Foundation.Metadata;
+using Windows.Graphics.Imaging;
 using Windows.Phone;
+using Windows.Storage;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 
@@ -44,8 +49,15 @@ public partial class ProfilePageViewModel : ProfileViewModel
     [ObservableProperty]
     private ProfileFeedViewModel selectedFeed;
 
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(Theme))]
+    private bool? isLight;
+
     public Visibility ShowBio
         => !string.IsNullOrWhiteSpace(Bio) ? Visibility.Visible : Visibility.Collapsed;
+
+    public ElementTheme Theme
+        => IsLight.HasValue ? IsLight.Value ? ElementTheme.Dark : ElementTheme.Light : ElementTheme.Default;
 
     public string Followers
         => FollowerCount.ToMetric(decimals: 2);
@@ -94,30 +106,40 @@ public partial class ProfilePageViewModel : ProfileViewModel
     {
         using var context = this.GetLoadingContext();
 
-        var protocol = Ioc.Default.GetRequiredService<IProtocolService>();
-        var profile = (await protocol.Protocol.GetProfileAsync(this.id).ConfigureAwait(false))
-            .HandleResult();
-
-        syncContext.Post(() =>
+        try
         {
-            if (Feeds.Count == 0)
+            var protocol = Ioc.Default.GetRequiredService<IProtocolService>();
+            var profile = (await protocol.Protocol.GetProfileAsync(this.id).ConfigureAwait(false))
+                .HandleResult();
+
+            syncContext.Post(() =>
             {
-                Feeds.Add(new ProfileFeedViewModel(this, "posts_no_replies", profile, protocol));
-                Feeds.Add(new ProfileFeedViewModel(this, "posts_with_replies", profile, protocol));
-                Feeds.Add(new ProfileFeedViewModel(this, "posts_with_media", profile, protocol));
+                if (Feeds.Count == 0)
+                {
+                    Feeds.Add(new ProfileFeedViewModel(this, "posts_no_replies", profile, protocol));
+                    Feeds.Add(new ProfileFeedViewModel(this, "posts_with_replies", profile, protocol));
+                    Feeds.Add(new ProfileFeedViewModel(this, "posts_with_media", profile, protocol));
 
-                SelectedFeed = Feeds[0];
-            }
+                    SelectedFeed = Feeds[0];
+                }
 
-            Populate(profile);
-        });
+                Populate(profile);
+            });
+
+            await CalculateBannerLightnessAsync(profile)
+                .ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            this.SetErrored(ex);
+        }
     }
 
     private void Populate(ProfileViewDetailed profile)
     {
         this.id = profile.Did;
         this.AvatarUrl = profile.Avatar;
-        this.Name = profile.DisplayName;
+        this.Name = string.IsNullOrWhiteSpace(profile.DisplayName) ? profile.Handle.ToString() : profile.DisplayName;
         this.Handle = $"@{profile.Handle}";
         this.BannerUrl = profile.Banner;
         this.FollowerCount = (int)profile.FollowersCount;
@@ -152,5 +174,36 @@ public partial class ProfilePageViewModel : ProfileViewModel
     internal void Select(ProfileFeedViewModel profileFeedViewModel)
     {
         SelectedFeed = profileFeedViewModel;
+    }
+
+    private async Task CalculateBannerLightnessAsync(ProfileViewDetailed profile)
+    {
+        if (string.IsNullOrWhiteSpace(profile.Banner)) return;
+
+        var protocol = Ioc.Default.GetRequiredService<IProtocolService>();
+        using var banner = await protocol.Protocol.Client.GetStreamAsync(profile.Banner)
+            .ConfigureAwait(false);
+        using var memoryStream = new MemoryStream();
+        await banner.CopyToAsync(memoryStream);
+
+        memoryStream.Seek(0, SeekOrigin.Begin);
+
+        var lightness = await BitmapInterop.GetImageAverageBrightnessAsync(memoryStream.AsRandomAccessStream());
+        IsLight = lightness < 0.60f;
+
+        Debug.WriteLine(lightness);
+
+        syncContext.Post(() =>
+        {
+            var safeAreaService = Ioc.Default.GetRequiredService<ISafeAreaService>();
+            if (IsLight == true)
+            {
+                safeAreaService.SetTitlebarTheme(ElementTheme.Dark);
+            }
+            else
+            {
+                safeAreaService.SetTitlebarTheme(ElementTheme.Light);
+            }
+        });
     }
 }

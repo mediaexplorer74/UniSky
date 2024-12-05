@@ -132,7 +132,7 @@ public partial class PostViewModel : ViewModelBase
         Embed = CreateEmbedViewModel(view.Embed);
 
         RichText = new RichTextViewModel(post.Text, post.Facets ?? []);
-        Debug.WriteLine(string.Concat(RichText.Facets.Select(f => f.Text)));
+        //Debug.WriteLine(string.Concat(RichText.Facets.Select(f => f.Text)));
 
         var timeSinceIndex = DateTime.Now - (view.IndexedAt.Value.ToLocalTime());
         var date = timeSinceIndex.Humanize(1, minUnit: Humanizer.Localisation.TimeUnit.Second);
@@ -273,7 +273,7 @@ public partial class PostViewModel : ViewModelBase
         if (embed is null)
             return null;
 
-        Debug.WriteLine(embed.GetType());
+        //Debug.WriteLine(embed.GetType());
 
         return embed switch
         {

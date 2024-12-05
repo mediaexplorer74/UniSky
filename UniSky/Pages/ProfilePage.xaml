@@ -9,6 +9,7 @@
     xmlns:extensions="using:UniSky.Extensions"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:mux="using:Microsoft.UI.Xaml.Controls"
+    xmlns:w1809="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 7)"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     Loaded="Page_Loaded"
@@ -19,13 +20,14 @@
 
     <Grid>
         <ListView x:Name="RootList"
-              ItemsSource="{Binding SelectedFeed.Items}" 
-              ItemTemplate="{StaticResource FeedItemContentTemplate}"
-              SelectionMode="None"
-              IsItemClickEnabled="True"
-              HorizontalAlignment="Stretch"
-              HorizontalContentAlignment="Stretch"
-              ScrollViewer.IsVerticalScrollChainingEnabled="True">
+                  ItemsSource="{Binding SelectedFeed.Items}" 
+                  ItemTemplate="{StaticResource FeedItemContentTemplate}"
+                  SelectionMode="None"
+                  IsItemClickEnabled="True"
+                  HorizontalAlignment="Stretch"
+                  HorizontalContentAlignment="Stretch"
+                  ScrollViewer.IsVerticalScrollChainingEnabled="True"
+                  w1809:ScrollViewer.CanContentRenderOutsideBounds="True">
             <ListView.Resources>
                 <SolidColorBrush Color="Transparent" x:Key="ListViewItemRevealBackground"/>
                 <SolidColorBrush Color="Transparent" x:Key="ListViewItemBackgroundPointerOver"/>
@@ -41,7 +43,6 @@
                 <Grid x:Name="ProfileContainer"
                       extensions:Hairline.BorderThickness="0,0,0,1"
                       BorderBrush="{StaticResource SystemControlRevealSeparatorBrush}"
-                      Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}"
                       SizeChanged="Page_SizeChanged">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -54,6 +55,16 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
+                    <Border Canvas.ZIndex="-1"
+                            Grid.ColumnSpan="2"
+                            Grid.RowSpan="3"
+                            Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}"/>
+
+                    <Border Canvas.ZIndex="-1"
+                            Grid.ColumnSpan="2"
+                            Grid.Row="4"
+                            Background="{ThemeResource SystemControlChromeMediumAcrylicElementMediumBrush}"/>
+
                     <Grid x:Name="HeaderGrid"
                           Grid.ColumnSpan="2"
                           Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}">
@@ -62,6 +73,12 @@
                                    HorizontalAlignment="Center"
                                    Stretch="UniformToFill"/>
                         </controls:ConstrainedBox>
+
+                        <ProgressRing VerticalAlignment="Center"
+                                      HorizontalAlignment="Center"
+                                      Width="48"
+                                      Height="48"
+                                      IsActive="{Binding IsLoading}"/>
                     </Grid>
 
                     <Ellipse x:Name="ProfileImage"
@@ -184,7 +201,7 @@
                             Grid.ColumnSpan="2"
                             Grid.Row="1"
                             VerticalAlignment="Bottom"
-                            RequestedTheme="Dark">
+                            RequestedTheme="{Binding Theme}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
@@ -208,7 +225,7 @@
                                 Tapped="ProfileContainer_Tapped"
                                 Margin="-60,-8,-8,-8"
                                 Grid.ColumnSpan="2"
-                                Grid.RowSpan="2"/>
+                                Grid.RowSpan="2"/> 
 
                         <Button x:Name="ScrolledFollowButton"
                                 Style="{ThemeResource ButtonRevealStyle}"

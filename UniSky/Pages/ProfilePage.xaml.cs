@@ -74,6 +74,7 @@ public sealed partial class ProfilePage : Page
     {
         var safeAreaService = Ioc.Default.GetRequiredService<ISafeAreaService>();
         safeAreaService.SafeAreaUpdated -= OnSafeAreaUpdated;
+        safeAreaService.SetTitlebarTheme(ElementTheme.Default);
     }
 
     private void HandleUniskyProtocol(Uri uri)
@@ -228,7 +229,7 @@ public sealed partial class ProfilePage : Page
 
         var safeAreaService = Ioc.Default.GetRequiredService<ISafeAreaService>();
 
-        var titleBarHeight = (float)safeAreaService.State.Bounds.Top;
+        var titleBarHeight = (float)safeAreaService.State.Bounds.Top + 4;
         var stickyHeight = (float)StickyFooter.ActualHeight;
         var totalSize = (float)ProfileContainer.ActualHeight;
         var clampHeight = (float)(52 + titleBarHeight) + stickyHeight;

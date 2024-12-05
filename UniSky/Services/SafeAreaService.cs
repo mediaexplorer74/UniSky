@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Humanizer;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
+using Microsoft.Toolkit.Uwp.UI.Helpers;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Foundation.Metadata;
@@ -13,10 +15,11 @@ using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace UniSky.Services;
 
-public record class SafeAreaInfo(bool HasTitleBar, bool IsActive, Thickness Bounds);
+public record class SafeAreaInfo(bool HasTitleBar, bool IsActive, Thickness Bounds, ElementTheme Theme);
 
 public class SafeAreaUpdatedEventArgs : EventArgs
 {
@@ -28,6 +31,7 @@ internal class SafeAreaService : ISafeAreaService
     private readonly CoreWindow _window;
     private readonly ApplicationView _applicationView;
     private readonly CoreApplicationView _coreApplicationView;
+    private readonly ThemeListener _themeListener;
 
     private SafeAreaInfo _state;
 
@@ -49,10 +53,6 @@ internal class SafeAreaService : ISafeAreaService
         _applicationView.SetDesiredBoundsMode(ApplicationViewBoundsMode.UseCoreWindow);
         _applicationView.VisibleBoundsChanged += ApplicationView_VisibleBoundsChanged;
 
-        var appTitleBar = _applicationView.TitleBar;
-        appTitleBar.ButtonBackgroundColor = Colors.Transparent;
-        appTitleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
-
         var titleBar = _coreApplicationView.TitleBar;
         titleBar.ExtendViewIntoTitleBar = true;
 
@@ -61,7 +61,11 @@ internal class SafeAreaService : ISafeAreaService
         titleBar.IsVisibleChanged
             += CoreTitleBar_IsVisibleChanged;
 
-        _state = new SafeAreaInfo(true, true, new Thickness());
+        _themeListener = new ThemeListener();
+        _themeListener.ThemeChanged += OnThemeChanged;
+
+        _state = new SafeAreaInfo(true, true, new Thickness(), ElementTheme.Default);
+        SetTitlebarTheme(ElementTheme.Default);
     }
 
     public event EventHandler<SafeAreaUpdatedEventArgs> SafeAreaUpdated
@@ -152,5 +156,53 @@ internal class SafeAreaService : ISafeAreaService
 
         _state = _state with { Bounds = new Thickness(left, top, right, bottom) };
         _event?.Invoke(this, new SafeAreaUpdatedEventArgs() { SafeArea = _state });
+    }
+
+    public void SetTitlebarTheme(ElementTheme theme)
+    {
+        var actualTheme = theme switch
+        {
+            ElementTheme.Default => _themeListener.CurrentTheme == ApplicationTheme.Dark
+                ? ElementTheme.Dark
+                : ElementTheme.Light,
+            _ => theme
+        };
+
+        var appTitleBar = _applicationView.TitleBar;
+        appTitleBar.ButtonBackgroundColor = Colors.Transparent;
+        appTitleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
+
+        if (actualTheme == ElementTheme.Dark)
+        {
+            appTitleBar.ButtonForegroundColor = Colors.White;
+            appTitleBar.ButtonInactiveForegroundColor = Colors.LightGray;
+        }
+        else
+        {
+            appTitleBar.ButtonForegroundColor = Colors.Black;
+            appTitleBar.ButtonInactiveForegroundColor = Colors.DarkGray;
+        }
+
+        if (ApiInformation.IsApiContractPresent(typeof(PhoneContract).FullName, 1))
+        {
+            var statusBar = StatusBar.GetForCurrentView();
+
+            if (actualTheme == ElementTheme.Dark)
+            {
+                statusBar.ForegroundColor = Colors.White;
+            }
+            else
+            {
+                statusBar.ForegroundColor = Colors.Black;
+            }
+        }
+
+        _state = _state with { Theme = theme };
+        _event?.Invoke(this, new SafeAreaUpdatedEventArgs() { SafeArea = _state });
+    }
+
+    private void OnThemeChanged(ThemeListener sender)
+    {
+        SetTitlebarTheme(_state.Theme);
     }
 }

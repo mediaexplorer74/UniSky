@@ -296,61 +296,78 @@
                               ToolTipService.Placement="Top"/>
                 </Grid>
 
-
-
-                <Grid x:Name="AppTitleBar"
-                      Background="Transparent"
-                      VerticalAlignment="Top">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition x:Name="LeftPaddingColumn" Width="0"/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-
-                    <Grid Grid.Column="1" 
-                          MaxWidth="600" 
-                          HorizontalAlignment="Stretch">
+                <UserControl x:Name="AppTitleBarContainer"
+                             VerticalAlignment="Top">
+                    <Grid x:Name="AppTitleBar"
+                          Background="Transparent">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="32"/>
+                            <ColumnDefinition x:Name="LeftPaddingColumn" Width="0"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <Grid.RenderTransform>
-                            <TranslateTransform x:Name="TitleHeaderTransform"/>
-                        </Grid.RenderTransform>
 
-                        <Button x:Name="BackButton"
-                                x:Load="{x:Bind NavigationFrame.CanGoBack, Mode=OneWay}"
-                                Style="{StaticResource NavigationBackButtonNormalStyle}"
-                                Height="32"
-                                FontSize="13"
-                                ToolTipService.ToolTip="Back"
-                                Command="{x:Bind ViewModel.GoBackCommand}"/>
+                        <Grid Grid.Column="1" 
+                               MaxWidth="600" 
+                               HorizontalAlignment="Stretch">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="32"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RenderTransform>
+                                <TranslateTransform x:Name="TitleHeaderTransform"/>
+                            </Grid.RenderTransform>
 
-                        <Viewbox VerticalAlignment="Center"
-                                 HorizontalAlignment="Center"
-                                 Margin="8,2,0,0"
-                                 Width="16"
-                                 Height="16"
-                                 Grid.Column="1">
-                            <Path x:Name="AppIconPath"
-                                  Data="{StaticResource BlueSkyLogoPath}"
-                                  Fill="{ThemeResource ApplicationForegroundThemeBrush}"/>
-                        </Viewbox>
+                            <Button x:Name="BackButton"
+                                     x:Load="{x:Bind NavigationFrame.CanGoBack, Mode=OneWay}"
+                                     Style="{StaticResource NavigationBackButtonNormalStyle}"
+                                     Height="32"
+                                     FontSize="13"
+                                     ToolTipService.ToolTip="Back"
+                                     Command="{x:Bind ViewModel.GoBackCommand}"/>
 
-                        <TextBlock x:Name="AppTitleTextBlock"
-                                   x:Uid="AppTitle"
-                                   Style="{StaticResource CaptionTextBlockStyle}" 
-                                   Text="Unisky"
-                                   VerticalAlignment="Center" 
-                                   Grid.Column="2"
-                                   Margin="8,0"/>
+                            <Viewbox VerticalAlignment="Center"
+                                      HorizontalAlignment="Center"
+                                      Margin="8,2,0,0"
+                                      Width="16"
+                                      Height="16"
+                                      Grid.Column="1">
+                                <Path x:Name="AppIconPath"
+                                       Data="{StaticResource BlueSkyLogoPath}"
+                                       Fill="{ThemeResource ApplicationForegroundThemeBrush}"/>
+                            </Viewbox>
 
-                        <Border x:Name="TitleBarDrag"
-                                Background="Transparent"
-                                Grid.Column="1"
-                                Grid.ColumnSpan="2"/>
+                            <TextBlock x:Name="AppTitleTextBlock"
+                                        x:Uid="AppTitle"
+                                        Style="{StaticResource CaptionTextBlockStyle}" 
+                                        Text="Unisky"
+                                        VerticalAlignment="Center" 
+                                        Grid.Column="2"
+                                        Margin="8,0"/>
+
+                            <Border x:Name="TitleBarDrag"
+                                     Background="Transparent"
+                                     Grid.Column="1"
+                                     Grid.ColumnSpan="2"/>
+                        </Grid>
+                        
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup>
+                                <VisualState x:Name="Active">
+                                    <VisualState.Setters>
+                                        <Setter Target="AppIconPath.Fill" Value="{ThemeResource ApplicationForegroundThemeBrush}"/>
+                                        <Setter Target="AppTitleTextBlock.Foreground" Value="{ThemeResource ApplicationForegroundThemeBrush}"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Inactive">
+                                    <VisualState.Setters>
+                                        <Setter Target="AppIconPath.Fill" Value="{ThemeResource ApplicationSecondaryForegroundThemeBrush}"/>
+                                        <Setter Target="AppTitleTextBlock.Foreground" Value="{ThemeResource ApplicationSecondaryForegroundThemeBrush}"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
                     </Grid>
-                </Grid>
+                </UserControl>
             </Grid>
 
         </mux:NavigationView>
@@ -378,30 +395,6 @@
                         <Setter Target="FrameContainer.(extensions:Hairline.BorderThickness)" Value="1,0"/>
                         <Setter Target="NavView.PaneDisplayMode" Value="LeftCompact"/>
                         <Setter Target="FooterNavigation.Visibility" Value="Collapsed"/>
-                    </VisualState.Setters>
-                </VisualState>
-                <!--<VisualState x:Name="Wide">
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="1023" />
-                    </VisualState.StateTriggers>
-
-                    <VisualState.Setters>
-                        <Setter Target="NavView.PaneDisplayMode" Value="Left"/>
-                        <Setter Target="FooterNavigation.Visibility" Value="Collapsed"/>
-                    </VisualState.Setters>
-                </VisualState>-->
-            </VisualStateGroup>
-            <VisualStateGroup>
-                <VisualState x:Name="Active">
-                    <VisualState.Setters>
-                        <Setter Target="AppIconPath.Fill" Value="{ThemeResource ApplicationForegroundThemeBrush}"/>
-                        <Setter Target="AppTitleTextBlock.Foreground" Value="{ThemeResource ApplicationForegroundThemeBrush}"/>
-                    </VisualState.Setters>
-                </VisualState>
-                <VisualState x:Name="Inactive">
-                    <VisualState.Setters>
-                        <Setter Target="AppIconPath.Fill" Value="{ThemeResource ApplicationSecondaryForegroundThemeBrush}"/>
-                        <Setter Target="AppTitleTextBlock.Foreground" Value="{ThemeResource ApplicationSecondaryForegroundThemeBrush}"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
