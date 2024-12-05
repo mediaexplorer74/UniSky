@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
+using UniSky.Services;
 using UniSky.ViewModels;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -32,7 +33,7 @@ public sealed partial class LoginPage : Page
     public LoginPage()
     {
         this.InitializeComponent();
-        this.ViewModel = ActivatorUtilities.CreateInstance<LoginViewModel>(Ioc.Default);
+        this.ViewModel = ActivatorUtilities.CreateInstance<LoginViewModel>(ServiceContainer.Scoped);
     }
 
     protected override void OnNavigatedTo(NavigationEventArgs e)

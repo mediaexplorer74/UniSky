@@ -13,6 +13,7 @@ using FishyFlip.Lexicon.App.Bsky.Actor;
 using FishyFlip.Models;
 using FishyFlip.Tools;
 using Humanizer;
+using Microsoft.Extensions.DependencyInjection;
 using UniSky.Extensions;
 using UniSky.Helpers.Interop;
 using UniSky.Services;
@@ -82,7 +83,7 @@ public partial class ProfilePageViewModel : ProfileViewModel
     public ProfilePageViewModel(ATObject profile)
         : base(profile)
     {
-        var protocol = Ioc.Default.GetRequiredService<IProtocolService>();
+        var protocol = ServiceContainer.Scoped.GetRequiredService<IProtocolService>();
         if (profile is ProfileViewDetailed detailed)
         {
             Populate(detailed);
@@ -108,7 +109,7 @@ public partial class ProfilePageViewModel : ProfileViewModel
 
         try
         {
-            var protocol = Ioc.Default.GetRequiredService<IProtocolService>();
+            var protocol = ServiceContainer.Scoped.GetRequiredService<IProtocolService>();
             var profile = (await protocol.Protocol.GetProfileAsync(this.id).ConfigureAwait(false))
                 .HandleResult();
 
@@ -180,7 +181,7 @@ public partial class ProfilePageViewModel : ProfileViewModel
     {
         if (string.IsNullOrWhiteSpace(profile.Banner)) return;
 
-        var protocol = Ioc.Default.GetRequiredService<IProtocolService>();
+        var protocol = ServiceContainer.Scoped.GetRequiredService<IProtocolService>();
         using var banner = await protocol.Protocol.Client.GetStreamAsync(profile.Banner)
             .ConfigureAwait(false);
         using var memoryStream = new MemoryStream();
@@ -195,7 +196,7 @@ public partial class ProfilePageViewModel : ProfileViewModel
 
         syncContext.Post(() =>
         {
-            var safeAreaService = Ioc.Default.GetRequiredService<ISafeAreaService>();
+            var safeAreaService = ServiceContainer.Scoped.GetRequiredService<ISafeAreaService>();
             if (IsLight == true)
             {
                 safeAreaService.SetTitlebarTheme(ElementTheme.Dark);

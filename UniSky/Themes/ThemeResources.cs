@@ -1,5 +1,6 @@
 ﻿using System;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using UniSky.Services;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -10,7 +11,7 @@ namespace UniSky.Themes
     {
         public ThemeResources()
         {
-            var theme = Ioc.Default.GetRequiredService<IThemeService>()
+            var theme = ServiceContainer.Scoped.GetRequiredService<IThemeService>()
                 .GetTheme();
 
             Uri uri = theme switch

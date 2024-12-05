@@ -4,14 +4,17 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using Ipfs;
 using Microsoft.Extensions.DependencyInjection;
 using UniSky.Controls.Sheet;
+using UniSky.Services;
 using UniSky.ViewModels.Compose;
 using UniSky.ViewModels.Posts;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.ApplicationModel.Resources;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Foundation.Metadata;
 using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -50,6 +53,11 @@ namespace UniSky.Controls.Compose
             this.strings = ResourceLoader.GetForCurrentView();
         }
 
+        protected override void OnBottomInsetsChanged(double leftInset, double rightInset)
+        {
+            FooterContainer.Padding = new Thickness(leftInset, 0, rightInset, 2);
+        }
+
         public bool Not(bool b, bool a)
             => !a && !b;
 
@@ -70,11 +78,11 @@ namespace UniSky.Controls.Compose
 
             if (e.Parameter is PostViewModel replyTo)
             {
-                this.ViewModel = ActivatorUtilities.CreateInstance<ComposeViewModel>(Ioc.Default, replyTo);
+                this.ViewModel = ActivatorUtilities.CreateInstance<ComposeViewModel>(ServiceContainer.Scoped, replyTo, Controller);
             }
             else
             {
-                this.ViewModel = ActivatorUtilities.CreateInstance<ComposeViewModel>(Ioc.Default);
+                this.ViewModel = ActivatorUtilities.CreateInstance<ComposeViewModel>(ServiceContainer.Scoped, Controller);
             }
         }
 
@@ -104,10 +112,17 @@ namespace UniSky.Controls.Compose
             var deferral = e.GetDeferral();
             try
             {
-                if (ViewModel.IsDirty && await new ComposeDiscardDraftDialog().ShowAsync() != ContentDialogResult.Primary)
+                if (ViewModel.IsDirty)
                 {
-                    e.Cancel = true;
-                    return;
+                    var discardDraftDialog = new ComposeDiscardDraftDialog();
+                    if (Controller != null && ApiInformation.IsApiContractPresent(typeof(UniversalApiContract).FullName, 8))
+                        discardDraftDialog.XamlRoot = Controller.Root.XamlRoot;
+
+                    if (await discardDraftDialog.ShowAsync() != ContentDialogResult.Primary)
+                    {
+                        e.Cancel = true;
+                        return;
+                    }
                 }
             }
             finally

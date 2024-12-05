@@ -67,15 +67,20 @@ public partial class ComposeViewModel : ViewModelBase
         => ReplyTo != null;
 
     public ObservableCollection<ComposeViewAttachmentViewModel> AttachedFiles { get; }
+
     public bool HasAttachments
         => AttachedFiles.Count > 0;
 
+    public ISheetController SheetController { get; }
+
     public ComposeViewModel(IProtocolService protocolService,
+                            ISheetController sheetController,
                             ILogger<ComposeViewModel> logger,
                             PostViewModel replyTo = null)
     {
         this.protocolService = protocolService;
         this.logger = logger;
+        this.SheetController = sheetController;
         this.resources = ResourceLoader.GetForCurrentView();
 
         this.Text = "";
@@ -179,8 +184,7 @@ public partial class ComposeViewModel : ViewModelBase
     [RelayCommand]
     private async Task Hide()
     {
-        var sheetService = Ioc.Default.GetRequiredService<ISheetService>();
-        await sheetService.TryCloseAsync();
+        await this.SheetController.TryHideSheetAsync();
     }
 
     [RelayCommand]
@@ -354,7 +358,7 @@ public partial class ComposeViewModel : ViewModelBase
             throw new InvalidOperationException(resources.GetString("E_VideosUnsupported"));
         }
 
-        AttachedFiles.Add(ActivatorUtilities.CreateInstance<ComposeViewAttachmentViewModel>(Ioc.Default, this, storageFile, type, isTemporary));
+        AttachedFiles.Add(ActivatorUtilities.CreateInstance<ComposeViewAttachmentViewModel>(ServiceContainer.Scoped, this, storageFile, type, isTemporary));
     }
 
     internal void UpdateLoading(ComposeViewAttachmentViewModel attachmentViewModel, bool value)

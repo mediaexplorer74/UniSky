@@ -64,15 +64,15 @@ public sealed partial class ProfilePage : Page
         if (e.Parameter is Uri { Scheme: "unisky" } uri)
             HandleUniskyProtocol(uri);
         else if (e.Parameter is ATObject basic)
-            this.DataContext = ActivatorUtilities.CreateInstance<ProfilePageViewModel>(Ioc.Default, basic);
+            this.DataContext = ActivatorUtilities.CreateInstance<ProfilePageViewModel>(ServiceContainer.Scoped, basic);
 
-        var safeAreaService = Ioc.Default.GetRequiredService<ISafeAreaService>();
+        var safeAreaService = ServiceContainer.Scoped.GetRequiredService<ISafeAreaService>();
         safeAreaService.SafeAreaUpdated += OnSafeAreaUpdated;
     }
 
     protected override void OnNavigatedFrom(NavigationEventArgs e)
     {
-        var safeAreaService = Ioc.Default.GetRequiredService<ISafeAreaService>();
+        var safeAreaService = ServiceContainer.Scoped.GetRequiredService<ISafeAreaService>();
         safeAreaService.SafeAreaUpdated -= OnSafeAreaUpdated;
         safeAreaService.SetTitlebarTheme(ElementTheme.Default);
     }
@@ -86,7 +86,7 @@ public sealed partial class ProfilePage : Page
         }
 
         if (ATDid.TryCreate(path[1], out var did))
-            this.DataContext = ActivatorUtilities.CreateInstance<ProfilePageViewModel>(Ioc.Default, did);
+            this.DataContext = ActivatorUtilities.CreateInstance<ProfilePageViewModel>(ServiceContainer.Scoped, did);
     }
 
     private void Page_Loaded(object sender, RoutedEventArgs e)
@@ -227,7 +227,7 @@ public sealed partial class ProfilePage : Page
         if (ProfileContainer.ActualHeight == 0)
             return;
 
-        var safeAreaService = Ioc.Default.GetRequiredService<ISafeAreaService>();
+        var safeAreaService = ServiceContainer.Scoped.GetRequiredService<ISafeAreaService>();
 
         var titleBarHeight = (float)safeAreaService.State.Bounds.Top + 4;
         var stickyHeight = (float)StickyFooter.ActualHeight;

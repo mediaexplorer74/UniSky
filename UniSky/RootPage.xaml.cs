@@ -7,6 +7,7 @@ using System.Numerics;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Xml;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Geometry;
 using UniSky.Helpers.Composition;
@@ -51,11 +52,11 @@ public sealed partial class RootPage : Page
     {
         base.OnNavigatedTo(e);
 
-        var serviceLocator = Ioc.Default.GetRequiredService<INavigationServiceLocator>();
+        var serviceLocator = ServiceContainer.Scoped.GetRequiredService<INavigationServiceLocator>();
         var service = serviceLocator.GetNavigationService("Root");
         service.Frame = RootFrame;
 
-        var sessionService = Ioc.Default.GetRequiredService<SessionService>();
+        var sessionService = ServiceContainer.Scoped.GetRequiredService<SessionService>();
         if (ApplicationData.Current.LocalSettings.Values.TryGetValue("LastUsedUser", out var userObj) &&
             userObj is string user)
         {

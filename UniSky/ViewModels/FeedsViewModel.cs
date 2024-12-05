@@ -8,6 +8,7 @@ using FishyFlip.Lexicon.App.Bsky.Actor;
 using FishyFlip.Lexicon.App.Bsky.Feed;
 using FishyFlip.Models;
 using FishyFlip.Tools;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
 using UniSky.Controls.Compose;
@@ -42,7 +43,7 @@ public partial class FeedsViewModel : ViewModelBase
     [RelayCommand]
     public async Task Post()
     {
-        var sheetsService = Ioc.Default.GetRequiredService<ISheetService>();
+        var sheetsService = ServiceContainer.Scoped.GetRequiredService<ISheetService>();
         await sheetsService.ShowAsync<ComposeSheet>();
     }
 

@@ -10,6 +10,7 @@ using FishyFlip.Lexicon.App.Bsky.Notification;
 using FishyFlip.Lexicon.Com.Atproto.Server;
 using FishyFlip.Models;
 using FishyFlip.Tools;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using UniSky.Extensions;
 using UniSky.Helpers;
@@ -190,7 +191,7 @@ public partial class HomeViewModel : ViewModelBase
             throw new InvalidOperationException("Authentication failed!");
 
         var sessionModel2 = new SessionModel(true, sessionModel.Service, authSession2.Session, authSession2);
-        var sessionService = Ioc.Default.GetRequiredService<SessionService>();
+        var sessionService = ServiceContainer.Scoped.GetRequiredService<SessionService>();
         sessionService.SaveSession(sessionModel2);
 
         protocolService.SetProtocol(protocol);

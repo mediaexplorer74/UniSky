@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using UniSky.Controls.Compose;
 using UniSky.Extensions;
 using UniSky.Helpers;
+using Windows.Foundation;
 using Windows.Foundation.Metadata;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
@@ -108,6 +109,9 @@ public partial class ComposeViewAttachmentViewModel : ViewModelBase
     {
         var previousAltText = AltText;
         var altTextDialog = new ComposeAddAltTextDialog(this);
+        if (parent.SheetController != null && ApiInformation.IsApiContractPresent(typeof(UniversalApiContract).FullName, 8))
+            altTextDialog.XamlRoot = parent.SheetController.Root.XamlRoot;
+
         if (await altTextDialog.ShowAsync() != ContentDialogResult.Primary)
             AltText = previousAltText;
     }

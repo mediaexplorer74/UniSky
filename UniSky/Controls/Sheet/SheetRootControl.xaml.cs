@@ -7,6 +7,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Uwp.UI;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
 using UniSky.Pages;
@@ -86,7 +87,7 @@ namespace UniSky.Controls.Sheet
 
             Window.Current.SetTitleBar(TitleBar);
 
-            var safeAreaService = Ioc.Default.GetRequiredService<ISafeAreaService>();
+            var safeAreaService = ServiceContainer.Scoped.GetRequiredService<ISafeAreaService>();
             safeAreaService.SafeAreaUpdated += OnSafeAreaUpdated;
 
             var systemNavigationManager = SystemNavigationManager.GetForCurrentView();
@@ -106,7 +107,6 @@ namespace UniSky.Controls.Sheet
 
             try
             {
-                // TODO: allow deferrals
                 if (SheetRoot.Child is SheetControl control)
                 {
                     if (!await control.InvokeHidingAsync())
@@ -115,7 +115,7 @@ namespace UniSky.Controls.Sheet
 
                 VisualStateManager.GoToState(this, "Closed", true);
 
-                var safeAreaService = Ioc.Default.GetRequiredService<ISafeAreaService>();
+                var safeAreaService = ServiceContainer.Scoped.GetRequiredService<ISafeAreaService>();
                 safeAreaService.SafeAreaUpdated -= OnSafeAreaUpdated;
 
                 var systemNavigationManager = SystemNavigationManager.GetForCurrentView();
