@@ -273,7 +273,7 @@ public partial class PostViewModel : ViewModelBase
         if (embed is null)
             return null;
 
-        Debug.WriteLine(embed.GetType());
+        //Debug.WriteLine(embed.GetType());
 
         return embed switch
         {

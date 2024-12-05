@@ -62,6 +62,12 @@
                                    HorizontalAlignment="Center"
                                    Stretch="UniformToFill"/>
                         </controls:ConstrainedBox>
+
+                        <ProgressRing VerticalAlignment="Center"
+                                      HorizontalAlignment="Center"
+                                      Width="48"
+                                      Height="48"
+                                      IsActive="{Binding IsLoading}"/>
                     </Grid>
 
                     <Ellipse x:Name="ProfileImage"

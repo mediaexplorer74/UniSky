@@ -179,7 +179,7 @@ public class BitmapInterop
         }
 
         var decoder = await BitmapDecoder.CreateAsync(stream);
-        var transform = new BitmapTransform() { ScaledWidth = 1, ScaledHeight = 1, InterpolationMode = BitmapInterpolationMode.Cubic };
+        var transform = new BitmapTransform() { ScaledWidth = 1, ScaledHeight = 1, InterpolationMode = BitmapInterpolationMode.Fant };
 
         using var bitmap = await decoder.GetSoftwareBitmapAsync(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied, transform, ExifOrientationMode.RespectExifOrientation, ColorManagementMode.ColorManageToSRgb);
         using var buffer = bitmap.LockBuffer(BitmapBufferAccessMode.Read);

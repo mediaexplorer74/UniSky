@@ -7,6 +7,6 @@ public abstract partial class PostEmbedViewModel : ViewModelBase
 {
     public PostEmbedViewModel(ATObject embed)
     {
-        Debug.WriteLine(embed?.Type);
+        //Debug.WriteLine(embed?.Type);
     }
 }

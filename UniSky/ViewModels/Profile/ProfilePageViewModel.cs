@@ -139,7 +139,7 @@ public partial class ProfilePageViewModel : ProfileViewModel
     {
         this.id = profile.Did;
         this.AvatarUrl = profile.Avatar;
-        this.Name = profile.DisplayName;
+        this.Name = string.IsNullOrWhiteSpace(profile.DisplayName) ? profile.Handle.ToString() : profile.DisplayName;
         this.Handle = $"@{profile.Handle}";
         this.BannerUrl = profile.Banner;
         this.FollowerCount = (int)profile.FollowersCount;
@@ -189,7 +189,8 @@ public partial class ProfilePageViewModel : ProfileViewModel
         memoryStream.Seek(0, SeekOrigin.Begin);
 
         var lightness = await BitmapInterop.GetImageAverageBrightnessAsync(memoryStream.AsRandomAccessStream());
-        IsLight = lightness < 0.66f;
+        IsLight = lightness < 0.60f;
+
         Debug.WriteLine(lightness);
 
         syncContext.Post(() =>

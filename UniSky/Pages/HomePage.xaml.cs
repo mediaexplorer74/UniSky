@@ -68,14 +68,14 @@ public sealed partial class HomePage : Page
 
         if (e.SafeArea.IsActive)
         {
-            VisualStateManager.GoToState(this, "Active", true);
+            VisualStateManager.GoToState(AppTitleBarContainer, "Active", true);
         }
         else
         {
-            VisualStateManager.GoToState(this, "Inactive", true);
+            VisualStateManager.GoToState(AppTitleBarContainer, "Inactive", true);
         }
 
-        AppTitleBar.RequestedTheme = e.SafeArea.Theme;
+        AppTitleBarContainer.RequestedTheme = e.SafeArea.Theme;
         Margin = new Thickness(e.SafeArea.Bounds.Left, 0, e.SafeArea.Bounds.Right, e.SafeArea.Bounds.Bottom);
     }
 
