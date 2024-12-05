@@ -133,8 +133,11 @@ public partial class ComposeViewModel : ViewModelBase
                 .HandleResult();
 
             Text = "";
-            AttachedFiles.Clear();
-            syncContext.Post(async () => { await Hide(); });
+            syncContext.Post(async () =>
+            {
+                AttachedFiles.Clear();
+                await Hide();
+            });
         }
         catch (Exception ex)
         {
