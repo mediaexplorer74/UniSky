@@ -378,8 +378,8 @@ public partial class ComposeViewModel : ViewModelBase
         using (var outputStream = await output.OpenAsync(FileAccessMode.ReadWrite))
         {
             var decoder = await BitmapDecoder.CreateAsync(inputStream);
-            width = (int)decoder.PixelWidth;
-            height = (int)decoder.PixelHeight;
+            width = (int)decoder.OrientedPixelWidth;
+            height = (int)decoder.OrientedPixelHeight;
 
             SizeHelpers.Scale(ref width, ref height, size, size);
 
