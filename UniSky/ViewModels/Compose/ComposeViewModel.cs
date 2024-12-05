@@ -25,6 +25,7 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.ApplicationModel.Resources;
 using Windows.Foundation.Metadata;
 using Windows.Graphics.Imaging;
+using Windows.Media.Capture;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
@@ -55,10 +56,10 @@ public partial class ComposeViewModel : ViewModelBase
 
     // TODO: this but better
     public bool IsDirty
-        => !string.IsNullOrEmpty(Text);
+        => (!string.IsNullOrEmpty(Text) || HasAttachments);
     // TODO: ditto
     public bool CanPost
-        => !string.IsNullOrEmpty(Text) && Text.Length <= 300;
+        => (!string.IsNullOrEmpty(Text) || HasAttachments) && Text.Length <= 300;
     public int Characters
         => Text?.Length ?? 0;
 
@@ -84,6 +85,7 @@ public partial class ComposeViewModel : ViewModelBase
         {
             this.SetErrored(null);
             this.OnPropertyChanged(nameof(HasAttachments));
+            this.OnPropertyChanged(nameof(CanPost));
         };
 
         Task.Run(LoadAsync);
@@ -194,6 +196,26 @@ public partial class ComposeViewModel : ViewModelBase
             {
                 await AddFileAsync(file, false);
             }
+        }
+        catch (Exception ex)
+        {
+            this.SetErrored(ex);
+        }
+    }
+
+    [RelayCommand]
+    private async Task TakePhotoAsync()
+    {
+        try
+        {
+            this.SetErrored(null);
+
+            var picker = new CameraCaptureUI();
+            picker.PhotoSettings.Format = CameraCaptureUIPhotoFormat.Jpeg;
+            picker.PhotoSettings.AllowCropping = false;
+
+            var file = await picker.CaptureFileAsync(CameraCaptureUIMode.Photo);
+            await AddFileAsync(file, false);
         }
         catch (Exception ex)
         {

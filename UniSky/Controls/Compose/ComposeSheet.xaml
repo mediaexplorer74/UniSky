@@ -227,6 +227,10 @@
                         VerticalAlignment="Stretch"
                         Orientation="Horizontal">
                 <Button Style="{ThemeResource IconButtonStyle}"
+                        Content="&#xE722;"
+                        Margin="0,0,2,0"
+                        Command="{x:Bind ViewModel.TakePhotoCommand}"/>
+                <Button Style="{ThemeResource IconButtonStyle}"
                         Content="&#xEB9F;"
                         Margin="0,0,2,0"
                         Command="{x:Bind ViewModel.AddPhotoCommand}"/>
