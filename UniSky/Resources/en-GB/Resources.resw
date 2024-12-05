@@ -180,4 +180,22 @@
   <data name="TimeUnit_Year" xml:space="preserve">
     <value>yr</value>
   </data>
+  <data name="E_NonImageOrVideo" xml:space="preserve">
+    <value>Only image and video types are supported.</value>
+  </data>
+  <data name="E_ReplyToNonPost" xml:space="preserve">
+    <value>Trying to reply to something that isn't a post?</value>
+  </data>
+  <data name="E_TooManyPhotos" xml:space="preserve">
+    <value>Posts can contain at most four photos.</value>
+  </data>
+  <data name="E_TooManyVideos" xml:space="preserve">
+    <value>Posts can contain at most one video.</value>
+  </data>
+  <data name="E_UnableToAddImageToVideoPost" xml:space="preserve">
+    <value>Can't add image when this post contains a video.</value>
+  </data>
+  <data name="E_UnableToAddVideoToImagePost" xml:space="preserve">
+    <value>Can't add video when this post contains an image.</value>
+  </data>
 </root>

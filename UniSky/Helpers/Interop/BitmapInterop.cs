@@ -3,6 +3,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.Streams;
@@ -157,6 +158,23 @@ public class BitmapInterop
         void GetBuffer(out byte* buffer, out uint capacity);
     }
 
+    public static async Task<StorageFile> SaveBitmapToFileAsync(RandomAccessStreamReference streamReference)
+    {
+        var file = await ApplicationData.Current.TemporaryFolder.CreateFileAsync($"{Guid.NewGuid()}.png");
+
+        using (var stream = await file.OpenAsync(FileAccessMode.ReadWrite))
+        using (var bmp = await streamReference.OpenReadAsync())
+        {
+            var decoder = await BitmapDecoder.CreateAsync(bmp);
+
+            using var softwareBmp = await decoder.GetSoftwareBitmapAsync(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Straight);
+            var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, stream);
+            encoder.SetSoftwareBitmap(softwareBmp);
+            await encoder.FlushAsync();
+        }
+
+        return file;
+    }
 
     public static async Task<StorageFile> SaveBitmapToFileAsync(IRandomAccessStream stream)
     {
@@ -165,7 +183,7 @@ public class BitmapInterop
         var array = new byte[stream.Size];
         await stream.AsStream().ReadAsync(array, 0, array.Length);
 
-        var softwareBitmap = CreateSoftwareBitmap(array);
+        using var softwareBitmap = CreateSoftwareBitmap(array);
         using (var outputStream = await file.OpenAsync(FileAccessMode.ReadWrite))
         {
             var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, outputStream);

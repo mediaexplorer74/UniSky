@@ -148,6 +148,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Compose\ComposeAddAltTextDialog.xaml.cs">
+      <DependentUpon>ComposeAddAltTextDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Compose\ComposeDiscardDraftDialog.xaml.cs">
       <DependentUpon>ComposeDiscardDraftDialog.xaml</DependentUpon>
     </Compile>
@@ -198,6 +201,7 @@
     <Compile Include="Helpers\Geometry\Parsers\CanvasGeometryParser.cs" />
     <Compile Include="Helpers\Geometry\Scalar.cs" />
     <Compile Include="Helpers\Geometry\Utils.cs" />
+    <Compile Include="Helpers\Interop\BitmapInterop.cs" />
     <Compile Include="Helpers\Localisation\ShortTimespanFormatter.cs" />
     <Compile Include="Helpers\Shadows\AttachedCardShadow.cs" />
     <Compile Include="Helpers\Shadows\AttachedDropShadow.cs" />
@@ -207,6 +211,7 @@
     <Compile Include="Helpers\Shadows\IAlphaMaskProvider.cs" />
     <Compile Include="Helpers\Shadows\IAttachedShadow.cs" />
     <Compile Include="Helpers\Shadows\TypedResourceKey.cs" />
+    <Compile Include="Helpers\SizeHelpers.cs" />
     <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="Helpers\UIElementExtensions.cs" />
     <Compile Include="Helpers\UrlHelpers.cs" />
@@ -229,6 +234,7 @@
     <Compile Include="Services\SheetService.cs" />
     <Compile Include="Services\ThemeService.cs" />
     <Compile Include="Themes\ThemeResources.cs" />
+    <Compile Include="ViewModels\Compose\ComposeViewAttachmentViewModel.cs" />
     <Compile Include="ViewModels\Compose\ComposeViewModel.cs" />
     <Compile Include="ViewModels\Error\ExceptionViewModel.cs" />
     <Compile Include="ViewModels\Post\PostEmbedVideoViewModel.cs" />
@@ -382,6 +388,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Controls\Compose\ComposeAddAltTextDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\Compose\ComposeDiscardDraftDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
