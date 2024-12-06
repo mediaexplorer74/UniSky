@@ -23,7 +23,7 @@
                 not1809:Placement="Bottom">
         <MenuFlyoutItem Text="Share" Command="{Binding ShareCommand}">
             <MenuFlyoutItem.Icon>
-                <FontIcon Glyph="&#xE72D;" FontFamily="{StaticResource SymbolThemeFontFamily}"/>
+                <FontIcon Glyph="&#xE72D;" FontFamily="{ThemeResource SymbolThemeFontFamily}"/>
             </MenuFlyoutItem.Icon>
         </MenuFlyoutItem>
         <MenuFlyoutItem Text="Copy Text" Icon="Copy" Command="{Binding CopyTextCommand}"/>
@@ -32,7 +32,7 @@
         <MenuFlyoutItem Text="Mute Thread" Icon="Mute"/>
         <MenuFlyoutItem Text="Hide Post" Icon="Clear"/>
         <MenuFlyoutSeparator/>
-        <MenuFlyoutItem Foreground="{StaticResource SystemControlErrorTextForegroundBrush}" 
+        <MenuFlyoutItem Foreground="{ThemeResource SystemControlErrorTextForegroundBrush}" 
                         Text="Report Post"
                         Icon="ReportHacked"/>
     </MenuFlyout>
@@ -40,7 +40,7 @@
     <Style x:Key="FeedItemActionButtonStyle" TargetType="Button">
         <Setter Property="Padding" Value="8"/>
         <Setter Property="Margin" Value="0,0,8,0"/>
-        <Setter Property="FontFamily" Value="{StaticResource SymbolThemeFontFamily}"/>
+        <Setter Property="FontFamily" Value="{ThemeResource SymbolThemeFontFamily}"/>
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Foreground" Value="{ThemeResource ApplicationSecondaryForegroundThemeBrush}"/>
     </Style>
@@ -216,7 +216,7 @@
 
     <DataTemplate x:Key="FeedItemContentTemplate"
                   x:DataType="posts:PostViewModel">
-        <StackPanel BorderBrush="{StaticResource SystemControlRevealSeparatorBrush}"
+        <StackPanel BorderBrush="{ThemeResource SystemControlRevealSeparatorBrush}"
                     extensions:Hairline.BorderThickness="{x:Bind Borders}"
                     HorizontalAlignment="Stretch"
                     Padding="12,8,12,4">
@@ -298,7 +298,7 @@
                             x:Load="{x:Bind ShowReplyLine}"
                             x:Phase="1"
                             BorderThickness="2,0,0,0"
-                            BorderBrush="{StaticResource SystemControlSeparatorBrush}"
+                            BorderBrush="{ThemeResource SystemControlSeparatorBrush}"
                             Grid.RowSpan="4"
                             Margin="0,48,0,-8"
                             HorizontalAlignment="Center"/>
@@ -368,7 +368,7 @@
                                            Text="{x:Bind Replies, Mode=OneWay}"
                                            Margin="8,-1,0,0"
                                            FontSize="12"
-                                           FontFamily="{StaticResource ContentControlThemeFontFamily}"
+                                           FontFamily="{ThemeResource ContentControlThemeFontFamily}"
                                            Typography.NumeralAlignment="Tabular"/>
                             </StackPanel>
                         </Button>
@@ -386,7 +386,7 @@
                                            Text="{x:Bind Retweets, Mode=OneWay}"
                                            Margin="8,-1,0,0"
                                            FontSize="12"
-                                           FontFamily="{StaticResource ContentControlThemeFontFamily}"
+                                           FontFamily="{ThemeResource ContentControlThemeFontFamily}"
                                            Typography.NumeralAlignment="Tabular"/>
                             </StackPanel>
                         </Button>
@@ -406,7 +406,7 @@
                                            Text="{x:Bind Likes, Mode=OneWay}"
                                            Margin="8,-1,0,0"
                                            FontSize="12"
-                                           FontFamily="{StaticResource ContentControlThemeFontFamily}"
+                                           FontFamily="{ThemeResource ContentControlThemeFontFamily}"
                                            Typography.NumeralAlignment="Tabular"/>
                             </StackPanel>
                         </Button>
@@ -443,7 +443,7 @@
                                           Value="False">
                     <core:ChangePropertyAction TargetObject="{Binding ElementName=LikeButton}" 
                                                PropertyName="Foreground"
-                                               Value="{StaticResource ApplicationSecondaryForegroundThemeBrush}"/>
+                                               Value="{ThemeResource ApplicationSecondaryForegroundThemeBrush}"/>
                     <core:ChangePropertyAction TargetObject="{Binding ElementName=LikeTextBlock}" 
                                                PropertyName="Text"
                                                Value="&#xEB51;"/>
@@ -460,7 +460,7 @@
                                           Value="False">
                     <core:ChangePropertyAction TargetObject="{Binding ElementName=RetweetButton}" 
                                                PropertyName="Foreground"
-                                               Value="{StaticResource ApplicationSecondaryForegroundThemeBrush}"/>
+                                               Value="{ThemeResource ApplicationSecondaryForegroundThemeBrush}"/>
                 </core:DataTriggerBehavior>
             </i:Interaction.Behaviors>
         </StackPanel>

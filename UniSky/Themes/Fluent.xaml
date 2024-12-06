@@ -13,6 +13,10 @@
                                      Color="{ThemeResource SystemControlSeparatorColor}"
                                      FallbackColor="{ThemeResource SystemControlSeparatorColor}"
                                      TargetTheme="Dark"/>
+
+            <StaticResource x:Key="NavigationViewDefaultPaneBackground" ResourceKey="SystemControlChromeMediumLowAcrylicWindowMediumBrush"/>
+            <StaticResource x:Key="NavigationViewExpandedPaneBackground" ResourceKey="SystemControlChromeMediumLowAcrylicWindowMediumBrush"/>
+            <StaticResource x:Key="HomePageFooterBackgroundBrush" ResourceKey="SystemControlChromeMediumLowAcrylicWindowMediumBrush"/>
         </ResourceDictionary>
         <ResourceDictionary x:Key="Default">
             <Color x:Key="SystemControlSeparatorColor">#FFDEDEDE</Color>
@@ -21,15 +25,15 @@
                                      Color="{ThemeResource SystemControlSeparatorColor}"
                                      FallbackColor="{ThemeResource SystemControlSeparatorColor}"
                                      TargetTheme="Light"/>
+
+            <StaticResource x:Key="NavigationViewDefaultPaneBackground" ResourceKey="SystemControlChromeMediumLowAcrylicWindowMediumBrush"/>
+            <StaticResource x:Key="NavigationViewExpandedPaneBackground" ResourceKey="SystemControlChromeMediumLowAcrylicWindowMediumBrush"/>
+            <StaticResource x:Key="HomePageFooterBackgroundBrush" ResourceKey="SystemControlChromeMediumLowAcrylicWindowMediumBrush"/>
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
     
     <CornerRadius x:Key="ControlCornerRadius">0,0,0,0</CornerRadius>
     <CornerRadius x:Key="OverlayCornerRadius">0,0,0,0</CornerRadius>
-
-    <StaticResource x:Key="NavigationViewDefaultPaneBackground" ResourceKey="SystemControlChromeMediumLowAcrylicWindowMediumBrush"/>
-    <StaticResource x:Key="NavigationViewExpandedPaneBackground" ResourceKey="SystemControlChromeMediumLowAcrylicWindowMediumBrush"/>
-    <StaticResource x:Key="HomePageFooterBackgroundBrush" ResourceKey="SystemControlChromeMediumLowAcrylicWindowMediumBrush"/>
 
     <media:RevealBackgroundBrush x:Key="FooterToggleButtonRevealBackgroundBrush" Color="Transparent"/>
 

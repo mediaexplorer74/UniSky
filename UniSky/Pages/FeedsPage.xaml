@@ -58,7 +58,7 @@
                                       HorizontalAlignment="Stretch"
                                       HorizontalContentAlignment="Stretch"
                                       ScrollViewer.IsVerticalScrollChainingEnabled="True"
-                                      BorderBrush="{StaticResource SystemControlRevealSeparatorBrush}"
+                                      BorderBrush="{ThemeResource SystemControlRevealSeparatorBrush}"
                                       extensions:Hairline.BorderThickness="0,1,0,0">
                                 <ListView.Resources>
                                     <SolidColorBrush Color="Transparent" x:Key="ListViewItemRevealBackground"/>
@@ -96,7 +96,7 @@
                                        Text="&#xE783;" 
                                        Margin="0,0,0,8"
                                        HorizontalAlignment="Center"/>
-                            <TextBlock Text="Unable to fetch timeline!" TextAlignment="Center" Style="{StaticResource TitleTextBlockStyle}"/>
+                            <TextBlock Text="Unable to fetch timeline!" TextAlignment="Center" Style="{ThemeResource TitleTextBlockStyle}"/>
                             <Button Content="Try again" HorizontalAlignment="Center" Style="{ThemeResource TextBlockButtonStyle}" />
                         </StackPanel>
 
