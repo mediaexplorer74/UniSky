@@ -214,7 +214,7 @@ namespace UniSky.Controls.Sheet
         {
             base.OnApplyTemplate();
 
-            if (Controller.IsFullWindow)
+            if (Controller != null && Controller.IsFullWindow)
             {
                 VisualStateManager.GoToState(this, "FullWindow", false);
                 var titleBarDragArea = this.FindDescendantByName("TitleBarDragArea");

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Windows.Foundation;
 using Windows.Storage;
 
 namespace UniSky.Services;
@@ -18,6 +20,12 @@ namespace UniSky.Services;
 [JsonSerializable(typeof(ulong))]
 [JsonSerializable(typeof(bool))]
 [JsonSerializable(typeof(string))]
+[JsonSerializable(typeof(Size))]
+[JsonSerializable(typeof(Rect))]
+[JsonSerializable(typeof(Point))]
+[JsonSerializable(typeof(Vector2))]
+[JsonSerializable(typeof(Vector3))]
+[JsonSerializable(typeof(Vector4))]
 [JsonSourceGenerationOptions(WriteIndented = false, PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
 public partial class SettingsJsonContext : JsonSerializerContext { }
 

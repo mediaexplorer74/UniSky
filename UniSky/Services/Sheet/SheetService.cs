@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Uwp.UI.Extensions;
 using UniSky.Controls.Sheet;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Foundation.Metadata;
+using Windows.Graphics.Display;
+using Windows.System.Profile;
 using Windows.UI.Core;
 using Windows.UI.Core.Preview;
 using Windows.UI.ViewManagement;
@@ -18,14 +21,16 @@ namespace UniSky.Services;
 internal class SheetService : ISheetService
 {
     private readonly SheetRootControl sheetRoot;
-    public SheetService()
+    private readonly ISettingsService settingsService;
+    public SheetService(ISettingsService settingsService)
     {
-        //this.sheetRoot = Window.Current.Content.FindDescendant<SheetRootControl>();
+        this.settingsService = settingsService;
+        this.sheetRoot = Window.Current.Content.FindDescendant<SheetRootControl>();
     }
 
     public async Task<ISheetController> ShowAsync<T>(object parameter = null) where T : SheetControl, new()
     {
-        if (sheetRoot != null)
+        if (sheetRoot != null && !settingsService.Read("WindowedSheets", AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop"))
         {
             var safeArea = ServiceContainer.Scoped.GetRequiredService<ISafeAreaService>();
 
@@ -50,8 +55,11 @@ internal class SheetService : ISheetService
         }
     }
 
-    private static async Task<ISheetController> ShowSheetForAppWindow<T>(object parameter) where T : SheetControl, new()
+    private async Task<ISheetController> ShowSheetForAppWindow<T>(object parameter) where T : SheetControl, new()
     {
+        var settingsKey = "AppWindow_LastSize_" + typeof(T).FullName.Replace(".", "_");
+        var initialSize = settingsService.Read(settingsKey, new Size(320, 400));
+
         var control = new T();
         var appWindow = await AppWindow.TryCreateAsync();
         var controller = new AppWindowSheetController(appWindow, control);
@@ -60,6 +68,7 @@ internal class SheetService : ISheetService
 
         ElementCompositionPreview.SetAppWindowContent(appWindow, control);
 
+        appWindow.PersistedStateId = settingsKey;
         appWindow.CloseRequested += async (o, e) =>
         {
             var deferral = e.GetDeferral();
@@ -69,13 +78,60 @@ internal class SheetService : ISheetService
             deferral.Complete();
         };
 
+        appWindow.Changed += (o, e) =>
+        {
+            if (e.DidSizeChange)
+                settingsService.Save(settingsKey, new Size(control.ActualSize.X, control.ActualSize.Y));
+        };
+
         appWindow.Closed += (o, e) =>
         {
             control.InvokeHidden();
         };
+        
+        appWindow.RequestSize(initialSize);
 
-        appWindow.RequestSize(new Size(320, 400));
-        appWindow.RequestMoveAdjacentToCurrentView();
+        var applicationView = ApplicationView.GetForCurrentView();
+        var currentViewRect = applicationView.VisibleBounds;
+        var environment = applicationView.WindowingEnvironment;
+        if (environment.Kind == WindowingEnvironmentKind.Overlapped)
+        {
+            var regions = environment.GetDisplayRegions();
+            var currentRegion = regions[0];
+            foreach (var region in regions)
+            {
+                var regionRect = new Rect(region.WorkAreaOffset, region.WorkAreaSize);
+                if (regionRect.Contains(new Point(applicationView.VisibleBounds.X, applicationView.VisibleBounds.Y)))
+                    currentRegion = region;
+            }
+
+            var currentDisplayOffset = currentRegion.WorkAreaOffset;
+            var currentDisplaySize = currentRegion.WorkAreaSize;
+            currentViewRect = new Rect(
+                currentViewRect.X - currentDisplayOffset.X,
+                currentViewRect.Y - currentDisplayOffset.Y,
+                currentViewRect.Width,
+                currentViewRect.Height);
+
+            var currentDisplayCenter = currentDisplaySize.Width / 2;
+            var offset = (currentViewRect.Left + Math.Max(currentViewRect.Width / 2, initialSize.Width / 2)) - currentDisplayCenter;
+
+            if (applicationView.AdjacentToLeftDisplayEdge && applicationView.AdjacentToRightDisplayEdge)
+            {
+                appWindow.RequestMoveRelativeToDisplayRegion(currentRegion, new Point((currentDisplayCenter - (initialSize.Width / 2)) + 20, 150));
+            }
+            else if (offset < 0)
+            {
+                // right
+                appWindow.RequestMoveRelativeToCurrentViewContent(new Point(applicationView.VisibleBounds.Width + 8, 0));
+            }
+            else
+            {
+                // left
+                appWindow.RequestMoveRelativeToCurrentViewContent(new Point(-initialSize.Width - 8, 0));
+            }
+        }
+
         await appWindow.TryShowAsync();
 
         control.InvokeShown();

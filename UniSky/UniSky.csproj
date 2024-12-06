@@ -564,16 +564,48 @@
   </Target>
   -->
 
-  <Target Name="ScamTheXamlCompiler"
-          BeforeTargets="MarkupCompilePass1">
+  <Target Name="BeforeDesignTimeMarkupCompilationCT" BeforeTargets="DesignTimeMarkupCompilationCT">
     <PropertyGroup>
+      <OriginalTargetPlatformMinVersion>$(TargetPlatformMinVersion)</OriginalTargetPlatformMinVersion>
       <TargetPlatformMinVersion>10.0.15063.0</TargetPlatformMinVersion>
     </PropertyGroup>
   </Target>
-  <Target Name="ScamTheXamlCompiler2"
-          AfterTargets="MarkupCompilePass2">
+  <Target Name="AfterDesignTimeMarkupCompilationCT" AfterTargets="DesignTimeMarkupCompilationCT">
     <PropertyGroup>
-      <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
+      <TargetPlatformMinVersion>$(OriginalTargetPlatformMinVersion)</TargetPlatformMinVersion>
+    </PropertyGroup>
+  </Target>
+  <Target Name="BeforeMarkupCompilePass1" BeforeTargets="MarkupCompilePass1">
+    <PropertyGroup>
+      <OriginalTargetPlatformMinVersion>$(TargetPlatformMinVersion)</OriginalTargetPlatformMinVersion>
+      <TargetPlatformMinVersion>10.0.15063.0</TargetPlatformMinVersion>
+    </PropertyGroup>
+  </Target>
+  <Target Name="AfterMarkupCompilePass1" AfterTargets="MarkupCompilePass1">
+    <PropertyGroup>
+      <TargetPlatformMinVersion>$(OriginalTargetPlatformMinVersion)</TargetPlatformMinVersion>
+    </PropertyGroup>
+  </Target>
+  <Target Name="BeforeMarkupCompilePass2" BeforeTargets="MarkupCompilePass2">
+    <PropertyGroup>
+      <OriginalTargetPlatformMinVersion>$(TargetPlatformMinVersion)</OriginalTargetPlatformMinVersion>
+      <TargetPlatformMinVersion>10.0.15063.0</TargetPlatformMinVersion>
+    </PropertyGroup>
+  </Target>
+  <Target Name="AfterMarkupCompilePass2" AfterTargets="MarkupCompilePass2">
+    <PropertyGroup>
+      <TargetPlatformMinVersion>$(OriginalTargetPlatformMinVersion)</TargetPlatformMinVersion>
+    </PropertyGroup>
+  </Target>
+  <Target Name="BeforeOnXamlPreCompileError" BeforeTargets="_OnXamlPreCompileError">
+    <PropertyGroup>
+      <OriginalTargetPlatformMinVersion>$(TargetPlatformMinVersion)</OriginalTargetPlatformMinVersion>
+      <TargetPlatformMinVersion>10.0.15063.0</TargetPlatformMinVersion>
+    </PropertyGroup>
+  </Target>
+  <Target Name="AfterOnXamlPreCompileError" AfterTargets="_OnXamlPreCompileError">
+    <PropertyGroup>
+      <TargetPlatformMinVersion>$(OriginalTargetPlatformMinVersion)</TargetPlatformMinVersion>
     </PropertyGroup>
   </Target>
 </Project>

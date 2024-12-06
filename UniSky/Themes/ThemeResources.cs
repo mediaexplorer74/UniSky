@@ -1,7 +1,9 @@
 ﻿using System;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Uwp.UI;
 using UniSky.Services;
+using Windows.ApplicationModel;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls.Primitives;
 
@@ -11,8 +13,16 @@ namespace UniSky.Themes
     {
         public ThemeResources()
         {
-            var theme = ServiceContainer.Scoped.GetRequiredService<IThemeService>()
-                .GetTheme();
+            AppTheme theme;
+            if (!DesignMode.DesignModeEnabled)
+            {
+                theme = ServiceContainer.Scoped.GetRequiredService<IThemeService>()
+                    .GetTheme();
+            }
+            else
+            {
+                theme = AppTheme.Fluent;
+            }
 
             Uri uri = theme switch
             {

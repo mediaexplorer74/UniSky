@@ -20,7 +20,6 @@
                             </Grid.RowDefinitions>
 
                             <Grid x:Name="TitleBarGrid"
-                                  Grid.ColumnSpan="3"
                                   Height="48"
                                   Background="{ThemeResource SystemControlBackgroundListLowBrush}"
                                   BorderBrush="{ThemeResource SystemControlSeparatorBrush}"
@@ -40,7 +39,6 @@
                             </Grid>
 
                             <Border x:Name="Handle"
-                                    Grid.ColumnSpan="3"
                                     BorderThickness="0,2,0,0"
                                     BorderBrush="{ThemeResource SystemControlSeparatorBrush}"
                                     Margin="0,4,0,0"
@@ -48,7 +46,6 @@
 
                             <ContentPresenter x:Name="SheetContentPresenter"
                                               Grid.Row="1"
-                                              Grid.ColumnSpan="3"
                                               HorizontalAlignment="Stretch"
                                               VerticalAlignment="Stretch"
                                               HorizontalContentAlignment="Stretch"
@@ -57,7 +54,8 @@
                                               ContentTemplate="{TemplateBinding SheetContentTemplate}"/>
 
                             <Grid x:Name="ButtonsGrid"
-                                  Grid.ColumnSpan="3"
+                                  VerticalAlignment="Top"
+                                  HorizontalAlignment="Stretch"
                                   Grid.RowSpan="3"
                                   Height="48">
                                 <Grid.ColumnDefinitions>
@@ -68,7 +66,7 @@
                                 <Button x:Name="PrimaryTitleBarButton"
                                         TabIndex="0"
                                         Style="{ThemeResource AccentButtonStyle}"
-                                        Grid.Column="1"
+                                        Grid.Column="2"
                                         Visibility="{TemplateBinding PrimaryButtonVisibility}"
                                         Command="{TemplateBinding PrimaryButtonCommand}"
                                         IsEnabled="{TemplateBinding IsPrimaryButtonEnabled}"

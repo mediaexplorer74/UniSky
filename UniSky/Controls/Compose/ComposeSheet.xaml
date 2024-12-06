@@ -11,7 +11,7 @@
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls" 
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls" 
     xmlns:compose="using:UniSky.ViewModels.Compose"
-    mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="320"
+    mc:Ignorable="d" d:DesignHeight="350" d:DesignWidth="480"
     Style="{StaticResource DefaultSheetControlStyle}"
     DataContext="{x:Bind ViewModel, Mode=OneWay}"
     PrimaryButtonCommand="{x:Bind ViewModel.PostCommand}"
@@ -96,7 +96,7 @@
                                         Height="48"
                                         Margin="0,0,8,0"
                                         VerticalAlignment="Top"
-                                        ProfilePicture="{x:Bind ViewModel.ReplyTo.Author.AvatarUrl, Mode=OneWay}"/>
+                                        ProfilePicture="{Binding ReplyTo.Author.AvatarUrl, Mode=OneWay}"/>
                     <StackPanel Grid.Column="1"
                                 Margin="0,0,0,8">
                         <TextBlock Foreground="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"                  
@@ -123,21 +123,11 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Ellipse Width="48" 
-                                 Height="48"
-                                 Margin="0,0,8,0"
-                                 VerticalAlignment="Top">
-                        <Ellipse.Fill>
-                            <ImageBrush>
-                                <ImageBrush.ImageSource>
-                                    <BitmapImage UriSource="{Binding AvatarUrl}"
-                                                     DecodePixelWidth="48"
-                                                     DecodePixelHeight="48"
-                                                     DecodePixelType="Logical"/>
-                                </ImageBrush.ImageSource>
-                            </ImageBrush>
-                        </Ellipse.Fill>
-                    </Ellipse>
+                    <muxc:PersonPicture Width="48" 
+                                        Height="48"
+                                        Margin="0,0,8,0"
+                                        VerticalAlignment="Top"
+                                        ProfilePicture="{Binding AvatarUrl, Mode=OneWay}"/>
                     
                     <TextBox x:Name="PrimaryTextBox"
                              x:Uid="ComposePrimaryTextBox"
