@@ -170,6 +170,7 @@
       <DependentUpon>SheetRootControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\Static.cs" />
+    <Compile Include="DataTemplates\FeedItemTemplateSelector.cs" />
     <Compile Include="DataTemplates\PostEmbedTemplateSelector.cs" />
     <Compile Include="Extensions\Hairline.cs" />
     <Compile Include="Extensions\SynchronizationContextExtensions.cs" />
