@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using UniSky.Controls.Sheet;
 using Windows.Foundation;
+using Windows.Foundation.Metadata;
 using Windows.UI.Core;
 using Windows.UI.Core.Preview;
 using Windows.UI.ViewManagement;
@@ -37,8 +38,12 @@ internal class ApplicationViewSheetController : ISheetController
         var systemNavigationManager = SystemNavigationManager.GetForCurrentView();
         systemNavigationManager.BackRequested += OnBackRequested;
 
-        var systemNavigationManagerPreview = SystemNavigationManagerPreview.GetForCurrentView();
-        systemNavigationManagerPreview.CloseRequested += OnCloseRequested;
+        if (ApiInformation.IsTypePresent("Windows.UI.Core.Preview.SystemNavigationManagerPreview"))
+        {
+            var systemNavigationManagerPreview = SystemNavigationManagerPreview.GetForCurrentView();
+            systemNavigationManagerPreview.CloseRequested += OnCloseRequested;
+        }
+
         var coreWindow = CoreWindow.GetForCurrentThread();
         coreWindow.SizeChanged += OnWindowSizeChanged;
         coreWindow.Activated += OnActivated;

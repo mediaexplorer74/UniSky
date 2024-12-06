@@ -97,7 +97,7 @@ internal class SheetService : ISheetService
 
         });
 
-        await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newViewId, ViewSizePreference.UseLess);
+        await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newViewId, ViewSizePreference.UseMinimum);
 
         return controller;
     }
