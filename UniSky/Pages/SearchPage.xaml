@@ -150,5 +150,10 @@
             </ListView.ItemContainerStyle>
         </ListView>
 
+      <ProgressBar Grid.Row="3"
+                   VerticalAlignment="Top"
+                   IsIndeterminate="{x:Bind ViewModel.SelectedFeed.IsLoading, Mode=OneWay}"
+                   Background="Transparent"/>
+
     </Grid>
 </Page>
