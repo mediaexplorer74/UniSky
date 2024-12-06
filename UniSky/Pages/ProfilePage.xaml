@@ -6,10 +6,12 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:profile="using:UniSky.ViewModels.Profile" 
+    xmlns:converters="using:UniSky.Converters"
     xmlns:extensions="using:UniSky.Extensions"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:mux="using:Microsoft.UI.Xaml.Controls"
     xmlns:w1809="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 7)"
+    xmlns:aurora="using:System.Windows.Shell.Aurora"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     Loaded="Page_Loaded"
@@ -69,9 +71,14 @@
                           Grid.ColumnSpan="2"
                           Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}">
                         <controls:ConstrainedBox x:Name="ProfileBanner" AspectRatio="3:1">
-                            <Image Source="{Binding BannerUrl}"
-                                   HorizontalAlignment="Center"
-                                   Stretch="UniformToFill"/>
+                            <Grid>
+                                <aurora:PreviewPaneAuroraControl x:Name="PreviewPaneAurora"
+                                                                 x:Load="{x:Bind converters:Static.NullOrWhiteSpace(ViewModel.BannerUrl), Mode=OneWay}"
+                                                                 Color="{StaticResource SystemAccentColor}"/>
+                                <Image Source="{Binding BannerUrl}"
+                                       HorizontalAlignment="Center"
+                                       Stretch="UniformToFill"/>
+                            </Grid>
                         </controls:ConstrainedBox>
 
                         <ProgressRing VerticalAlignment="Center"

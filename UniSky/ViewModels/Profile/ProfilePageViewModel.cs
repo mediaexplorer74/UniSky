@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
@@ -16,12 +12,11 @@ using Humanizer;
 using UniSky.Extensions;
 using UniSky.Helpers.Interop;
 using UniSky.Services;
-using UniSky.ViewModels.Feeds;
 using UniSky.ViewModels.Profiles;
 using Windows.Foundation.Metadata;
-using Windows.Graphics.Imaging;
 using Windows.Phone;
-using Windows.Storage;
+using Windows.Storage.Streams;
+using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 
@@ -52,6 +47,8 @@ public partial class ProfilePageViewModel : ProfileViewModel
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(Theme))]
     private bool? isLight;
+    [ObservableProperty]
+    private Color avatarColor;
 
     public Visibility ShowBio
         => !string.IsNullOrWhiteSpace(Bio) ? Visibility.Visible : Visibility.Collapsed;
@@ -126,7 +123,7 @@ public partial class ProfilePageViewModel : ProfileViewModel
                 Populate(profile);
             });
 
-            await CalculateBannerLightnessAsync(profile)
+            await CalculateLightnessAsync(profile)
                 .ConfigureAwait(false);
         }
         catch (Exception ex)
@@ -176,21 +173,21 @@ public partial class ProfilePageViewModel : ProfileViewModel
         SelectedFeed = profileFeedViewModel;
     }
 
-    private async Task CalculateBannerLightnessAsync(ProfileViewDetailed profile)
+    private async Task CalculateLightnessAsync(ProfileViewDetailed profile)
     {
-        if (string.IsNullOrWhiteSpace(profile.Banner)) return;
-
         var protocol = Ioc.Default.GetRequiredService<IProtocolService>();
-        using var banner = await protocol.Protocol.Client.GetStreamAsync(profile.Banner)
+        var lightness = 0.0f;
+        if (string.IsNullOrWhiteSpace(profile.Banner))
+            return;
+
+        var randomAccessStreamRef = RandomAccessStreamReference.CreateFromUri(new Uri(profile.Banner));
+        using var randomAccessStream = await randomAccessStreamRef.OpenReadAsync()
+            .AsTask()
             .ConfigureAwait(false);
-        using var memoryStream = new MemoryStream();
-        await banner.CopyToAsync(memoryStream);
 
-        memoryStream.Seek(0, SeekOrigin.Begin);
-
-        var lightness = await BitmapInterop.GetImageAverageBrightnessAsync(memoryStream.AsRandomAccessStream());
-        IsLight = lightness < 0.60f;
-
+        lightness = await BitmapInterop.GetImageAverageBrightnessAsync(randomAccessStream)
+            .ConfigureAwait(false);
+        IsLight = lightness < 0.55f;
         Debug.WriteLine(lightness);
 
         syncContext.Post(() =>

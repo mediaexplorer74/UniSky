@@ -49,6 +49,15 @@ public sealed partial class ProfilePage : Page
     private Visual _scrolledDisplayNameContainer;
     private SpriteVisual _blurredBackgroundImageVisual;
 
+    public ProfilePageViewModel ViewModel
+    {
+        get { return (ProfilePageViewModel)GetValue(ViewModelProperty); }
+        set { SetValue(ViewModelProperty, value); }
+    }
+
+    public static readonly DependencyProperty ViewModelProperty =
+        DependencyProperty.Register("ViewModel", typeof(ProfilePageViewModel), typeof(ProfilePage), new PropertyMetadata(null));
+
     public ProfilePage()
     {
         this.InitializeComponent();
@@ -64,7 +73,7 @@ public sealed partial class ProfilePage : Page
         if (e.Parameter is Uri { Scheme: "unisky" } uri)
             HandleUniskyProtocol(uri);
         else if (e.Parameter is ATObject basic)
-            this.DataContext = ActivatorUtilities.CreateInstance<ProfilePageViewModel>(Ioc.Default, basic);
+            this.DataContext = ViewModel = ActivatorUtilities.CreateInstance<ProfilePageViewModel>(Ioc.Default, basic);
 
         var safeAreaService = Ioc.Default.GetRequiredService<ISafeAreaService>();
         safeAreaService.SafeAreaUpdated += OnSafeAreaUpdated;
@@ -86,7 +95,7 @@ public sealed partial class ProfilePage : Page
         }
 
         if (ATDid.TryCreate(path[1], out var did))
-            this.DataContext = ActivatorUtilities.CreateInstance<ProfilePageViewModel>(Ioc.Default, did);
+            this.DataContext = ViewModel = ActivatorUtilities.CreateInstance<ProfilePageViewModel>(Ioc.Default, did);
     }
 
     private void Page_Loaded(object sender, RoutedEventArgs e)
