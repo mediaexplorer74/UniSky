@@ -10,6 +10,7 @@ using UniSky.ViewModels.Profile;
 using UniSky.ViewModels.Search;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Foundation.Metadata;
 using Windows.Networking.NetworkOperators;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -92,6 +93,15 @@ public sealed partial class SearchPage : Page
             {
                 profile.OpenProfileCommand.Execute(null);
             }
+        }
+    }
+
+    private void RootList_Loaded(object sender, RoutedEventArgs e)
+    {
+        if (ApiInformation.IsApiContractPresent(typeof(UniversalApiContract).FullName, 7))
+        {
+            var scrollViewer = RootList.FindDescendant<ScrollViewer>();
+            scrollViewer.CanContentRenderOutsideBounds = true;
         }
     }
 }
