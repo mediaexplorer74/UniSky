@@ -59,12 +59,14 @@ internal static class BirdAnimation
 
         var scaleAnimation = compositor.CreateVector2KeyFrameAnimation();
         scaleAnimation.InsertKeyFrame(1.0f, new Vector2(scale, scale), ease);
+        scaleAnimation.DelayTime = TimeSpan.FromSeconds(0.15);
         scaleAnimation.Duration = TimeSpan.FromSeconds(0.15);
         scaleAnimation.Target = "Scale";
         group.Add(scaleAnimation);
 
         var offsetAnimation = compositor.CreateVector2KeyFrameAnimation();
         offsetAnimation.InsertKeyFrame(1.0f, new Vector2(offsetX, offsetY - (6 * scale)), ease);
+        offsetAnimation.DelayTime = TimeSpan.FromSeconds(0.15);
         offsetAnimation.Duration = TimeSpan.FromSeconds(0.15);
         offsetAnimation.Target = "Offset";
         group.Add(offsetAnimation);
@@ -72,6 +74,7 @@ internal static class BirdAnimation
         var scaleAnimation2 = compositor.CreateVector3KeyFrameAnimation();
         scaleAnimation2.InsertKeyFrame(0.5f, new Vector3(1.1f), ease);
         scaleAnimation2.InsertKeyFrame(1.0f, new Vector3(1.0f), ease2);
+        scaleAnimation2.DelayTime = TimeSpan.FromSeconds(0.15);
         scaleAnimation2.Duration = TimeSpan.FromSeconds(0.3);
         scaleAnimation2.Target = "Scale";
 

@@ -53,18 +53,21 @@ sealed partial class App : Application
         collection.AddLogging(c => c.AddDebug()
             .SetMinimumLevel(LogLevel.Trace));
 
+        collection.AddSingleton<IProtocolService, ProtocolService>();
         collection.AddSingleton<ISettingsService, SettingsService>();
         collection.AddSingleton<IThemeService, ThemeService>();
         collection.AddSingleton<INavigationServiceLocator, NavigationServiceLocator>();
-        collection.AddSingleton<IProtocolService, ProtocolService>();
-        collection.AddSingleton<ISafeAreaService, SafeAreaService>();
-        collection.AddSingleton<ISheetService, SheetService>();
+        collection.AddScoped<ISafeAreaService, CoreWindowSafeAreaService>();
+        collection.AddScoped<ISheetService, SheetService>();
 
         collection.AddTransient<LoginService>();
         collection.AddTransient<SessionService>();
 
-        Ioc.Default.ConfigureServices(collection.BuildServiceProvider());
+        ServiceContainer.Default.ConfigureServices(collection.BuildServiceProvider());
+        
         Configurator.Formatters.Register("en", (locale) => new ShortTimespanFormatter("en"));
+        Configurator.Formatters.Register("en-GB", (locale) => new ShortTimespanFormatter("en"));
+        Configurator.Formatters.Register("en-US", (locale) => new ShortTimespanFormatter("en"));
     }
 
     protected override void OnActivated(IActivatedEventArgs args)

@@ -39,16 +39,16 @@ public sealed partial class HomePage : Page
 
         Window.Current.SetTitleBar(TitleBarDrag);
 
-        var safeAreaService = Ioc.Default.GetRequiredService<ISafeAreaService>();
+        var safeAreaService = ServiceContainer.Scoped.GetRequiredService<ISafeAreaService>();
         safeAreaService.SafeAreaUpdated += OnSafeAreaUpdated;
 
-        var serviceLocator = Ioc.Default.GetRequiredService<INavigationServiceLocator>();
+        var serviceLocator = ServiceContainer.Scoped.GetRequiredService<INavigationServiceLocator>();
         var service = serviceLocator.GetNavigationService("Home");
         service.Frame = NavigationFrame;
 
         if (e.Parameter is string session || e.Parameter is ATDid did && (session = did.Handler) != null)
         {
-            ViewModel = ActivatorUtilities.CreateInstance<HomeViewModel>(Ioc.Default, session);
+            ViewModel = ActivatorUtilities.CreateInstance<HomeViewModel>(ServiceContainer.Scoped, session);
         }
     }
 

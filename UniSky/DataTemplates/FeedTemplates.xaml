@@ -217,7 +217,7 @@
     <DataTemplate x:Key="FeedItemContentTemplate"
                   x:DataType="posts:PostViewModel">
         <StackPanel BorderBrush="{ThemeResource SystemControlRevealSeparatorBrush}"
-                    extensions:Hairline.BorderThickness="{x:Bind Borders}"
+                    extensions:Hairline.BorderThickness="{x:Bind Borders, Mode=OneWay}"
                     HorizontalAlignment="Stretch"
                     Padding="12,8,12,4">
 

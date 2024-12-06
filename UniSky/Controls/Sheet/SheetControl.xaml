@@ -10,37 +10,68 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="sheets:SheetControl">
-                    <Grid>
+                    <Grid>                        
                         <Grid x:Name="RootGrid"
-                                  Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+                              Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="42"/>
+                                <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
-                            <Grid Background="{ThemeResource SystemControlBackgroundListLowBrush}"
-                                      BorderBrush="{ThemeResource SystemControlSeparatorBrush}"
-                                      extensions:Hairline.BorderThickness="0,0,0,1"
-                                      Padding="8,0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-
+                            <Grid x:Name="TitleBarGrid"
+                                  Height="48"
+                                  Background="{ThemeResource SystemControlBackgroundListLowBrush}"
+                                  BorderBrush="{ThemeResource SystemControlSeparatorBrush}"
+                                  extensions:Hairline.BorderThickness="0,0,0,1">
+                                
                                 <ContentPresenter x:Name="SheetTitlePresenter"
-                                                      Grid.ColumnSpan="3"
-                                                      VerticalAlignment="Center"
-                                                      HorizontalAlignment="Center"
-                                                      Content="{TemplateBinding TitleContent}"
-                                                      ContentTemplate="{TemplateBinding TitleContentTemplate}"/>
+                                                  Grid.ColumnSpan="3"
+                                                  VerticalAlignment="Center"
+                                                  HorizontalAlignment="Center"
+                                                  Content="{TemplateBinding TitleContent}"
+                                                  ContentTemplate="{TemplateBinding TitleContentTemplate}"
+                                                  Margin="16,0"/>
 
-                                <Button x:Name="PrimaryButton"
-                                            Style="{ThemeResource AccentButtonStyle}"
-                                            Grid.Column="2"
-                                            Visibility="{TemplateBinding PrimaryButtonVisibility}"
-                                            Command="{TemplateBinding PrimaryButtonCommand}"
-                                            IsEnabled="{TemplateBinding IsPrimaryButtonEnabled}">
+                                <Border x:Name="TitleBarDragArea"
+                                        Grid.ColumnSpan="3"
+                                        Background="Transparent"/>
+                            </Grid>
+
+                            <Border x:Name="Handle"
+                                    BorderThickness="0,2,0,0"
+                                    BorderBrush="{ThemeResource SystemControlSeparatorBrush}"
+                                    Margin="0,4,0,0"
+                                    Width="48"/>
+
+                            <ContentPresenter x:Name="SheetContentPresenter"
+                                              Grid.Row="1"
+                                              HorizontalAlignment="Stretch"
+                                              VerticalAlignment="Stretch"
+                                              HorizontalContentAlignment="Stretch"
+                                              VerticalContentAlignment="Stretch"
+                                              Content="{TemplateBinding SheetContent}"
+                                              ContentTemplate="{TemplateBinding SheetContentTemplate}"/>
+
+                            <Grid x:Name="ButtonsGrid"
+                                  VerticalAlignment="Top"
+                                  HorizontalAlignment="Stretch"
+                                  Grid.RowSpan="3"
+                                  Height="48">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition x:Name="ButtonGridColumn1" Width="Auto"/>
+                                    <ColumnDefinition x:Name="ButtonGridColumn2" Width="*"/>
+                                    <ColumnDefinition x:Name="ButtonGridColumn3" Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Button x:Name="PrimaryTitleBarButton"
+                                        TabIndex="0"
+                                        Style="{ThemeResource AccentButtonStyle}"
+                                        Grid.Column="2"
+                                        Visibility="{TemplateBinding PrimaryButtonVisibility}"
+                                        Command="{TemplateBinding PrimaryButtonCommand}"
+                                        IsEnabled="{TemplateBinding IsPrimaryButtonEnabled}"
+                                        Padding="{ThemeResource ButtonPadding}"
+                                        Margin="8">
                                     <w1709:Button.KeyboardAccelerators>
                                         <w1709:KeyboardAccelerator Modifiers="Control" Key="Enter"/>
                                     </w1709:Button.KeyboardAccelerators>
@@ -49,12 +80,15 @@
                                                             ContentTemplate="{TemplateBinding PrimaryButtonContentTemplate}"/>
                                 </Button>
 
-                                <Button x:Name="SecondaryButton"
-                                            Style="{ThemeResource TextBlockButtonStyle}"
-                                            Grid.Column="0"
-                                            Visibility="{TemplateBinding SecondaryButtonVisibility}"
-                                            Command="{TemplateBinding SecondaryButtonCommand}"
-                                            IsEnabled="{TemplateBinding IsSecondaryButtonEnabled}">
+                                <Button x:Name="SecondaryTitleBarButton"
+                                        TabIndex="1"
+                                        Style="{ThemeResource TextBlockButtonStyle}"
+                                        Grid.Column="0"
+                                        Visibility="{TemplateBinding SecondaryButtonVisibility}"
+                                        Command="{TemplateBinding SecondaryButtonCommand}"
+                                        IsEnabled="{TemplateBinding IsSecondaryButtonEnabled}"
+                                        Padding="{ThemeResource ButtonPadding}"
+                                        Margin="8">
                                     <w1709:Button.KeyboardAccelerators>
                                         <w1709:KeyboardAccelerator Key="Escape"/>
                                     </w1709:Button.KeyboardAccelerators>
@@ -63,21 +97,34 @@
                                                         ContentTemplate="{TemplateBinding SecondaryButtonContentTemplate}"/>
                                 </Button>
                             </Grid>
-
-                            <Border BorderThickness="0,2,0,0"
-                                        BorderBrush="{ThemeResource SystemControlSeparatorBrush}"
-                                        Margin="0,4,0,0"
-                                        Width="48"/>
-
-                            <ContentPresenter x:Name="SheetContentPresenter"
-                                             Grid.Row="1"
-                                             HorizontalAlignment="Stretch"
-                                             VerticalAlignment="Stretch"
-                                             HorizontalContentAlignment="Stretch"
-                                             VerticalContentAlignment="Stretch"
-                                             Content="{TemplateBinding SheetContent}"
-                                             ContentTemplate="{TemplateBinding SheetContentTemplate}"/>
                         </Grid>
+
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="WindowStates">
+                                <VisualState x:Name="Standard">
+                                    <VisualState.Setters>
+                                        <Setter Target="Handle.Visibility" Value="Visible"/>
+                                        <Setter Target="ButtonsGrid.VerticalAlignment" Value="Top"/>
+                                        <Setter Target="ButtonsGrid.HorizontalAlignment" Value="Stretch"/>
+                                        <Setter Target="SheetTitlePresenter.HorizontalAlignment" Value="Center"/>
+                                        <Setter Target="SheetTitlePresenter.FontSize" Value="{ThemeResource ControlContentThemeFontSize}"/>
+                                        <Setter Target="ButtonGridColumn2.Width" Value="*"/>
+                                        <Setter Target="SecondaryTitleBarButton.Visibility" Value="Visible"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="FullWindow">
+                                    <VisualState.Setters>
+                                        <Setter Target="Handle.Visibility" Value="Collapsed"/>
+                                        <Setter Target="ButtonsGrid.VerticalAlignment" Value="Bottom"/>
+                                        <Setter Target="ButtonsGrid.HorizontalAlignment" Value="Right"/>
+                                        <Setter Target="SheetTitlePresenter.HorizontalAlignment" Value="Left"/>
+                                        <Setter Target="SheetTitlePresenter.FontSize" Value="12"/>
+                                        <Setter Target="ButtonGridColumn2.Width" Value="Auto"/>
+                                        <Setter Target="SecondaryTitleBarButton.Visibility" Value="Collapsed"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

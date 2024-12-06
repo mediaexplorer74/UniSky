@@ -1,4 +1,5 @@
 ﻿using Microsoft.Toolkit.Uwp.Helpers;
+using Microsoft.Toolkit.Uwp.UI.Helpers;
 using Microsoft.Toolkit.Uwp.UI.Media.Geometry;
 using Windows.UI;
 using Windows.UI.Xaml;
@@ -16,23 +17,6 @@ namespace System.Windows.Shell.Aurora
     /// </summary>
     public partial class PreviewPaneAuroraControl : UserControl
     {
-        //private record ColorSet(Color Aurora, Color Background);
-
-        //private ColorSet[] _colorSets = new[]
-        //{
-        //    new ColorSet(Color.FromArgb(255, 0x85, 0x99, 0xB4), Color.FromArgb(255, 0x5A, 0x6B, 0x7D)), // Default
-        //    new ColorSet(Color.FromArgb(255, 0x51, 0x90, 0xDA), Color.FromArgb(255, 0x24, 0x43, 0x8E)), // Documents
-        //    new ColorSet(Color.FromArgb(255, 0xF2, 0xA4, 0x7B), Color.FromArgb(255, 0xD2, 0x64, 0x2A)), // Contacts
-        //    new ColorSet(Color.FromArgb(255, 0xDA, 0x51, 0x51), Color.FromArgb(255, 0x74, 0x14, 0x14)), // Music
-        //    new ColorSet(Color.FromArgb(255, 0x9E, 0xCA, 0x4E), Color.FromArgb(255, 0x6E, 0x97, 0x24)), // Games
-        //    new ColorSet(Color.FromArgb(255, 0x6F, 0x49, 0x70), Color.FromArgb(255, 0x26, 0x08, 0x27)), // Photos
-        //};
-
-        //private static Random _random = new Random();
-        //private int _i = _random.Next(6);
-        //private Color _color = Color.FromArgb(255, 0x85, 0x99, 0xB4);
-        //private TimeSpan _duration = TimeSpan.FromSeconds(0.5);
-
         public Color Color
         {
             get { return (Color)GetValue(ColorProperty); }
@@ -59,7 +43,7 @@ namespace System.Windows.Shell.Aurora
             var control = (PreviewPaneAuroraControl)d;
 
             var hslColor = newValue.ToHsl();
-            if (control.ActualTheme == ElementTheme.Dark)
+            if (Application.Current.RequestedTheme == ApplicationTheme.Dark)
             {
                 var hslBackground = hslColor with { L = hslColor.L * 0.7 };
                 var colorBackground = ColorHelper.FromHsl(hslBackground.H, hslBackground.S, hslBackground.L);

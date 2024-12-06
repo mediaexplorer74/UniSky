@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
 using UniSky.Pages;
 using UniSky.Services;
@@ -139,7 +140,7 @@ namespace UniSky.Controls
             if (sender.GetValue(HyperlinkUrlProperty) is not Uri { Scheme: "unisky" } uri)
                 return;
 
-            var service = Ioc.Default.GetRequiredService<INavigationServiceLocator>()
+            var service = ServiceContainer.Scoped.GetRequiredService<INavigationServiceLocator>()
                 .GetNavigationService("Home");
 
             var path = uri.PathAndQuery.Split('/', StringSplitOptions.RemoveEmptyEntries);

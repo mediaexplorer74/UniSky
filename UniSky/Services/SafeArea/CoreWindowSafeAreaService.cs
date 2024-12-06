@@ -1,21 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Humanizer;
-using Microsoft.Toolkit.Uwp.UI.Extensions;
 using Microsoft.Toolkit.Uwp.UI.Helpers;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Foundation.Metadata;
-using Windows.Graphics.Display;
 using Windows.Phone;
 using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 
 namespace UniSky.Services;
 
@@ -26,7 +18,7 @@ public class SafeAreaUpdatedEventArgs : EventArgs
     public SafeAreaInfo SafeArea { get; init; }
 }
 
-internal class SafeAreaService : ISafeAreaService
+internal class CoreWindowSafeAreaService : ISafeAreaService
 {
     private readonly CoreWindow _window;
     private readonly ApplicationView _applicationView;
@@ -40,7 +32,7 @@ internal class SafeAreaService : ISafeAreaService
     public SafeAreaInfo State
         => _state;
 
-    public SafeAreaService()
+    public CoreWindowSafeAreaService()
     {
         _window = CoreWindow.GetForCurrentThread();
         _window.SizeChanged += CoreWindow_SizeChanged;
@@ -49,7 +41,11 @@ internal class SafeAreaService : ISafeAreaService
         _applicationView = ApplicationView.GetForCurrentView();
         _coreApplicationView = CoreApplication.GetCurrentView();
 
-        _applicationView.SetPreferredMinSize(new Size(320, 640));
+        if (_coreApplicationView.IsMain)
+            _applicationView.SetPreferredMinSize(new Size(320, 640));
+        else
+            _applicationView.SetPreferredMinSize(new Size(320, 320));
+
         _applicationView.SetDesiredBoundsMode(ApplicationViewBoundsMode.UseCoreWindow);
         _applicationView.VisibleBoundsChanged += ApplicationView_VisibleBoundsChanged;
 
@@ -204,5 +200,10 @@ internal class SafeAreaService : ISafeAreaService
     private void OnThemeChanged(ThemeListener sender)
     {
         SetTitlebarTheme(_state.Theme);
+    }
+
+    public void SetTitleBar(UIElement uiElement)
+    {
+        Window.Current.SetTitleBar(uiElement);
     }
 }

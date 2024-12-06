@@ -34,7 +34,7 @@
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
     <AppxBundle>Always</AppxBundle>
-    <AppxBundlePlatforms>x64</AppxBundlePlatforms>
+    <AppxBundlePlatforms>arm</AppxBundlePlatforms>
     <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
   </PropertyGroup>
@@ -224,7 +224,6 @@
     <Compile Include="Services\INavigationService.cs" />
     <Compile Include="Services\INavigationServiceLocator.cs" />
     <Compile Include="Services\IProtocolService.cs" />
-    <Compile Include="Services\ISafeAreaService.cs" />
     <Compile Include="Services\ISettingsService.cs" />
     <Compile Include="Services\ISheetService.cs" />
     <Compile Include="Services\IThemeService.cs" />
@@ -232,9 +231,16 @@
     <Compile Include="DataTemplates\FeedTemplates.xaml.cs">
       <DependentUpon>FeedTemplates.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Services\SafeAreaService.cs" />
+    <Compile Include="Services\SafeArea\AppWindowSafeAreaService.cs" />
+    <Compile Include="Services\SafeArea\CoreWindowSafeAreaService.cs" />
+    <Compile Include="Services\SafeArea\ISafeAreaService.cs" />
+    <Compile Include="Services\ServiceContainer.cs" />
     <Compile Include="Services\SettingsService.cs" />
-    <Compile Include="Services\SheetService.cs" />
+    <Compile Include="Services\Sheet\ApplicationViewSheetController.cs" />
+    <Compile Include="Services\Sheet\AppWindowSheetController.cs" />
+    <Compile Include="Services\Sheet\ISheetController.cs" />
+    <Compile Include="Services\Sheet\SheetRootController.cs" />
+    <Compile Include="Services\Sheet\SheetService.cs" />
     <Compile Include="Services\ThemeService.cs" />
     <Compile Include="Themes\ThemeResources.cs" />
     <Compile Include="ViewModels\Compose\ComposeViewAttachmentViewModel.cs" />
@@ -489,7 +495,7 @@
       <Version>8.3.2</Version>
     </PackageReference>
     <PackageReference Include="FishyFlip">
-      <Version>3.1.0-alpha.8</Version>
+      <Version>3.1.0-alpha.9</Version>
     </PackageReference>
     <PackageReference Include="Humanizer.Core">
       <Version>2.14.1</Version>
@@ -557,4 +563,48 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Target Name="BeforeDesignTimeMarkupCompilationCT" BeforeTargets="DesignTimeMarkupCompilationCT">
+    <PropertyGroup>
+      <OriginalTargetPlatformMinVersion>$(TargetPlatformMinVersion)</OriginalTargetPlatformMinVersion>
+      <TargetPlatformMinVersion>10.0.15063.0</TargetPlatformMinVersion>
+    </PropertyGroup>
+  </Target>
+  <Target Name="AfterDesignTimeMarkupCompilationCT" AfterTargets="DesignTimeMarkupCompilationCT">
+    <PropertyGroup>
+      <TargetPlatformMinVersion>$(OriginalTargetPlatformMinVersion)</TargetPlatformMinVersion>
+    </PropertyGroup>
+  </Target>
+  <Target Name="BeforeMarkupCompilePass1" BeforeTargets="MarkupCompilePass1">
+    <PropertyGroup>
+      <OriginalTargetPlatformMinVersion>$(TargetPlatformMinVersion)</OriginalTargetPlatformMinVersion>
+      <TargetPlatformMinVersion>10.0.15063.0</TargetPlatformMinVersion>
+    </PropertyGroup>
+  </Target>
+  <Target Name="AfterMarkupCompilePass1" AfterTargets="MarkupCompilePass1">
+    <PropertyGroup>
+      <TargetPlatformMinVersion>$(OriginalTargetPlatformMinVersion)</TargetPlatformMinVersion>
+    </PropertyGroup>
+  </Target>
+  <Target Name="BeforeMarkupCompilePass2" BeforeTargets="MarkupCompilePass2">
+    <PropertyGroup>
+      <OriginalTargetPlatformMinVersion>$(TargetPlatformMinVersion)</OriginalTargetPlatformMinVersion>
+      <TargetPlatformMinVersion>10.0.15063.0</TargetPlatformMinVersion>
+    </PropertyGroup>
+  </Target>
+  <Target Name="AfterMarkupCompilePass2" AfterTargets="MarkupCompilePass2">
+    <PropertyGroup>
+      <TargetPlatformMinVersion>$(OriginalTargetPlatformMinVersion)</TargetPlatformMinVersion>
+    </PropertyGroup>
+  </Target>
+  <Target Name="BeforeOnXamlPreCompileError" BeforeTargets="_OnXamlPreCompileError">
+    <PropertyGroup>
+      <OriginalTargetPlatformMinVersion>$(TargetPlatformMinVersion)</OriginalTargetPlatformMinVersion>
+      <TargetPlatformMinVersion>10.0.15063.0</TargetPlatformMinVersion>
+    </PropertyGroup>
+  </Target>
+  <Target Name="AfterOnXamlPreCompileError" AfterTargets="_OnXamlPreCompileError">
+    <PropertyGroup>
+      <TargetPlatformMinVersion>$(OriginalTargetPlatformMinVersion)</TargetPlatformMinVersion>
+    </PropertyGroup>
+  </Target>
 </Project>

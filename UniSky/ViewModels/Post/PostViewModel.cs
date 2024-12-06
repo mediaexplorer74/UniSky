@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using FishyFlip.Lexicon;
 using FishyFlip.Lexicon.App.Bsky.Actor;
@@ -15,6 +14,7 @@ using FishyFlip.Lexicon.Com.Atproto.Repo;
 using FishyFlip.Models;
 using FishyFlip.Tools;
 using Humanizer;
+using Microsoft.Extensions.DependencyInjection;
 using UniSky.Controls.Compose;
 using UniSky.Helpers;
 using UniSky.Pages;
@@ -161,7 +161,7 @@ public partial class PostViewModel : ViewModelBase
     [RelayCommand]
     private async Task LikeAsync()
     {
-        var protocol = Ioc.Default.GetRequiredService<IProtocolService>()
+        var protocol = ServiceContainer.Scoped.GetRequiredService<IProtocolService>()
             .Protocol;
 
         if (IsLiked)
@@ -189,7 +189,7 @@ public partial class PostViewModel : ViewModelBase
     [RelayCommand]
     private void OpenProfile(UIElement element)
     {
-        var service = Ioc.Default.GetRequiredService<INavigationServiceLocator>()
+        var service = ServiceContainer.Scoped.GetRequiredService<INavigationServiceLocator>()
             .GetNavigationService("Home");
 
         service.Navigate<ProfilePage>(this.view.Author, new ContinuumNavigationTransitionInfo() { ExitElement = element });
@@ -199,7 +199,7 @@ public partial class PostViewModel : ViewModelBase
     [RelayCommand]
     private async Task ReplyAsync()
     {
-        var service = Ioc.Default.GetRequiredService<ISheetService>();
+        var service = ServiceContainer.Scoped.GetRequiredService<ISheetService>();
         await service.ShowAsync<ComposeSheet>(this);
     }
 

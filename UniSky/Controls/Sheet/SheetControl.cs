@@ -1,15 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.PortableExecutable;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Uwp.Deferred;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
 using UniSky.Services;
 using Windows.ApplicationModel;
 using Windows.Foundation;
+using Windows.UI.ViewManagement;
+using Windows.UI.WindowManagement;
+using Windows.UI.WindowManagement.Preview;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
@@ -188,14 +193,61 @@ namespace UniSky.Controls.Sheet
         public static readonly DependencyProperty IsSecondaryButtonEnabledProperty =
             DependencyProperty.Register("IsSecondaryButtonEnabled", typeof(bool), typeof(SheetControl), new PropertyMetadata(true));
 
+        public Size PreferredWindowSize
+        {
+            get { return (Size)GetValue(PreferredWindowSizeProperty); }
+            set { SetValue(PreferredWindowSizeProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for PreferredWindowSize.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty PreferredWindowSizeProperty =
+            DependencyProperty.Register("PreferredWindowSize", typeof(Size), typeof(SheetControl), new PropertyMetadata(new Size(320, 400)));
+
+
         public event TypedEventHandler<SheetControl, SheetShowingEventArgs> Showing;
         public event TypedEventHandler<SheetControl, RoutedEventArgs> Shown;
         public event TypedEventHandler<SheetControl, SheetHidingEventArgs> Hiding;
         public event TypedEventHandler<SheetControl, RoutedEventArgs> Hidden;
 
+        public ISheetController Controller { get; private set; }
+
         public SheetControl()
         {
             this.DefaultStyleKey = typeof(SheetControl);
+        }
+
+        internal void SetSheetController(ISheetController controller)
+        {
+            Controller = controller;
+        }
+
+        protected override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+
+            if (Controller != null && Controller.IsFullWindow)
+            {
+                VisualStateManager.GoToState(this, "FullWindow", false);
+                var titleBarDragArea = this.FindDescendantByName("TitleBarDragArea");
+                Controller.SafeAreaService.SafeAreaUpdated += OnSafeAreaUpdated;
+                Controller.SafeAreaService.SetTitleBar(titleBarDragArea);
+
+                var inputPane = InputPane.GetForCurrentView();
+                inputPane.Showing += OnInputPaneShowing;
+                inputPane.Hiding += OnInputPaneHiding;
+
+                this.SizeChanged += OnSizeChanged;
+            }
+            else
+            {
+                VisualStateManager.GoToState(this, "Standard", false);
+            }
+        }
+
+        private void OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            var rightButton = this.FindDescendantByName("PrimaryTitleBarButton");
+            this.OnBottomInsetsChanged(0, rightButton.ActualWidth + 16);
         }
 
         internal void InvokeShowing(object parameter)
@@ -220,7 +272,46 @@ namespace UniSky.Controls.Sheet
 
         internal void InvokeHidden()
         {
+            if (Controller.IsFullWindow)
+            {
+                Controller.SafeAreaService.SafeAreaUpdated += OnSafeAreaUpdated;
+            }
+
             Hidden?.Invoke(this, new RoutedEventArgs());
         }
+
+        private void OnInputPaneShowing(InputPane sender, InputPaneVisibilityEventArgs args)
+        {
+            var ButtonsGrid = (Grid)this.FindDescendantByName("ButtonsGrid");
+            ButtonsGrid.Margin = new Thickness(0, 0, 0, args.OccludedRect.Height);
+            args.EnsuredFocusedElementInView = true;
+        }
+
+        private void OnInputPaneHiding(InputPane sender, InputPaneVisibilityEventArgs args)
+        {
+            var ButtonsGrid = (Grid)this.FindDescendantByName("ButtonsGrid");
+            ButtonsGrid.Margin = new Thickness(0, 0, 0, args.OccludedRect.Height);
+            args.EnsuredFocusedElementInView = true;
+        }
+
+        private void OnSafeAreaUpdated(object sender, SafeAreaUpdatedEventArgs e)
+        {
+            var titleBarGrid = (Grid)this.FindDescendantByName("TitleBarGrid");
+
+            if (e.SafeArea.HasTitleBar)
+            {
+                titleBarGrid.Height = e.SafeArea.Bounds.Top;
+                titleBarGrid.Padding = new Thickness();
+            }
+            else
+            {
+                titleBarGrid.Height = 42;
+                titleBarGrid.Padding = new Thickness(0, e.SafeArea.Bounds.Top, 0, 4);
+            }
+
+            Margin = new Thickness(e.SafeArea.Bounds.Left, 0, e.SafeArea.Bounds.Right, e.SafeArea.Bounds.Bottom);
+        }
+
+        protected virtual void OnBottomInsetsChanged(double leftInset, double rightInset) { }
     }
 }

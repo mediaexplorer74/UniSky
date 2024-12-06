@@ -39,9 +39,9 @@ public sealed partial class FeedsPage : Page
     {
         base.OnNavigatedTo(e);
 
-        this.ViewModel = ActivatorUtilities.CreateInstance<FeedsViewModel>(Ioc.Default);
+        this.ViewModel = ActivatorUtilities.CreateInstance<FeedsViewModel>(ServiceContainer.Scoped);
 
-        var safeAreaService = Ioc.Default.GetRequiredService<ISafeAreaService>();
+        var safeAreaService = ServiceContainer.Scoped.GetRequiredService<ISafeAreaService>();
         safeAreaService.SafeAreaUpdated += OnSafeAreaUpdated;
     }
 

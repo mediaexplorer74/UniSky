@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml;
 using Windows.Graphics.Display;
+using System.Threading;
 
 namespace UniSky.Extensions
 {
@@ -37,15 +38,23 @@ namespace UniSky.Extensions
         public static readonly DependencyProperty MarginProperty =
             DependencyProperty.RegisterAttached("Margin", typeof(Thickness), typeof(Hairline), new PropertyMetadata(DependencyProperty.UnsetValue, OnMarginPropertyChanged));
 
-        private static List<WeakReference<DependencyObject>> Elements { get; set; } = [];
-        private static DisplayInformation DisplayInfo { get; set; }
+        private static ThreadLocal<List<WeakReference<DependencyObject>>> Elements { get; }
+            = new ThreadLocal<List<WeakReference<DependencyObject>>>(() => new List<WeakReference<DependencyObject>>(), true);
+
+        private static ThreadLocal<DisplayInformation> DisplayInfo { get; }
+            = new ThreadLocal<DisplayInformation>(() =>
+            {
+                var info = DisplayInformation.GetForCurrentView();
+                info.DpiChanged += OnDpiChanged;
+                return info;
+            }, true);
 
         private static void OnThicknessPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is not (Grid or StackPanel or Control or Border))
                 return;
 
-            Elements.Add(new WeakReference<DependencyObject>(d));
+            Elements.Value.Add(new WeakReference<DependencyObject>(d));
 
             if (DisplayInfo == null)
             {
@@ -53,7 +62,7 @@ namespace UniSky.Extensions
             }
 
             var newValue = (Thickness)(e.NewValue);
-            ApplyBorderThickness(d, newValue, DisplayInfo);
+            ApplyBorderThickness(d, newValue, DisplayInfo.Value);
         }
 
         private static void OnMarginPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -61,7 +70,7 @@ namespace UniSky.Extensions
             if (d is not FrameworkElement)
                 return;
 
-            Elements.Add(new WeakReference<DependencyObject>(d));
+            Elements.Value.Add(new WeakReference<DependencyObject>(d));
 
             if (DisplayInfo == null)
             {
@@ -69,7 +78,7 @@ namespace UniSky.Extensions
             }
 
             var newValue = (Thickness)(e.NewValue);
-            ApplyMargin(d, newValue, DisplayInfo);
+            ApplyMargin(d, newValue, DisplayInfo.Value);
         }
 
         private static void ApplyBorderThickness(DependencyObject d, Thickness newValue, DisplayInformation info)
@@ -117,14 +126,12 @@ namespace UniSky.Extensions
 
         public static void Initialize()
         {
-            DisplayInfo = DisplayInformation.GetForCurrentView();
-            DisplayInfo.DpiChanged += OnDpiChanged;
-            ApplyResources(DisplayInfo);
+            ApplyResources(DisplayInfo.Value);
         }
 
         private static void OnDpiChanged(DisplayInformation sender, object args)
         {
-            foreach (var item in Elements)
+            foreach (var item in Elements.Value)
             {
                 if (item.TryGetTarget(out var element))
                 {
