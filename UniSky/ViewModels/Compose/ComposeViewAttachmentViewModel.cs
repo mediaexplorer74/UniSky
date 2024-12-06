@@ -155,6 +155,8 @@ public partial class ComposeViewAttachmentViewModel : ViewModelBase
             encoder.SetSoftwareBitmap(await decoder.GetSoftwareBitmapAsync());
             encoder.BitmapTransform.ScaledWidth = (uint)Math.Ceiling(width);
             encoder.BitmapTransform.ScaledHeight = (uint)Math.Ceiling(height);
+            encoder.BitmapTransform.InterpolationMode = BitmapInterpolationMode.Fant;
+
 
             await encoder.FlushAsync();
         }

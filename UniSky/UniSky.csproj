@@ -553,4 +553,17 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+
+  <Target Name="ScamTheXamlCompiler"
+          BeforeTargets="MarkupCompilePass1">
+    <PropertyGroup>
+      <TargetPlatformMinVersion>10.0.15063.0</TargetPlatformMinVersion>
+    </PropertyGroup>
+  </Target>
+  <Target Name="ScamTheXamlCompiler2"
+          AfterTargets="MarkupCompilePass2">
+    <PropertyGroup>
+      <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
+    </PropertyGroup>
+  </Target>
 </Project>
