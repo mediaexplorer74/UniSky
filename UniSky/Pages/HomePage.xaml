@@ -155,7 +155,7 @@
                     </Viewbox>
 
                     <TextBlock Text="Unisky"
-                               Style="{StaticResource CaptionTextBlockStyle}" 
+                               Style="{ThemeResource CaptionTextBlockStyle}" 
                                VerticalAlignment="Center" 
                                Grid.Column="1"
                                Margin="8,0"/>
@@ -172,7 +172,7 @@
                         HorizontalAlignment="Stretch" 
                         VerticalAlignment="Stretch" 
                         MaxWidth="600"
-                        BorderBrush="{StaticResource SystemControlRevealSeparatorBrush}"
+                        BorderBrush="{ThemeResource SystemControlRevealSeparatorBrush}"
                         ui:UIElementExtensions.ClipToBounds="True">
                     <Frame x:Name="NavigationFrame"
                            HorizontalAlignment="Stretch">
