@@ -12,6 +12,7 @@ using Microsoft.Toolkit.Uwp.UI.Extensions;
 using UniSky.Services;
 using Windows.ApplicationModel;
 using Windows.Foundation;
+using Windows.UI.ViewManagement;
 using Windows.UI.WindowManagement;
 using Windows.UI.WindowManagement.Preview;
 using Windows.UI.Xaml;
@@ -220,6 +221,10 @@ namespace UniSky.Controls.Sheet
                 Controller.SafeAreaService.SafeAreaUpdated += OnSafeAreaUpdated;
                 Controller.SafeAreaService.SetTitleBar(titleBarDragArea);
 
+                var inputPane = InputPane.GetForCurrentView();
+                inputPane.Showing += OnInputPaneShowing;
+                inputPane.Hiding += OnInputPaneHiding;
+
                 this.SizeChanged += OnSizeChanged;
             }
             else
@@ -264,6 +269,20 @@ namespace UniSky.Controls.Sheet
             Hidden?.Invoke(this, new RoutedEventArgs());
         }
 
+        private void OnInputPaneShowing(InputPane sender, InputPaneVisibilityEventArgs args)
+        {
+            var ButtonsGrid = (Grid)this.FindDescendantByName("ButtonsGrid");
+            ButtonsGrid.Margin = new Thickness(0, 0, 0, args.OccludedRect.Height);
+            args.EnsuredFocusedElementInView = true;
+        }
+
+        private void OnInputPaneHiding(InputPane sender, InputPaneVisibilityEventArgs args)
+        {
+            var ButtonsGrid = (Grid)this.FindDescendantByName("ButtonsGrid");
+            ButtonsGrid.Margin = new Thickness(0, 0, 0, args.OccludedRect.Height);
+            args.EnsuredFocusedElementInView = true;
+        }
+
         private void OnSafeAreaUpdated(object sender, SafeAreaUpdatedEventArgs e)
         {
             var titleBarGrid = (Grid)this.FindDescendantByName("TitleBarGrid");
@@ -276,7 +295,7 @@ namespace UniSky.Controls.Sheet
             else
             {
                 titleBarGrid.Height = 42;
-                titleBarGrid.Padding = new Thickness(0, e.SafeArea.Bounds.Top, 0, 0);
+                titleBarGrid.Padding = new Thickness(0, e.SafeArea.Bounds.Top, 0, 4);
             }
 
             Margin = new Thickness(e.SafeArea.Bounds.Left, 0, e.SafeArea.Bounds.Right, e.SafeArea.Bounds.Bottom);

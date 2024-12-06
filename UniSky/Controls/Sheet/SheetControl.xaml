@@ -72,6 +72,7 @@
                                         Visibility="{TemplateBinding PrimaryButtonVisibility}"
                                         Command="{TemplateBinding PrimaryButtonCommand}"
                                         IsEnabled="{TemplateBinding IsPrimaryButtonEnabled}"
+                                        Padding="{ThemeResource ButtonPadding}"
                                         Margin="8">
                                     <w1709:Button.KeyboardAccelerators>
                                         <w1709:KeyboardAccelerator Modifiers="Control" Key="Enter"/>
@@ -88,6 +89,7 @@
                                         Visibility="{TemplateBinding SecondaryButtonVisibility}"
                                         Command="{TemplateBinding SecondaryButtonCommand}"
                                         IsEnabled="{TemplateBinding IsSecondaryButtonEnabled}"
+                                        Padding="{ThemeResource ButtonPadding}"
                                         Margin="8">
                                     <w1709:Button.KeyboardAccelerators>
                                         <w1709:KeyboardAccelerator Key="Escape"/>

@@ -66,6 +66,8 @@ sealed partial class App : Application
         ServiceContainer.Default.ConfigureServices(collection.BuildServiceProvider());
         
         Configurator.Formatters.Register("en", (locale) => new ShortTimespanFormatter("en"));
+        Configurator.Formatters.Register("en-GB", (locale) => new ShortTimespanFormatter("en"));
+        Configurator.Formatters.Register("en-US", (locale) => new ShortTimespanFormatter("en"));
     }
 
     protected override void OnActivated(IActivatedEventArgs args)

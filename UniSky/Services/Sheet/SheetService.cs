@@ -87,16 +87,19 @@ internal class SheetService : ISheetService
     {
         ISheetController controller = null;
 
+        var currentViewId = ApplicationView.GetForCurrentView().Id;
         var view = CoreApplication.CreateNewView();
         var newViewId = 0;
         await view.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
         {
+            newViewId = ApplicationView.GetForCurrentView().Id;
+
             // a surprise tool that'll help us later
             // (instanciating this now so it handles min. window sizes, etc.)
             var safeAreaService = ServiceContainer.Scoped.GetRequiredService<ISafeAreaService>();
 
             var control = new T();
-            controller = new ApplicationViewSheetController(control, ApplicationView.GetForCurrentView(), safeAreaService);
+            controller = new ApplicationViewSheetController(control, currentViewId, newViewId, safeAreaService);
             control.SetSheetController(controller);
 
             SystemNavigationManagerPreview.GetForCurrentView().CloseRequested += async (o, e) =>
@@ -119,11 +122,9 @@ internal class SheetService : ISheetService
             control.InvokeShowing(parameter);
             control.InvokeShown();
 
-            newViewId = ApplicationView.GetForCurrentView().Id;
         });
 
-        var prefs = ViewModePreferences.CreateDefault(ApplicationViewMode.Default);
-        await ApplicationViewSwitcher.TryShowAsViewModeAsync(newViewId, ApplicationViewMode.Default, prefs);
+        await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newViewId, ViewSizePreference.UseLess);
 
         return controller;
     }

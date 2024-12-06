@@ -221,7 +221,6 @@
     <Compile Include="Services\INavigationService.cs" />
     <Compile Include="Services\INavigationServiceLocator.cs" />
     <Compile Include="Services\IProtocolService.cs" />
-    <Compile Include="Services\ISafeAreaService.cs" />
     <Compile Include="Services\ISettingsService.cs" />
     <Compile Include="Services\ISheetService.cs" />
     <Compile Include="Services\IThemeService.cs" />
@@ -229,9 +228,16 @@
     <Compile Include="DataTemplates\FeedTemplates.xaml.cs">
       <DependentUpon>FeedTemplates.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Services\SafeAreaService.cs" />
+    <Compile Include="Services\SafeArea\AppWindowSafeAreaService.cs" />
+    <Compile Include="Services\SafeArea\CoreWindowSafeAreaService.cs" />
+    <Compile Include="Services\SafeArea\ISafeAreaService.cs" />
+    <Compile Include="Services\ServiceContainer.cs" />
     <Compile Include="Services\SettingsService.cs" />
-    <Compile Include="Services\SheetService.cs" />
+    <Compile Include="Services\Sheet\ApplicationViewSheetController.cs" />
+    <Compile Include="Services\Sheet\AppWindowSheetController.cs" />
+    <Compile Include="Services\Sheet\ISheetController.cs" />
+    <Compile Include="Services\Sheet\SheetRootController.cs" />
+    <Compile Include="Services\Sheet\SheetService.cs" />
     <Compile Include="Services\ThemeService.cs" />
     <Compile Include="Themes\ThemeResources.cs" />
     <Compile Include="ViewModels\Compose\ComposeViewAttachmentViewModel.cs" />

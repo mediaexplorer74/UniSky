@@ -7,7 +7,8 @@ using Windows.UI.Xaml;
 namespace UniSky.Services;
 
 internal class ApplicationViewSheetController(SheetControl control,
-                                              ApplicationView appView,
+                                              int hostViewId,
+                                              int viewId,
                                               ISafeAreaService safeAreaService) : ISheetController
 {
     public UIElement Root => control;
@@ -18,7 +19,7 @@ internal class ApplicationViewSheetController(SheetControl control,
     {
         if (await control.InvokeHidingAsync())
         {
-            await appView.TryConsolidateAsync();
+            await ApplicationViewSwitcher.SwitchAsync(hostViewId, viewId, ApplicationViewSwitchingOptions.ConsolidateViews);
             return true;
         }
 
