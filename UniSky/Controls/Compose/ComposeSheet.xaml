@@ -251,7 +251,7 @@
             <controls:RadialProgressBar Grid.Column="1"
                                         Margin="8,6"
                                         Minimum="0" 
-                                        Maximum="{x:Bind ViewModel.MaxCharacters}" 
+                                        Maximum="{x:Bind ViewModel.MaxCharacters, FallbackValue=300}" 
                                         Value="{x:Bind ViewModel.Characters, Mode=OneWay}"
                                         Width="32"
                                         Height="32"/>
