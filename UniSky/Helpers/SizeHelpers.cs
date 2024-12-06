@@ -10,6 +10,9 @@ internal class SizeHelpers
 {
     public static void Scale(ref double width, ref double height, double maxWidth, double maxHeight, StretchMode mode = StretchMode.Uniform)
     {
+        if (width <= maxWidth && height <= maxHeight)
+            return;
+
         if (mode == StretchMode.None)
         {
             return;
