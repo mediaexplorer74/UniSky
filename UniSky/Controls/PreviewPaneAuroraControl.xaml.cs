@@ -59,10 +59,20 @@ namespace System.Windows.Shell.Aurora
             var control = (PreviewPaneAuroraControl)d;
 
             var hslColor = newValue.ToHsl();
-            var hslBackground = hslColor with { L = hslColor.L * 0.7 };
-            var colorBackground = ColorHelper.FromHsl(hslBackground.H, hslBackground.S, hslBackground.L);
+            if (control.ActualTheme == ElementTheme.Dark)
+            {
+                var hslBackground = hslColor with { L = hslColor.L * 0.7 };
+                var colorBackground = ColorHelper.FromHsl(hslBackground.H, hslBackground.S, hslBackground.L);
 
-            control._AnimateAurora(oldValue, newValue, colorBackground);
+                control._AnimateAurora(oldValue, newValue, colorBackground);
+            }
+            else
+            {
+                var hslForeground = hslColor with { L = Math.Clamp(hslColor.L * 1.25, 0, 1) };
+                var colorForeground = ColorHelper.FromHsl(hslForeground.H, hslForeground.S, hslForeground.L);
+
+                control._AnimateAurora(oldValue, colorForeground, newValue);
+            }
         }
 
         public PreviewPaneAuroraControl()
