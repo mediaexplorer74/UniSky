@@ -281,6 +281,8 @@ public partial class HomeViewModel : ViewModelBase
                 this.homeNavigationService.Navigate<FeedsPage>();
                 break;
             case HomePages.Search:
+                this.homeNavigationService.Navigate<SearchPage>();
+                break;
             case HomePages.Notifications:
             case HomePages.Chat:
                 this.homeNavigationService.Navigate<Page>();

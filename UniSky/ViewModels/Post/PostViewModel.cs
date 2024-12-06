@@ -19,7 +19,7 @@ using UniSky.Controls.Compose;
 using UniSky.Helpers;
 using UniSky.Pages;
 using UniSky.Services;
-using UniSky.ViewModels.Profiles;
+using UniSky.ViewModels.Profile;
 using UniSky.ViewModels.Text;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.DataTransfer;
@@ -185,16 +185,6 @@ public partial class PostViewModel : ViewModelBase
                 .HandleResult()?.Uri;
         }
     }
-
-    [RelayCommand]
-    private void OpenProfile(UIElement element)
-    {
-        var service = ServiceContainer.Scoped.GetRequiredService<INavigationServiceLocator>()
-            .GetNavigationService("Home");
-
-        service.Navigate<ProfilePage>(this.view.Author, new ContinuumNavigationTransitionInfo() { ExitElement = element });
-    }
-
 
     [RelayCommand]
     private async Task ReplyAsync()

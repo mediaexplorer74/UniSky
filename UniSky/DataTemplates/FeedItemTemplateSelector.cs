@@ -4,22 +4,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UniSky.ViewModels.Posts;
+using UniSky.ViewModels.Profile;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace UniSky.DataTemplates;
 
-internal class PostEmbedTemplateSelector : DataTemplateSelector
+internal class FeedItemTemplateSelector : DataTemplateSelector
 {
-    public DataTemplate VideoEmbedTemplate { get; set; }
-    public DataTemplate ImagesEmbedTemplate { get; set; }
+    public DataTemplate FeedPostTemplate { get; set; }
+    public DataTemplate FeedProfileTemplate { get; set; }
 
     protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
     {
         return item switch
         {
-            PostEmbedImagesViewModel => ImagesEmbedTemplate,
-            PostEmbedVideoViewModel => VideoEmbedTemplate,
+            PostViewModel => FeedPostTemplate,
+            ProfileViewModel => FeedProfileTemplate,
             _ => null,
         };
     }

@@ -107,7 +107,7 @@
                             </ImageBrush>
                         </Ellipse.Fill>
                     </Ellipse>
-                    
+
                     <Border Background="Transparent"
                             Tapped="ProfileContainer_Tapped"
                             Grid.ColumnSpan="2"
@@ -159,7 +159,7 @@
                                 Grid.Column="1"
                                 Grid.RowSpan="2"
                                 VerticalAlignment="Center">
-                            <TextBlock Text="Follow" Margin="8,0"/>
+                            <TextBlock Text="{Binding FollowButtonText}" Margin="8,0"/>
                         </Button>
                     </Grid>
 
@@ -233,14 +233,14 @@
                                 Tapped="ProfileContainer_Tapped"
                                 Margin="-60,-8,-8,-8"
                                 Grid.ColumnSpan="2"
-                                Grid.RowSpan="2"/> 
+                                Grid.RowSpan="2"/>
 
                         <Button x:Name="ScrolledFollowButton"
                                 Style="{ThemeResource ButtonRevealStyle}"
                                 Grid.Column="1"
                                 Grid.RowSpan="2"
                                 VerticalAlignment="Center">
-                            <TextBlock Text="Follow" Margin="8,0"/>
+                            <TextBlock Text="{Binding FollowButtonText}" Margin="8,0"/>
                         </Button>
                     </Grid>
                 </Grid>
