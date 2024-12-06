@@ -22,6 +22,7 @@ internal class SheetService : ISheetService
 {
     private readonly SheetRootControl sheetRoot;
     private readonly ISettingsService settingsService;
+
     public SheetService(ISettingsService settingsService)
     {
         this.settingsService = settingsService;
@@ -57,80 +58,14 @@ internal class SheetService : ISheetService
 
     private async Task<ISheetController> ShowSheetForAppWindow<T>(object parameter) where T : SheetControl, new()
     {
-        var settingsKey = "AppWindow_LastSize_" + typeof(T).FullName.Replace(".", "_");
-        var initialSize = settingsService.Read(settingsKey, new Size(320, 400));
-
         var control = new T();
         var appWindow = await AppWindow.TryCreateAsync();
+
         var controller = new AppWindowSheetController(appWindow, control);
         control.SetSheetController(controller);
         control.InvokeShowing(parameter);
 
         ElementCompositionPreview.SetAppWindowContent(appWindow, control);
-
-        appWindow.PersistedStateId = settingsKey;
-        appWindow.CloseRequested += async (o, e) =>
-        {
-            var deferral = e.GetDeferral();
-            if (!await control.InvokeHidingAsync())
-                e.Cancel = true;
-
-            deferral.Complete();
-        };
-
-        appWindow.Changed += (o, e) =>
-        {
-            if (e.DidSizeChange)
-                settingsService.Save(settingsKey, new Size(control.ActualSize.X, control.ActualSize.Y));
-        };
-
-        appWindow.Closed += (o, e) =>
-        {
-            control.InvokeHidden();
-        };
-        
-        appWindow.RequestSize(initialSize);
-
-        var applicationView = ApplicationView.GetForCurrentView();
-        var currentViewRect = applicationView.VisibleBounds;
-        var environment = applicationView.WindowingEnvironment;
-        if (environment.Kind == WindowingEnvironmentKind.Overlapped)
-        {
-            var regions = environment.GetDisplayRegions();
-            var currentRegion = regions[0];
-            foreach (var region in regions)
-            {
-                var regionRect = new Rect(region.WorkAreaOffset, region.WorkAreaSize);
-                if (regionRect.Contains(new Point(applicationView.VisibleBounds.X, applicationView.VisibleBounds.Y)))
-                    currentRegion = region;
-            }
-
-            var currentDisplayOffset = currentRegion.WorkAreaOffset;
-            var currentDisplaySize = currentRegion.WorkAreaSize;
-            currentViewRect = new Rect(
-                currentViewRect.X - currentDisplayOffset.X,
-                currentViewRect.Y - currentDisplayOffset.Y,
-                currentViewRect.Width,
-                currentViewRect.Height);
-
-            var currentDisplayCenter = currentDisplaySize.Width / 2;
-            var offset = (currentViewRect.Left + Math.Max(currentViewRect.Width / 2, initialSize.Width / 2)) - currentDisplayCenter;
-
-            if (applicationView.AdjacentToLeftDisplayEdge && applicationView.AdjacentToRightDisplayEdge)
-            {
-                appWindow.RequestMoveRelativeToDisplayRegion(currentRegion, new Point((currentDisplayCenter - (initialSize.Width / 2)) + 20, 150));
-            }
-            else if (offset < 0)
-            {
-                // right
-                appWindow.RequestMoveRelativeToCurrentViewContent(new Point(applicationView.VisibleBounds.Width + 8, 0));
-            }
-            else
-            {
-                // left
-                appWindow.RequestMoveRelativeToCurrentViewContent(new Point(-initialSize.Width - 8, 0));
-            }
-        }
 
         await appWindow.TryShowAsync();
 
@@ -150,27 +85,9 @@ internal class SheetService : ISheetService
         {
             newViewId = ApplicationView.GetForCurrentView().Id;
 
-            // a surprise tool that'll help us later
-            // (instanciating this now so it handles min. window sizes, etc.)
-            var safeAreaService = ServiceContainer.Scoped.GetRequiredService<ISafeAreaService>();
-
             var control = new T();
-            controller = new ApplicationViewSheetController(control, currentViewId, newViewId, safeAreaService);
+            controller = new ApplicationViewSheetController(control, currentViewId, newViewId);
             control.SetSheetController(controller);
-
-            SystemNavigationManagerPreview.GetForCurrentView().CloseRequested += async (o, e) =>
-            {
-                var deferral = e.GetDeferral();
-                if (!await control.InvokeHidingAsync())
-                    e.Handled = true;
-
-                deferral.Complete();
-            };
-
-            Window.Current.Closed += (o, ev) =>
-            {
-                control.InvokeHidden();
-            };
 
             Window.Current.Content = control;
             Window.Current.Activate();

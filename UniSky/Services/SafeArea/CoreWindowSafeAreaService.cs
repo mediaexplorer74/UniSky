@@ -41,7 +41,11 @@ internal class CoreWindowSafeAreaService : ISafeAreaService
         _applicationView = ApplicationView.GetForCurrentView();
         _coreApplicationView = CoreApplication.GetCurrentView();
 
-        _applicationView.SetPreferredMinSize(new Size(320, 640));
+        if (_coreApplicationView.IsMain)
+            _applicationView.SetPreferredMinSize(new Size(320, 640));
+        else
+            _applicationView.SetPreferredMinSize(new Size(320, 320));
+
         _applicationView.SetDesiredBoundsMode(ApplicationViewBoundsMode.UseCoreWindow);
         _applicationView.VisibleBoundsChanged += ApplicationView_VisibleBoundsChanged;
 

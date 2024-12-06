@@ -193,6 +193,17 @@ namespace UniSky.Controls.Sheet
         public static readonly DependencyProperty IsSecondaryButtonEnabledProperty =
             DependencyProperty.Register("IsSecondaryButtonEnabled", typeof(bool), typeof(SheetControl), new PropertyMetadata(true));
 
+        public Size PreferredWindowSize
+        {
+            get { return (Size)GetValue(PreferredWindowSizeProperty); }
+            set { SetValue(PreferredWindowSizeProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for PreferredWindowSize.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty PreferredWindowSizeProperty =
+            DependencyProperty.Register("PreferredWindowSize", typeof(Size), typeof(SheetControl), new PropertyMetadata(new Size(320, 400)));
+
+
         public event TypedEventHandler<SheetControl, SheetShowingEventArgs> Showing;
         public event TypedEventHandler<SheetControl, RoutedEventArgs> Shown;
         public event TypedEventHandler<SheetControl, SheetHidingEventArgs> Hiding;
