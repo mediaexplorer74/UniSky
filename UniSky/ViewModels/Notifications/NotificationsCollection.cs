@@ -79,6 +79,8 @@ public class NotificationsCollection : ObservableCollection<NotificationViewMode
                 .Posts
                 .ToDictionary(k => k.Uri.ToString());
 
+            var initialCount = Count;
+
             await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 var groups = notifications.Notifications
@@ -123,7 +125,7 @@ public class NotificationsCollection : ObservableCollection<NotificationViewMode
             if (notifications.Notifications.Count == 0 || string.IsNullOrWhiteSpace(this.cursor))
                 HasMoreItems = false;
 
-            return new LoadMoreItemsResult() { Count = (uint)notifications.Notifications.Count };
+            return new LoadMoreItemsResult() { Count = (uint)(Count - initialCount) };
         }
         catch (Exception ex)
         {
