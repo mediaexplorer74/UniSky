@@ -219,6 +219,9 @@
     <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="Helpers\UIElementExtensions.cs" />
     <Compile Include="Helpers\UrlHelpers.cs" />
+    <Compile Include="Pages\NotificationsPage.xaml.cs">
+      <DependentUpon>NotificationsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\ProfilePage.xaml.cs">
       <DependentUpon>ProfilePage.xaml</DependentUpon>
     </Compile>
@@ -250,14 +253,17 @@
     <Compile Include="ViewModels\Compose\ComposeViewAttachmentViewModel.cs" />
     <Compile Include="ViewModels\Compose\ComposeViewModel.cs" />
     <Compile Include="ViewModels\Error\ExceptionViewModel.cs" />
-    <Compile Include="ViewModels\Post\PostEmbedVideoViewModel.cs" />
+    <Compile Include="ViewModels\Notifications\NotificationsCollection.cs" />
+    <Compile Include="ViewModels\Notifications\NotificationsPageViewModel.cs" />
+    <Compile Include="ViewModels\Notifications\NotificationViewModel.cs" />
+    <Compile Include="ViewModels\Posts\PostEmbedVideoViewModel.cs" />
     <Compile Include="ViewModels\Profile\ProfileFeedViewModel.cs" />
     <Compile Include="ViewModels\Profile\ProfilePageViewModel.cs" />
     <Compile Include="ViewModels\Profile\ProfileViewModel.cs" />
-    <Compile Include="ViewModels\Post\PostEmbedImagesViewModel.cs" />
-    <Compile Include="ViewModels\Post\PostEmbedImageViewModel.cs" />
-    <Compile Include="ViewModels\Post\PostEmbedViewModel.cs" />
-    <Compile Include="ViewModels\Post\PostViewModel.cs" />
+    <Compile Include="ViewModels\Posts\PostEmbedImagesViewModel.cs" />
+    <Compile Include="ViewModels\Posts\PostEmbedImageViewModel.cs" />
+    <Compile Include="ViewModels\Posts\PostEmbedViewModel.cs" />
+    <Compile Include="ViewModels\Posts\PostViewModel.cs" />
     <Compile Include="ViewModels\Search\SearchFeedViewModel.cs" />
     <Compile Include="ViewModels\Search\SearchPageViewModel.cs" />
     <Compile Include="ViewModels\Search\SearchPostsCollection.cs" />
@@ -438,6 +444,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\LoginPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\NotificationsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

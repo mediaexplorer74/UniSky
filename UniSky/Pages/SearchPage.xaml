@@ -96,7 +96,7 @@
 
         <AutoSuggestBox x:Name="SearchBox"
                         Grid.Row="2" 
-                        Margin="12,4,12,12"
+                        Margin="12,8,12,12"
                         PlaceholderText="Find something cool..."
                         QueryIcon="Find"
                         Text="{x:Bind ViewModel.SearchQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"

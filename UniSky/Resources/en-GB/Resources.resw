@@ -234,4 +234,31 @@
   <data name="ProfileFollowing" xml:space="preserve">
     <value>Following</value>
   </data>
+  <data name="NotificationLikedTweetSingle" xml:space="preserve">
+    <value>{0} liked your post</value>
+  </data>
+  <data name="NotificationLikedTweetMultiple" xml:space="preserve">
+    <value>{0} and {1} liked your post</value>
+  </data>
+  <data name="NotificationFollow" xml:space="preserve">
+    <value>{0} followed you</value>
+  </data>
+  <data name="NotificationMention" xml:space="preserve">
+    <value>{0} mentioned you</value>
+  </data>
+  <data name="NotificationOther" xml:space="preserve">
+    <value>other</value>
+  </data>
+  <data name="NotificationQuote" xml:space="preserve">
+    <value>{0} quoted your post</value>
+  </data>
+  <data name="NotificationReply" xml:space="preserve">
+    <value>{0} replied to you</value>
+  </data>
+  <data name="NotificationRetweetMultiple" xml:space="preserve">
+    <value>{0} and {1} reposted</value>
+  </data>
+  <data name="NotificationRetweetSingle" xml:space="preserve">
+    <value>{0} reposted</value>
+  </data>
 </root>
