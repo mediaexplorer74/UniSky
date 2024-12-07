@@ -253,7 +253,7 @@ public partial class PostViewModel : ViewModelBase
         return n.ToMetric(decimals: 2);
     }
 
-    private PostEmbedViewModel CreateEmbedViewModel(ATObject embed)
+    internal static PostEmbedViewModel CreateEmbedViewModel(ATObject embed, bool allowNestedPosts = true)
     {
         if (embed is null)
             return null;
@@ -265,7 +265,8 @@ public partial class PostViewModel : ViewModelBase
             ViewImages images => new PostEmbedImagesViewModel(images),
             ViewVideo video => new PostEmbedVideoViewModel(video),
             ViewExternal external => new PostEmbedExternalViewModel(external),
-            ViewRecordDef and { Record: ViewRecord viewRecord } => viewRecord.Value switch
+            ViewRecordWithMedia recordWithMedia => new PostEmbedRecordWithMediaViewModel(recordWithMedia),
+            ViewRecordDef and { Record: ViewRecord viewRecord } when allowNestedPosts => viewRecord.Value switch
             {
                 Post post => new PostEmbedPostViewModel(viewRecord, post),
                 _ => null

@@ -39,26 +39,10 @@ public partial class PostEmbedPostViewModel : PostEmbedViewModel
         Text = post.Text;
         RichText = new RichTextViewModel(post.Text, post.Facets ?? []);
         Author = new ProfileViewModel(view.Author);
-        Embed = CreateEmbedViewModel(view.Embeds.FirstOrDefault());
+        Embed = PostViewModel.CreateEmbedViewModel(view.Embeds?.FirstOrDefault(), false);
 
         var timeSinceIndex = DateTime.Now - (view.IndexedAt.Value.ToLocalTime());
         var date = timeSinceIndex.Humanize(1, minUnit: Humanizer.Localisation.TimeUnit.Second);
         Date = date;
-    }
-
-    private PostEmbedViewModel CreateEmbedViewModel(ATObject embed)
-    {
-        if (embed is null)
-            return null;
-
-        Debug.WriteLine(embed.GetType());
-
-        return embed switch
-        {
-            ViewImages images => new PostEmbedImagesViewModel(images),
-            ViewVideo video => new PostEmbedVideoViewModel(video),
-            ViewExternal external => new PostEmbedExternalViewModel(external),
-            _ => null
-        };
     }
 }

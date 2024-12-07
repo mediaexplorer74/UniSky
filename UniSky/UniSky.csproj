@@ -169,6 +169,7 @@
     <Compile Include="Controls\Sheet\SheetRootControl.xaml.cs">
       <DependentUpon>SheetRootControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\VisibilityConverter.cs" />
     <Compile Include="Converters\Static.cs" />
     <Compile Include="DataTemplates\FeedItemTemplateSelector.cs" />
     <Compile Include="DataTemplates\PostEmbedTemplateSelector.cs" />
@@ -258,6 +259,7 @@
     <Compile Include="ViewModels\Notifications\NotificationViewModel.cs" />
     <Compile Include="ViewModels\Posts\PostEmbedExternalViewModel.cs" />
     <Compile Include="ViewModels\Posts\PostEmbedPostViewModel.cs" />
+    <Compile Include="ViewModels\Posts\PostEmbedRecordWithMediaViewModel.cs" />
     <Compile Include="ViewModels\Posts\PostEmbedVideoViewModel.cs" />
     <Compile Include="ViewModels\Profile\ProfileFeedViewModel.cs" />
     <Compile Include="ViewModels\Profile\ProfilePageViewModel.cs" />
