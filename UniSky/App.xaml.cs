@@ -25,6 +25,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using UnhandledExceptionEventArgs = Windows.UI.Xaml.UnhandledExceptionEventArgs;
 
 namespace UniSky;
 
@@ -33,6 +34,8 @@ namespace UniSky;
 /// </summary>
 sealed partial class App : Application
 {
+    private ILogger<App> _logger;
+
     /// <summary>
     /// Initializes the singleton application object.  This is the first line of authored code
     /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -43,8 +46,20 @@ sealed partial class App : Application
 
         this.InitializeComponent();
         this.Suspending += OnSuspending;
+        this.UnhandledException += OnUnhandledException;
+
+        _logger = ServiceContainer.Default.GetRequiredService<ILoggerFactory>()
+            .CreateLogger<App>();
 
         // ResourceContext.SetGlobalQualifierValue("Custom", "Twitter", ResourceQualifierPersistence.LocalMachine);
+    }
+
+    private void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+    {
+        _logger.LogError(e.Exception, "Unhandled exception!!");
+
+        // hate this
+        e.Handled = true;
     }
 
     private void ConfigureServices()

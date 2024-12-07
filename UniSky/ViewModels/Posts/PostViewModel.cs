@@ -127,7 +127,7 @@ public partial class PostViewModel : ViewModelBase
 
         RichText = new RichTextViewModel(post.Text, post.Facets ?? []);
         Author = new ProfileViewModel(view.Author);
-        Embed = CreateEmbedViewModel(view.Embed);
+        Embed = CreateEmbedViewModel(view.Embed, false);
 
         var timeSinceIndex = DateTime.Now - (view.IndexedAt.Value.ToLocalTime());
         var date = timeSinceIndex.Humanize(1, minUnit: Humanizer.Localisation.TimeUnit.Second);
@@ -253,7 +253,7 @@ public partial class PostViewModel : ViewModelBase
         return n.ToMetric(decimals: 2);
     }
 
-    internal static PostEmbedViewModel CreateEmbedViewModel(ATObject embed, bool allowNestedPosts = true)
+    internal static PostEmbedViewModel CreateEmbedViewModel(ATObject embed, bool isNested = false)
     {
         if (embed is null)
             return null;
@@ -265,8 +265,10 @@ public partial class PostViewModel : ViewModelBase
             ViewImages images => new PostEmbedImagesViewModel(images),
             ViewVideo video => new PostEmbedVideoViewModel(video),
             ViewExternal external => new PostEmbedExternalViewModel(external),
-            ViewRecordWithMedia recordWithMedia => new PostEmbedRecordWithMediaViewModel(recordWithMedia),
-            ViewRecordDef and { Record: ViewRecord viewRecord } when allowNestedPosts => viewRecord.Value switch
+            ViewRecordWithMedia recordWithMedia => isNested ? 
+                CreateEmbedViewModel(recordWithMedia.Media, isNested) :
+                new PostEmbedRecordWithMediaViewModel(recordWithMedia, isNested),
+            ViewRecordDef and { Record: ViewRecord viewRecord } when !isNested => viewRecord.Value switch
             {
                 Post post => new PostEmbedPostViewModel(viewRecord, post),
                 _ => null

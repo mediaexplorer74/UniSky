@@ -25,6 +25,12 @@
                                              ExternalEmbedTemplate="{StaticResource ExternalEmbedContentTemplate}"
                                              RecordWithMediaEmbedTemplate="{StaticResource RecordWithMediaEmbedContentTemplate}"/>
     
+    <datatemplates:PostEmbedTemplateSelector x:Key="PostEmbedChildTemplateSelector"
+                                             ImagesEmbedTemplate="{StaticResource ImagesEmbedContentTemplate}"
+                                             VideoEmbedTemplate="{StaticResource VideoEmbedContentTemplate}"
+                                             PostEmbedTemplate="{StaticResource PostEmbedContentTemplate}"
+                                             ExternalEmbedTemplate="{StaticResource ExternalEmbedContentTemplate}"/>
+    
     <converters:VisibilityConverter x:Key="VisibilityConverter"/>
 
     <MenuFlyout x:Key="FeedItemMoreButtonFlyout"
@@ -63,16 +69,16 @@
                                 Margin="0,4,0,0"
                                 HorizontalAlignment="Stretch"
                                 HorizontalContentAlignment="Stretch"
-                                ContentTemplateSelector="{StaticResource PostEmbedTemplateSelector}"
+                                ContentTemplateSelector="{StaticResource PostEmbedChildTemplateSelector}"
                                 Content="{Binding Media}"/>
             </Grid>
             <Grid x:Name="RecordContentContainer"
-                  Visibility="{Binding Record,Converter={StaticResource VisibilityConverter}}">
+                  Visibility="{Binding Record, Converter={StaticResource VisibilityConverter}}">
                 <ContentControl x:Name="RecordContent"
                                 Margin="0,4,0,0"
                                 HorizontalAlignment="Stretch"
                                 HorizontalContentAlignment="Stretch"
-                                ContentTemplateSelector="{StaticResource PostEmbedTemplateSelector}"
+                                ContentTemplateSelector="{StaticResource PostEmbedChildTemplateSelector}"
                                 Content="{Binding Record}"/>
             </Grid>
         </StackPanel>

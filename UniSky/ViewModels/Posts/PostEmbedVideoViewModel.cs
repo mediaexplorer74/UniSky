@@ -38,6 +38,6 @@ public partial class PostEmbedVideoViewModel : PostEmbedViewModel
     {
         var create = await AdaptiveMediaSource.CreateFromUriAsync(new Uri(video.Playlist));
         if (create.Status == AdaptiveMediaSourceCreationStatus.Success)
-            Source = MediaSource.CreateFromAdaptiveMediaSource(create.MediaSource);
+            Source = MediaSource.CreateFromAdaptiveMediaSource(create.MediaSource); 
     }
 }

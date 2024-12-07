@@ -16,9 +16,9 @@ public partial class PostEmbedRecordWithMediaViewModel : PostEmbedViewModel
     [ObservableProperty]
     private PostEmbedViewModel media;
 
-    public PostEmbedRecordWithMediaViewModel(ViewRecordWithMedia embed) : base(embed)
+    public PostEmbedRecordWithMediaViewModel(ViewRecordWithMedia embed, bool isNested) : base(embed)
     {
-        Record = PostViewModel.CreateEmbedViewModel(embed.Record, true);
-        Media = PostViewModel.CreateEmbedViewModel(embed.Media, false);
+        Record = !isNested ? PostViewModel.CreateEmbedViewModel(embed.Record, isNested) : null;
+        Media = PostViewModel.CreateEmbedViewModel(embed.Media, true);
     }
 }

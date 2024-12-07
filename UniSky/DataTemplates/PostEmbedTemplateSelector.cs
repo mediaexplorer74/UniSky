@@ -26,7 +26,7 @@ internal class PostEmbedTemplateSelector : DataTemplateSelector
             PostEmbedPostViewModel => PostEmbedTemplate,
             PostEmbedExternalViewModel => ExternalEmbedTemplate,
             PostEmbedRecordWithMediaViewModel => RecordWithMediaEmbedTemplate,
-            _ => new DataTemplate(),
+            _ => null,
         };
     }
 

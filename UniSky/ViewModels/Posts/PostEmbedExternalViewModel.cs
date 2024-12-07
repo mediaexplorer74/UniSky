@@ -33,7 +33,7 @@ public partial class PostEmbedExternalViewModel : PostEmbedViewModel
 
             Title = external.Title;
             Description = external.Description;
-            ThumbnailUrl = external.Thumb;
+            ThumbnailUrl = external.Thumb ?? "";
             Source = link.Host;
         }
     }

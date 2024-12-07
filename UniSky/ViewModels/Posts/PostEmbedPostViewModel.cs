@@ -39,7 +39,8 @@ public partial class PostEmbedPostViewModel : PostEmbedViewModel
         Text = post.Text;
         RichText = new RichTextViewModel(post.Text, post.Facets ?? []);
         Author = new ProfileViewModel(view.Author);
-        Embed = PostViewModel.CreateEmbedViewModel(view.Embeds?.FirstOrDefault(), false);
+
+        Embed = PostViewModel.CreateEmbedViewModel(view.Embeds?.FirstOrDefault(), true);
 
         var timeSinceIndex = DateTime.Now - (view.IndexedAt.Value.ToLocalTime());
         var date = timeSinceIndex.Humanize(1, minUnit: Humanizer.Localisation.TimeUnit.Second);
