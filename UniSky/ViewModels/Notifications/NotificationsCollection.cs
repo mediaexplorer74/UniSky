@@ -1,26 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using FishyFlip.Lexicon.App.Bsky.Feed;
-using FishyFlip.Models;
-using System.Web;
-using UniSky.Services;
-using UniSky.ViewModels.Feeds;
-using UniSky.ViewModels.Posts;
-using UniSky.ViewModels.Profile;
-using Windows.Foundation;
-using Windows.UI.Core;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml;
 using FishyFlip.Lexicon.App.Bsky.Notification;
 using FishyFlip.Tools;
-using System.Collections;
-using Windows.UI.Notifications;
-using FishyFlip.Lexicon.App.Bsky.Actor;
+using UniSky.Services;
+using Windows.Foundation;
+using Windows.UI.Core;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Data;
 
 namespace UniSky.ViewModels.Notifications;
 
@@ -84,12 +75,15 @@ public class NotificationsCollection : ObservableCollection<NotificationViewMode
 
             var posts = (await service.GetPostsAsync(hydratePostIds.ToList())
                 .ConfigureAwait(false))
-                .HandleResult();
+                .HandleResult()
+                .Posts
+                .ToDictionary(k => k.Uri.ToString());
 
             await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 var groups = notifications.Notifications
                     .GroupBy(g => (g.Reason is (NotificationReason.Like or NotificationReason.Repost)) ? string.Join('-', g.Reason, g.ReasonSubject) : null);
+
                 foreach (var group in groups)
                 {
                     NotificationViewModel viewModel;
@@ -99,27 +93,28 @@ public class NotificationsCollection : ObservableCollection<NotificationViewMode
                         continue;
                     }
 
+                    Notification notification = null;
+                    PostView post = null;
                     if (group.Key == null)
                     {
-                        foreach (var notification in group)
+                        foreach (var ungroupedNotification in group)
                         {
-                            PostView post = null;
                             if (notification.Reason is (NotificationReason.Like or NotificationReason.Repost))
-                                post = posts.Posts.FirstOrDefault(p => p.Uri.ToString() == notification.ReasonSubject.ToString());
+                                _ = posts.TryGetValue(notification.ReasonSubject.ToString(), out post);
 
                             Add(new NotificationViewModel(notification, post));
                         }
-                    }
-                    else
-                    {
-                        var notification = group.FirstOrDefault();
 
-                        PostView post = null;
-                        if (notification.Reason is (NotificationReason.Like or NotificationReason.Repost))
-                            post = posts.Posts.FirstOrDefault(p => p.Uri.ToString() == notification.ReasonSubject.ToString());
-
-                        Add(new NotificationViewModel(group, post));
+                        continue;
                     }
+
+                    notification = group.FirstOrDefault();
+                    post = null;
+
+                    if (notification.Reason is (NotificationReason.Like or NotificationReason.Repost))
+                        _ = posts.TryGetValue(notification.ReasonSubject.ToString(), out post);
+
+                    Add(new NotificationViewModel(group, post));
                 }
 
                 ArrayList.Adapter(this).Sort(); // ?????
