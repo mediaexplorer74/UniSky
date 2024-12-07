@@ -101,6 +101,7 @@ public class NotificationsCollection : ObservableCollection<NotificationViewMode
                     {
                         foreach (var ungroupedNotification in group)
                         {
+                            notification = ungroupedNotification;
                             if (notification.Reason is (NotificationReason.Like or NotificationReason.Repost))
                                 _ = posts.TryGetValue(notification.ReasonSubject.ToString(), out post);
 
