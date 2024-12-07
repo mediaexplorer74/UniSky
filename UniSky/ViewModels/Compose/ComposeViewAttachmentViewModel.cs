@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -12,6 +13,7 @@ using Windows.Foundation.Metadata;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
+using Windows.Storage.Streams;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
 
@@ -71,7 +73,7 @@ public partial class ComposeViewAttachmentViewModel : ViewModelBase
         {
             if (this.AttachmentType == ComposeViewAttachmentType.Image)
             {
-                await CompressImageAsync(StorageFile);
+                await CompressImageAsync(StorageFile, CheckHeifSupport());
             }
 
             if (this.StorageFile is not IStorageItemProperties properties)
@@ -135,52 +137,67 @@ public partial class ComposeViewAttachmentViewModel : ViewModelBase
         }
     }
 
-    private async Task CompressImageAsync(IStorageFile input, int size = 2048)
+    private async Task CompressImageAsync(IStorageFile input, bool useHeif, int size = 2048)
     {
-        var useHeif = CheckHeifSupport();
-        var output = await ApplicationData.Current.TemporaryFolder.CreateFileAsync($"{Guid.NewGuid()}.{(useHeif ? "heic" : "jpeg")}");
+        var extension = useHeif ? "heic" : "jpeg";
         var contentType = useHeif ? "image/heic" : "image/jpeg";
+        var codec = useHeif ? BitmapEncoder.HeifEncoderId : BitmapEncoder.JpegEncoderId;
 
-        double width, height;
-        using (var inputStream = await input.OpenAsync(FileAccessMode.Read))
-        using (var outputStream = await output.OpenAsync(FileAccessMode.ReadWrite))
+        var output = await ApplicationData.Current.TemporaryFolder.CreateFileAsync($"{Guid.NewGuid()}.{extension}");
+
+        try
         {
-            var decoder = await BitmapDecoder.CreateAsync(inputStream);
-            width = (int)decoder.OrientedPixelWidth;
-            height = (int)decoder.OrientedPixelHeight;
+            double width, height;
+            using (var inputStream = await input.OpenAsync(FileAccessMode.Read))
+            using (var outputStream = await output.OpenAsync(FileAccessMode.ReadWrite))
+            {
+                var decoder = await BitmapDecoder.CreateAsync(inputStream);
+                var softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+                width = (int)decoder.OrientedPixelWidth;
+                height = (int)decoder.OrientedPixelHeight;
 
-            SizeHelpers.Scale(ref width, ref height, size, size);
+                do
+                {
+                    outputStream.Size = 0;
 
-            var encoder = await BitmapEncoder.CreateAsync(useHeif ? BitmapEncoder.HeifEncoderId : BitmapEncoder.JpegEncoderId, outputStream);
-            encoder.SetSoftwareBitmap(await decoder.GetSoftwareBitmapAsync());
-            encoder.BitmapTransform.ScaledWidth = (uint)Math.Ceiling(width);
-            encoder.BitmapTransform.ScaledHeight = (uint)Math.Ceiling(height);
-            encoder.BitmapTransform.InterpolationMode = BitmapInterpolationMode.Fant;
+                    SizeHelpers.Scale(ref width, ref height, size, size);
 
+                    var encoder = await BitmapEncoder.CreateAsync(codec, outputStream);
+                    encoder.SetSoftwareBitmap(softwareBitmap);
+                    encoder.BitmapTransform.ScaledWidth = (uint)Math.Ceiling(width);
+                    encoder.BitmapTransform.ScaledHeight = (uint)Math.Ceiling(height);
+                    encoder.BitmapTransform.InterpolationMode = BitmapInterpolationMode.Fant;
 
-            await encoder.FlushAsync();
+                    await encoder.FlushAsync();
+
+                    contentType = encoder.EncoderInformation.MimeTypes.FirstOrDefault() ?? contentType;
+                    size = (int)Math.Floor(size * 0.75);
+                }
+                while (outputStream.Size > 1_000_000);
+            }
+
+            if (IsTemporary)
+            {
+                await TryDeleteTemporaryFile(input);
+            }
+
+            Width = (int)Math.Ceiling(width);
+            Height = (int)Math.Ceiling(height);
+            ContentType = contentType;
+            IsTemporary = true;
+            StorageFile = output;
         }
-
-        var properties = await output.GetBasicPropertiesAsync();
-        if (properties.Size > 1_000_000)
+        catch (Exception ex) when ((uint)ex.HResult == 0xc00d5212) // missing heif codec
         {
-            await output.DeleteAsync();
-
-            await CompressImageAsync(input, (int)Math.Floor(size * 0.75));
-            return;
+            await output.DeleteAsync(StorageDeleteOption.PermanentDelete);
+            await CompressImageAsync(input, false, size);
         }
-
-        if (IsTemporary)
+        catch (Exception ex)
         {
-            await TryDeleteTemporaryFile(input);
+            SetErrored(ex);
         }
-
-        Width = (int)Math.Ceiling(width);
-        Height = (int)Math.Ceiling(height);
-        ContentType = contentType;
-        IsTemporary = true;
-        StorageFile = output;
     }
+
 
     private static bool CheckHeifSupport()
     {

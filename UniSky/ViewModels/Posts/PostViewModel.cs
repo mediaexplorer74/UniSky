@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -124,11 +125,9 @@ public partial class PostViewModel : ViewModelBase
 
         HasChild = hasChild;
 
-        Author = new ProfileViewModel(view.Author);
-        Embed = CreateEmbedViewModel(view.Embed);
-
         RichText = new RichTextViewModel(post.Text, post.Facets ?? []);
-        //Debug.WriteLine(string.Concat(RichText.Facets.Select(f => f.Text)));
+        Author = new ProfileViewModel(view.Author);
+        Embed = CreateEmbedViewModel(view.Embed, false);
 
         var timeSinceIndex = DateTime.Now - (view.IndexedAt.Value.ToLocalTime());
         var date = timeSinceIndex.Humanize(1, minUnit: Humanizer.Localisation.TimeUnit.Second);
@@ -254,17 +253,26 @@ public partial class PostViewModel : ViewModelBase
         return n.ToMetric(decimals: 2);
     }
 
-    private PostEmbedViewModel CreateEmbedViewModel(ATObject embed)
+    internal static PostEmbedViewModel CreateEmbedViewModel(ATObject embed, bool isNested = false)
     {
         if (embed is null)
             return null;
 
-        //Debug.WriteLine(embed.GetType());
+        Debug.WriteLine(embed.GetType());
 
         return embed switch
         {
             ViewImages images => new PostEmbedImagesViewModel(images),
             ViewVideo video => new PostEmbedVideoViewModel(video),
+            ViewExternal external => new PostEmbedExternalViewModel(external),
+            ViewRecordWithMedia recordWithMedia => isNested ? 
+                CreateEmbedViewModel(recordWithMedia.Media, isNested) :
+                new PostEmbedRecordWithMediaViewModel(recordWithMedia, isNested),
+            ViewRecordDef and { Record: ViewRecord viewRecord } when !isNested => viewRecord.Value switch
+            {
+                Post post => new PostEmbedPostViewModel(viewRecord, post),
+                _ => null
+            },
             _ => null
         };
     }
