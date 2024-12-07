@@ -46,21 +46,7 @@ public partial class PostEmbedImagesViewModel : PostEmbedViewModel
         Debug.Assert(Images.Length == Count);
 
         var firstRatio = embed.Images[0].AspectRatio;
-        if (Images.Length == 1 && firstRatio == null)
-        {
-            AspectRatio = new();
-        }
-        else
-        {
-            AspectRatio = new AspectRatioConstraint(Images.Length switch
-            {
-                1 => Math.Max((double)firstRatio.Width.Value / firstRatio.Height.Value, 0.75),
-                2 => 2.0,
-                3 => 2.0,
-                4 => 3.0 / 2.0,
-                _ => throw new NotImplementedException()
-            });
-        }
+        SetAspectRatio(firstRatio);
     }
 
     public PostEmbedImagesViewModel(ViewImages embed) : base(embed)
@@ -74,6 +60,11 @@ public partial class PostEmbedImagesViewModel : PostEmbedViewModel
         Debug.Assert(Images.Length == Count);
 
         var firstRatio = embed.Images[0].AspectRatio;
+        SetAspectRatio(firstRatio);
+    }
+
+    private void SetAspectRatio(AspectRatio firstRatio)
+    {
         if (Images.Length == 1 && firstRatio == null)
         {
             AspectRatio = new();
