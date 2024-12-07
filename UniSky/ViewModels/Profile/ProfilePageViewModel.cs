@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -13,7 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using UniSky.Extensions;
 using UniSky.Helpers.Interop;
 using UniSky.Services;
-using UniSky.ViewModels.Profiles;
+using UniSky.ViewModels.Profile;
 using Windows.Foundation.Metadata;
 using Windows.Phone;
 using Windows.Storage.Streams;
@@ -37,10 +38,6 @@ public partial class ProfilePageViewModel : ProfileViewModel
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(Posts))]
     private int postCount;
-
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(ShowBio))]
-    private string bio;
 
     [ObservableProperty]
     private ProfileFeedViewModel selectedFeed;
@@ -135,6 +132,8 @@ public partial class ProfilePageViewModel : ProfileViewModel
 
     private void Populate(ProfileViewDetailed profile)
     {
+        base.Populate(profile);
+
         this.id = profile.Did;
         this.AvatarUrl = profile.Avatar;
         this.Name = string.IsNullOrWhiteSpace(profile.DisplayName) ? profile.Handle.ToString() : profile.DisplayName;
@@ -202,5 +201,13 @@ public partial class ProfilePageViewModel : ProfileViewModel
                 safeAreaService.SetTitlebarTheme(ElementTheme.Light);
             }
         });
+    }
+
+    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+    {
+        base.OnPropertyChanged(e);
+
+        if (e.PropertyName == nameof(Bio))
+            this.OnPropertyChanged(nameof(ShowBio));
     }
 }

@@ -219,4 +219,19 @@
   <data name="UploadToBluesky" xml:space="preserve">
     <value>Attach to post</value>
   </data>
+  <data name="SearchNew" xml:space="preserve">
+    <value>Latest</value>
+  </data>
+  <data name="SearchHot" xml:space="preserve">
+    <value>Hot</value>
+  </data>
+  <data name="SearchPeople" xml:space="preserve">
+    <value>People</value>
+  </data>
+  <data name="ProfileFollow" xml:space="preserve">
+    <value>Follow</value>
+  </data>
+  <data name="ProfileFollowing" xml:space="preserve">
+    <value>Following</value>
+  </data>
 </root>

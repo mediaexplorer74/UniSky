@@ -10,7 +10,7 @@ using FishyFlip.Lexicon.App.Bsky.Actor;
 using FishyFlip.Models;
 using UniSky.Services;
 using UniSky.ViewModels.Feeds;
-using UniSky.ViewModels.Profiles;
+using UniSky.ViewModels.Profile;
 using Windows.ApplicationModel.Resources;
 
 namespace UniSky.ViewModels.Profile;

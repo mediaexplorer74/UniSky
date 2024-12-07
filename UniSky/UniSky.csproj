@@ -170,6 +170,7 @@
       <DependentUpon>SheetRootControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\Static.cs" />
+    <Compile Include="DataTemplates\FeedItemTemplateSelector.cs" />
     <Compile Include="DataTemplates\PostEmbedTemplateSelector.cs" />
     <Compile Include="Extensions\Hairline.cs" />
     <Compile Include="Extensions\SynchronizationContextExtensions.cs" />
@@ -221,6 +222,9 @@
     <Compile Include="Pages\ProfilePage.xaml.cs">
       <DependentUpon>ProfilePage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\SearchPage.xaml.cs">
+      <DependentUpon>SearchPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Services\INavigationService.cs" />
     <Compile Include="Services\INavigationServiceLocator.cs" />
     <Compile Include="Services\IProtocolService.cs" />
@@ -254,6 +258,10 @@
     <Compile Include="ViewModels\Post\PostEmbedImageViewModel.cs" />
     <Compile Include="ViewModels\Post\PostEmbedViewModel.cs" />
     <Compile Include="ViewModels\Post\PostViewModel.cs" />
+    <Compile Include="ViewModels\Search\SearchFeedViewModel.cs" />
+    <Compile Include="ViewModels\Search\SearchPageViewModel.cs" />
+    <Compile Include="ViewModels\Search\SearchPostsCollection.cs" />
+    <Compile Include="ViewModels\Search\SearchProfileCollection.cs" />
     <Compile Include="ViewModels\Text\RichTextViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Pages\FeedsPage.xaml.cs">
@@ -436,6 +444,10 @@
     <Page Include="Pages\ProfilePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\SearchPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="RootPage.xaml">
       <Generator>MSBuild:Compile</Generator>
