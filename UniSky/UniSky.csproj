@@ -256,6 +256,8 @@
     <Compile Include="ViewModels\Notifications\NotificationsCollection.cs" />
     <Compile Include="ViewModels\Notifications\NotificationsPageViewModel.cs" />
     <Compile Include="ViewModels\Notifications\NotificationViewModel.cs" />
+    <Compile Include="ViewModels\Posts\PostEmbedExternalViewModel.cs" />
+    <Compile Include="ViewModels\Posts\PostEmbedPostViewModel.cs" />
     <Compile Include="ViewModels\Posts\PostEmbedVideoViewModel.cs" />
     <Compile Include="ViewModels\Profile\ProfileFeedViewModel.cs" />
     <Compile Include="ViewModels\Profile\ProfilePageViewModel.cs" />

@@ -13,6 +13,8 @@ internal class PostEmbedTemplateSelector : DataTemplateSelector
 {
     public DataTemplate VideoEmbedTemplate { get; set; }
     public DataTemplate ImagesEmbedTemplate { get; set; }
+    public DataTemplate PostEmbedTemplate { get; set; }
+    public DataTemplate ExternalEmbedTemplate { get; set; }
 
     protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
     {
@@ -20,6 +22,8 @@ internal class PostEmbedTemplateSelector : DataTemplateSelector
         {
             PostEmbedImagesViewModel => ImagesEmbedTemplate,
             PostEmbedVideoViewModel => VideoEmbedTemplate,
+            PostEmbedPostViewModel => PostEmbedTemplate,
+            PostEmbedExternalViewModel => ExternalEmbedTemplate,
             _ => null,
         };
     }
