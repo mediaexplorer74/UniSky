@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,14 +16,11 @@ using Humanizer;
 using Microsoft.Extensions.DependencyInjection;
 using UniSky.Controls.Compose;
 using UniSky.Helpers;
-using UniSky.Pages;
 using UniSky.Services;
 using UniSky.ViewModels.Profile;
 using UniSky.ViewModels.Text;
-using Windows.ApplicationModel;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Media.Animation;
 
 namespace UniSky.ViewModels.Posts;
 

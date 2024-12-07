@@ -9,6 +9,11 @@ public partial class PostEmbedImageViewModel : ViewModelBase
     [ObservableProperty]
     private string thumbnailUrl;
 
+    public PostEmbedImageViewModel(ATIdentifier id, Image image)
+    {
+        ThumbnailUrl = $"https://cdn.bsky.app/img/feed_thumbnail/plain/{id}/{image.ImageValue.Ref.Link}@jpeg";
+    }
+
     public PostEmbedImageViewModel(ViewImage image)
     {
         ThumbnailUrl = image.Thumb;

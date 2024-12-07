@@ -35,6 +35,20 @@ public partial class PostEmbedImagesViewModel : PostEmbedViewModel
     public bool IsThree => Count == 3;
     public bool IsFour => Count == 4;
 
+    public PostEmbedImagesViewModel(ATIdentifier id, EmbedImages embed) : base(embed)
+    {
+        Count = embed.Images.Count;
+        Images = embed.Images.Select(i => new PostEmbedImageViewModel(id, i)).ToArray();
+
+        // this would be problematic
+        Debug.Assert(Images.Length > 0 && Images.Length <= 4);
+        Debug.Assert(embed.Images.Count == Images.Length);
+        Debug.Assert(Images.Length == Count);
+
+        var firstRatio = embed.Images[0].AspectRatio;
+        SetAspectRatio(firstRatio);
+    }
+
     public PostEmbedImagesViewModel(ViewImages embed) : base(embed)
     {
         Count = embed.Images.Count;
@@ -46,6 +60,11 @@ public partial class PostEmbedImagesViewModel : PostEmbedViewModel
         Debug.Assert(Images.Length == Count);
 
         var firstRatio = embed.Images[0].AspectRatio;
+        SetAspectRatio(firstRatio);
+    }
+
+    private void SetAspectRatio(AspectRatio firstRatio)
+    {
         if (Images.Length == 1 && firstRatio == null)
         {
             AspectRatio = new();

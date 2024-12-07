@@ -162,4 +162,19 @@
   <data name="ComposeSheetTitle.Text" xml:space="preserve">
     <value>NEW TWEET</value>
   </data>
+  <data name="NotificationLikedTweetMultiple" xml:space="preserve">
+    <value>{0} and {1} liked your tweet</value>
+  </data>
+  <data name="NotificationLikedTweetSingle" xml:space="preserve">
+    <value>{0} liked your tweet</value>
+  </data>
+  <data name="NotificationRetweetMultiple" xml:space="preserve">
+    <value>{0} and {1} retweeted</value>
+  </data>
+  <data name="NotificationRetweetSingle" xml:space="preserve">
+    <value>{0} retweeted</value>
+  </data>
+  <data name="NotificationQuote" xml:space="preserve">
+    <value>{0} quoted your tweet</value>
+  </data>
 </root>
