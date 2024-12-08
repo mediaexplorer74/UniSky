@@ -6,14 +6,11 @@ using UniSky.Controls.Sheet;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Foundation.Metadata;
-using Windows.Graphics.Display;
 using Windows.System.Profile;
 using Windows.UI.Core;
-using Windows.UI.Core.Preview;
 using Windows.UI.ViewManagement;
 using Windows.UI.WindowManagement;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Hosting;
 
 namespace UniSky.Services;
@@ -94,7 +91,6 @@ internal class SheetService : ISheetService
 
             control.InvokeShowing(parameter);
             control.InvokeShown();
-
         });
 
         await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newViewId, ViewSizePreference.UseMinimum);

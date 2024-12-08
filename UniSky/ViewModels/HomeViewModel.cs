@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using FishyFlip;
-using FishyFlip.Events;
 using FishyFlip.Lexicon.App.Bsky.Actor;
 using FishyFlip.Lexicon.App.Bsky.Notification;
 using FishyFlip.Lexicon.Com.Atproto.Server;
@@ -13,7 +11,6 @@ using FishyFlip.Tools;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using UniSky.Extensions;
-using UniSky.Helpers;
 using UniSky.Models;
 using UniSky.Pages;
 using UniSky.Services;

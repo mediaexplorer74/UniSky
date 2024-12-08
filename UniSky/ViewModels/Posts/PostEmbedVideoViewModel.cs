@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using FishyFlip.Lexicon.App.Bsky.Embed;
-using FishyFlip.Models;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using Windows.Media.Core;
 using Windows.Media.Playback;

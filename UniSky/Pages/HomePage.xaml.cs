@@ -1,5 +1,4 @@
-﻿using CommunityToolkit.Mvvm.DependencyInjection;
-using FishyFlip.Models;
+﻿using FishyFlip.Models;
 using Microsoft.Extensions.DependencyInjection;
 using UniSky.Services;
 using UniSky.ViewModels;

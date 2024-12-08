@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using CommunityToolkit.Mvvm.DependencyInjection;
-using Ipfs;
 using Microsoft.Extensions.DependencyInjection;
 using UniSky.Controls.Sheet;
 using UniSky.Services;
@@ -13,17 +7,10 @@ using UniSky.ViewModels.Posts;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.ApplicationModel.Resources;
 using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Foundation.Metadata;
-using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 

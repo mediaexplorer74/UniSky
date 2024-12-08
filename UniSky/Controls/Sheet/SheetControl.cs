@@ -1,27 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.PortableExecutable;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Windows.Input;
-using CommunityToolkit.Mvvm.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Toolkit.Uwp.Deferred;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
 using UniSky.Services;
-using Windows.ApplicationModel;
 using Windows.Foundation;
 using Windows.UI.ViewManagement;
-using Windows.UI.WindowManagement;
-using Windows.UI.WindowManagement.Preview;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Documents;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Markup;
-using Windows.UI.Xaml.Media;
 
 // The Templated Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234235
 

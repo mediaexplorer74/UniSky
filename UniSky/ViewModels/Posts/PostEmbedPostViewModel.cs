@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
-using FishyFlip.Lexicon;
 using FishyFlip.Lexicon.App.Bsky.Embed;
 using FishyFlip.Lexicon.App.Bsky.Feed;
-using FishyFlip.Lexicon.Tools.Ozone.Team;
 using Humanizer;
 using UniSky.ViewModels.Profile;
 using UniSky.ViewModels.Text;

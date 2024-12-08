@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ServiceModel;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -9,7 +8,6 @@ using FishyFlip.Lexicon.Com.Atproto.Server;
 using FishyFlip.Models;
 using FishyFlip.Tools;
 using UniSky.Extensions;
-using UniSky.Helpers;
 using UniSky.Models;
 using UniSky.Pages;
 using UniSky.Services;

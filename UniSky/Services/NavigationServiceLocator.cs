@@ -1,5 +1,4 @@
-﻿ using System.Collections.Generic;
-using CommunityToolkit.Mvvm.DependencyInjection;
+﻿using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace UniSky.Services;

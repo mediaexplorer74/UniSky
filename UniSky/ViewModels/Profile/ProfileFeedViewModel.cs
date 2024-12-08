@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using FishyFlip.Lexicon;
 using FishyFlip.Lexicon.App.Bsky.Actor;
-using FishyFlip.Models;
 using UniSky.Services;
 using UniSky.ViewModels.Feeds;
-using UniSky.ViewModels.Profile;
 using Windows.ApplicationModel.Resources;
 
 namespace UniSky.ViewModels.Profile;
