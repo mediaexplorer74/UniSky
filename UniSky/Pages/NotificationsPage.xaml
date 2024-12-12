@@ -103,28 +103,29 @@
         </Grid.RowDefinitions>
 
         <Border Grid.RowSpan="2"
-            Background="{ThemeResource SystemControlChromeMediumAcrylicElementMediumBrush}"
-            BorderBrush="{ThemeResource SystemControlRevealSeparatorBrush}"
-            extensions:Hairline.BorderThickness="0,0,0,1"/>
+                Background="{ThemeResource SystemControlChromeMediumAcrylicElementMediumBrush}"
+                BorderBrush="{ThemeResource SystemControlRevealSeparatorBrush}"
+                extensions:Hairline.BorderThickness="0,0,0,1"/>
 
-        <TextBlock Grid.Row="1"
-               Margin="12,4,12,12"
-               Text="NOTIFICATIONS"
-               Style="{ThemeResource BaseTextBlockStyle}"/>
+        <TextBlock x:Uid="NotificationsPageTitleBlock"
+                   Grid.Row="1"
+                   Margin="12,4,12,12"
+                   Text="NOTIFICATIONS"
+                   Style="{ThemeResource BaseTextBlockStyle}"/>
         
         
         <ListView x:Name="RootList"
-              Grid.Row="2"
-              Canvas.ZIndex="-1"
-              ItemsSource="{x:Bind ViewModel.Notifications, Mode=OneWay}" 
-              ItemTemplate="{StaticResource NotificationContentTemplate}"
-              SelectionMode="None"
-              IsItemClickEnabled="True"
-              HorizontalAlignment="Stretch"
-              HorizontalContentAlignment="Stretch"
-              ScrollViewer.IsVerticalScrollChainingEnabled="True"
-              Loaded="RootList_Loaded"
-              ItemClick="RootList_ItemClick">
+                  Grid.Row="2"
+                  Canvas.ZIndex="-1"
+                  ItemsSource="{x:Bind ViewModel.Notifications, Mode=OneWay}" 
+                  ItemTemplate="{StaticResource NotificationContentTemplate}"
+                  SelectionMode="None"
+                  IsItemClickEnabled="True"
+                  HorizontalAlignment="Stretch"
+                  HorizontalContentAlignment="Stretch"
+                  ScrollViewer.IsVerticalScrollChainingEnabled="True"
+                  Loaded="RootList_Loaded"
+                  ItemClick="RootList_ItemClick">
             <ListView.Resources>
                 <SolidColorBrush Color="Transparent" x:Key="ListViewItemRevealBackground"/>
                 <SolidColorBrush Color="Transparent" x:Key="ListViewItemBackgroundPointerOver"/>

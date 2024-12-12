@@ -108,7 +108,7 @@ public partial class NotificationViewModel : ViewModelBase, IComparable, ICompar
     private void Update()
     {
         var resources = ResourceLoader.GetForCurrentView();
-        var other = resources.GetString("NotificationOther");
+        var other = resources.GetString("Notification_Other");
         var mostRecentAuthor = new ProfileViewModel(MostRecent.Author);
 
         switch (Reason)
@@ -116,32 +116,32 @@ public partial class NotificationViewModel : ViewModelBase, IComparable, ICompar
             case NotificationReason.Like:
                 {
                     if (Count == 1)
-                        NotificationTitle = string.Format(resources.GetString("NotificationLikedTweetSingle"), mostRecentAuthor.Name);
+                        NotificationTitle = string.Format(resources.GetString("Notification_LikedTweetSingle"), mostRecentAuthor.Name);
                     else
-                        NotificationTitle = string.Format(resources.GetString("NotificationLikedTweetMultiple"), mostRecentAuthor.Name, other.ToQuantity(Count - 1));
+                        NotificationTitle = string.Format(resources.GetString("Notification_LikedTweetMultiple"), mostRecentAuthor.Name, other.ToQuantity(Count - 1));
 
                     break;
                 }
             case NotificationReason.Repost:
                 {
                     if (Count == 1)
-                        NotificationTitle = string.Format(resources.GetString("NotificationRetweetSingle"), mostRecentAuthor.Name);
+                        NotificationTitle = string.Format(resources.GetString("Notification_RetweetSingle"), mostRecentAuthor.Name);
                     else
-                        NotificationTitle = string.Format(resources.GetString("NotificationRetweetMultiple"), mostRecentAuthor.Name, other.ToQuantity(Count - 1));
+                        NotificationTitle = string.Format(resources.GetString("Notification_RetweetMultiple"), mostRecentAuthor.Name, other.ToQuantity(Count - 1));
 
                     break;
                 }
             case NotificationReason.Follow:
-                NotificationTitle = string.Format(resources.GetString("NotificationFollow"), mostRecentAuthor.Name);
+                NotificationTitle = string.Format(resources.GetString("Notification_Follow"), mostRecentAuthor.Name);
                 break;
             case NotificationReason.Reply:
-                NotificationTitle = string.Format(resources.GetString("NotificationReply"), mostRecentAuthor.Name);
+                NotificationTitle = string.Format(resources.GetString("Notification_Reply"), mostRecentAuthor.Name);
                 break;
             case NotificationReason.Mention:
-                NotificationTitle = string.Format(resources.GetString("NotificationMention"), mostRecentAuthor.Name);
+                NotificationTitle = string.Format(resources.GetString("Notification_Mention"), mostRecentAuthor.Name);
                 break;
             case NotificationReason.Quote:
-                NotificationTitle = string.Format(resources.GetString("NotificationQuote"), mostRecentAuthor.Name);
+                NotificationTitle = string.Format(resources.GetString("Notification_Quote"), mostRecentAuthor.Name);
                 break;
         }
 

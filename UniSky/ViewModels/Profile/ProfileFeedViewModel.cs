@@ -25,9 +25,9 @@ public partial class ProfileFeedViewModel : FeedViewModel
         var resources = ResourceLoader.GetForCurrentView();
         this.Name = filterType switch
         {
-            "posts_no_replies" => resources.GetString("FeedPosts"),
-            "posts_with_replies" => resources.GetString("FeedReplies"),
-            "posts_with_media" => resources.GetString("FeedMedia"),
+            "posts_no_replies" => resources.GetString("Feed_Posts"),
+            "posts_with_replies" => resources.GetString("Feed_Replies"),
+            "posts_with_media" => resources.GetString("Feed_Media"),
             "posts_and_author_threads" => throw new NotImplementedException(),
             _ => throw new NotImplementedException(),
         };

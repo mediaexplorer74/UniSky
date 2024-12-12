@@ -36,18 +36,18 @@
     <MenuFlyout x:Key="FeedItemMoreButtonFlyout"
                 w1809:Placement="BottomEdgeAlignedRight"
                 not1809:Placement="Bottom">
-        <MenuFlyoutItem Text="Share" Command="{Binding ShareCommand}">
+        <MenuFlyoutItem x:Uid="FeedMoreShareItem" Text="Share" Command="{Binding ShareCommand}">
             <MenuFlyoutItem.Icon>
                 <FontIcon Glyph="&#xE72D;" FontFamily="{ThemeResource SymbolThemeFontFamily}"/>
             </MenuFlyoutItem.Icon>
         </MenuFlyoutItem>
-        <MenuFlyoutItem Text="Copy Text" Icon="Copy" Command="{Binding CopyTextCommand}"/>
-        <MenuFlyoutItem Text="Copy Link" Icon="Link" Command="{Binding CopyLinkCommand}"/>
+        <MenuFlyoutItem x:Uid="FeedMoreCopyTextItem" Text="Copy Text" Icon="Copy" Command="{Binding CopyTextCommand}"/>
+        <MenuFlyoutItem x:Uid="FeedMoreCopyLinkItem" Text="Copy Link" Icon="Link" Command="{Binding CopyLinkCommand}"/>
         <MenuFlyoutSeparator/>
-        <MenuFlyoutItem Text="Mute Thread" Icon="Mute"/>
-        <MenuFlyoutItem Text="Hide Post" Icon="Clear"/>
+        <MenuFlyoutItem x:Uid="FeedMoreMuteItem" Text="Mute Thread" Icon="Mute"/>
+        <MenuFlyoutItem x:Uid="FeedMoreHidePostItem" Text="Hide Post" Icon="Clear"/>
         <MenuFlyoutSeparator/>
-        <MenuFlyoutItem Foreground="{ThemeResource SystemControlErrorTextForegroundBrush}" 
+        <MenuFlyoutItem x:Uid="FeedMoreReportPostItem" Foreground="{ThemeResource SystemControlErrorTextForegroundBrush}" 
                         Text="Report Post"
                         Icon="ReportHacked"/>
     </MenuFlyout>

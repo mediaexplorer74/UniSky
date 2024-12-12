@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using FishyFlip.Lexicon.App.Bsky.Feed;
 using FishyFlip.Models;
 using UniSky.Services;
+using Windows.ApplicationModel.Resources;
 using Windows.Foundation;
 
 namespace UniSky.ViewModels.Feeds;
@@ -41,7 +42,7 @@ public partial class FeedViewModel : ViewModelBase
         this.id = id;
         this.generator = record;
 
-        this.Name = record?.DisplayName ?? "Following";
+        this.Name = record?.DisplayName ?? ResourceLoader.GetForCurrentView().GetString("Feed_Following");
         this.Items = new FeedItemCollection(this, type, id, protocolService);
     }
 

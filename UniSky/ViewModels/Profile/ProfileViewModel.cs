@@ -49,7 +49,7 @@ public partial class ProfileViewModel : ViewModelBase
     public bool IsMutual
         => IsFollowing && FollowsYou;
     public string FollowButtonText
-        => strings.GetString(IsFollowing ? "ProfileFollowing" : "ProfileFollow");
+        => strings.GetString(IsFollowing ? "Profile_Following" : "Profile_Follow");
 
     public ProfileViewModel()
     {
@@ -144,16 +144,16 @@ public partial class ProfileViewModel : ViewModelBase
             if (viewer.Blocking != null)
             {
                 this.AvatarUrl = null;
-                this.Name = strings.GetString("ProfileBlocked");
-                this.Bio = strings.GetString("ProfileUserBlocked");
+                this.Name = strings.GetString("Profile_Blocked");
+                this.Bio = strings.GetString("Profile_BlockedUser");
                 return;
             }
 
             if (viewer.BlockedBy == true)
             {
                 this.AvatarUrl = null;
-                this.Name = strings.GetString("ProfileBlocked");
-                this.Bio = strings.GetString("ProfileYouAreBlocked");
+                this.Name = strings.GetString("Profile_Blocked");
+                this.Bio = strings.GetString("Profile_BlockedByUser");
                 return;
             }
 
@@ -170,7 +170,7 @@ public partial class ProfileViewModel : ViewModelBase
     private static string ConvertHandle(ATHandle handle, bool forDisplayName = false)
     {
         if (string.IsNullOrWhiteSpace(handle.Handle) || handle.Handle == "handle.invalid")
-            return strings.GetString("ProfileInvalidHandle");
+            return strings.GetString("Profile_InvalidHandle");
 
         return forDisplayName ? ConvertHandleString(handle) : $"@{ConvertHandleString(handle)}";
     }

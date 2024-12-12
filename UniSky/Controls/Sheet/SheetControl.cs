@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
 using UniSky.Services;
 using Windows.Foundation;
@@ -199,6 +200,12 @@ namespace UniSky.Controls.Sheet
         public SheetControl()
         {
             this.DefaultStyleKey = typeof(SheetControl);
+
+            // default hide
+            this.SecondaryButtonCommand = new AsyncRelayCommand(() =>
+            {
+                return Controller?.TryHideSheetAsync();
+            });
         }
 
         internal void SetSheetController(ISheetController controller)

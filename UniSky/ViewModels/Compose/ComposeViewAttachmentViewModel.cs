@@ -59,7 +59,7 @@ public partial class ComposeViewAttachmentViewModel : ViewModelBase
         Task.Run(LoadAsync);
     }
 
-    public new void SetErrored(Exception ex)
+    public void SetErrored(Exception ex)
     {
         base.SetErrored(ex);
     }
@@ -136,7 +136,7 @@ public partial class ComposeViewAttachmentViewModel : ViewModelBase
         }
     }
 
-    private async Task CompressImageAsync(IStorageFile input, bool useHeif, int size = 2048)
+    private async Task CompressImageAsync(IStorageFile input, bool useHeif, int size = 4096)
     {
         var extension = useHeif ? "heic" : "jpeg";
         var contentType = useHeif ? "image/heic" : "image/jpeg";

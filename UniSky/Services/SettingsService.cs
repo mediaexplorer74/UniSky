@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Numerics;
+﻿using System.Numerics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Windows.Foundation;
 using Windows.Storage;
+using Windows.System.Profile;
+using Windows.UI.Xaml;
+
+using static UniSky.Constants.Settings;
 
 namespace UniSky.Services;
 
@@ -28,15 +31,31 @@ namespace UniSky.Services;
 [JsonSourceGenerationOptions(WriteIndented = false, PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
 public partial class SettingsJsonContext : JsonSerializerContext { }
 
-internal class SettingsService : ISettingsService
+internal class SettingsService : ISettingsService, ITypedSettings
 {
     private static readonly JsonSerializerOptions Options
         = new JsonSerializerOptions { TypeInfoResolver = SettingsJsonContext.Default };
+    private readonly ApplicationDataContainer Settings = ApplicationData.Current.LocalSettings;
 
-    /// <summary>
-    /// Gets the settings container.
-    /// </summary>
-    public readonly ApplicationDataContainer Settings = ApplicationData.Current.LocalSettings;
+    // typed settings
+    public ElementTheme RequestedColourScheme
+    {
+        get => (ElementTheme)Read<int>(REQUESTED_COLOUR_SCHEME, REQUESTED_COLOUR_SCHEME_DEFAULT);
+        set => Save(REQUESTED_COLOUR_SCHEME, (int)value);
+    }
+
+    public bool UseMultipleWindows
+    {
+        get => Read(USE_MULTIPLE_WINDOWS, AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop");
+        set => Save(USE_MULTIPLE_WINDOWS, value);
+    }
+
+    public bool AutoRefreshFeeds
+    {
+        get => Read(AUTO_FEED_REFRESH, AUTO_FEED_REFRESH_DEFAULT);
+        set => Save(AUTO_FEED_REFRESH, value);
+    }
+
 
     /// <summary>
     /// Determines whether a setting already exists.
@@ -94,119 +113,6 @@ internal class SettingsService : ISettingsService
     public void Clear()
     {
         Settings.Values.Clear();
-    }
-
-    /// <summary>
-    /// Determines whether a setting already exists in composite.
-    /// </summary>
-    /// <param name="compositeKey">Key of the composite (that contains settings).</param>
-    /// <param name="key">Key of the setting (that contains object).</param>
-    /// <returns>True if a value exists.</returns>
-    public bool KeyExists(string compositeKey, string key)
-    {
-        if (TryRead(compositeKey, out ApplicationDataCompositeValue? composite) && composite != null)
-        {
-            return composite.ContainsKey(key);
-        }
-
-        return false;
-    }
-
-    /// <summary>
-    /// Attempts to retrieve a single item by its key in composite.
-    /// </summary>
-    /// <typeparam name="T">Type of object retrieved.</typeparam>
-    /// <param name="compositeKey">Key of the composite (that contains settings).</param>
-    /// <param name="key">Key of the object.</param>
-    /// <param name="value">The value of the object retrieved.</param>
-    /// <returns>The T object.</returns>
-    public bool TryRead<T>(string compositeKey, string key, out T? value)
-    {
-        if (TryRead(compositeKey, out ApplicationDataCompositeValue? composite) && composite != null)
-        {
-            string compositeValue = (string)composite[key];
-            if (compositeValue != null)
-            {
-                value = JsonSerializer.Deserialize<T>(compositeValue, Options);
-                return true;
-            }
-        }
-
-        value = default;
-        return false;
-    }
-
-    /// <summary>
-    /// Retrieves a single item by its key in composite.
-    /// </summary>
-    /// <typeparam name="T">Type of object retrieved.</typeparam>
-    /// <param name="compositeKey">Key of the composite (that contains settings).</param>
-    /// <param name="key">Key of the object.</param>
-    /// <param name="default">Default value of the object.</param>
-    /// <returns>The T object.</returns>
-    public T? Read<T>(string compositeKey, string key, T? @default = default)
-    {
-        if (TryRead(compositeKey, out ApplicationDataCompositeValue? composite) && composite != null)
-        {
-            if (composite.TryGetValue(key, out object valueObj) && valueObj is string value)
-            {
-                return JsonSerializer.Deserialize<T>(value, Options);
-            }
-        }
-
-        return @default;
-    }
-
-    /// <summary>
-    /// Saves a group of items by its key in a composite.
-    /// This method should be considered for objects that do not exceed 8k bytes during the lifetime of the application
-    /// and for groups of settings which need to be treated in an atomic way.
-    /// </summary>
-    /// <typeparam name="T">Type of object saved.</typeparam>
-    /// <param name="compositeKey">Key of the composite (that contains settings).</param>
-    /// <param name="values">Objects to save.</param>
-    public void Save<T>(string compositeKey, IDictionary<string, T> values)
-    {
-        if (TryRead(compositeKey, out ApplicationDataCompositeValue? composite) && composite != null)
-        {
-            foreach (KeyValuePair<string, T> setting in values)
-            {
-                if (composite.ContainsKey(setting.Key))
-                {
-                    composite[setting.Key] = JsonSerializer.Serialize(setting.Value, Options);
-                }
-                else
-                {
-                    composite.Add(setting.Key, JsonSerializer.Serialize(setting.Value, Options));
-                }
-            }
-        }
-        else
-        {
-            composite = new ApplicationDataCompositeValue();
-            foreach (KeyValuePair<string, T> setting in values)
-            {
-                composite.Add(setting.Key, JsonSerializer.Serialize(setting.Value, Options));
-            }
-
-            Settings.Values[compositeKey] = composite;
-        }
-    }
-
-    /// <summary>
-    /// Deletes a single item by its key in composite.
-    /// </summary>
-    /// <param name="compositeKey">Key of the composite (that contains settings).</param>
-    /// <param name="key">Key of the object.</param>
-    /// <returns>A boolean indicator of success.</returns>
-    public bool TryDelete(string compositeKey, string key)
-    {
-        if (TryRead(compositeKey, out ApplicationDataCompositeValue? composite) && composite != null)
-        {
-            return composite.Remove(key);
-        }
-
-        return false;
     }
 }
 

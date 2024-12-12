@@ -15,12 +15,14 @@ using FishyFlip.Models;
 using FishyFlip.Tools;
 using Humanizer;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Extensions;
 using UniSky.Controls.Compose;
 using UniSky.Helpers;
 using UniSky.Services;
 using UniSky.ViewModels.Profile;
 using UniSky.ViewModels.Text;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml;
 
 namespace UniSky.ViewModels.Posts;
@@ -225,6 +227,8 @@ public partial class PostViewModel : ViewModelBase
     {
         void OnDataRequested(DataTransferManager sender, DataRequestedEventArgs args)
         {
+            var resources = ResourceLoader.GetForViewIndependentUse();
+
             var url = UrlHelpers.GetPostURL(this.view);
             var uri = new Uri(url);
 
@@ -232,7 +236,7 @@ public partial class PostViewModel : ViewModelBase
             var escaped = HttpUtility.HtmlEncode(url);
 
             var request = args.Request;
-            request.Data.Properties.Title = $"@{Author.Handle} on BlueSky";
+            request.Data.Properties.Title = string.Format(resources.GetString("Share_Username"), Author.Handle);
 
             request.Data.SetText(post.Text);
             request.Data.SetWebLink(uri);

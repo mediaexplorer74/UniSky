@@ -18,9 +18,9 @@ namespace UniSky.Services;
 internal class SheetService : ISheetService
 {
     private readonly SheetRootControl sheetRoot;
-    private readonly ISettingsService settingsService;
+    private readonly ITypedSettings settingsService;
 
-    public SheetService(ISettingsService settingsService)
+    public SheetService(ITypedSettings settingsService)
     {
         this.settingsService = settingsService;
         this.sheetRoot = Window.Current.Content.FindDescendant<SheetRootControl>();
@@ -31,7 +31,7 @@ internal class SheetService : ISheetService
 
     public async Task<ISheetController> ShowAsync<T>(Func<SheetControl> factory, object parameter = null) where T : SheetControl
     {
-        if (sheetRoot != null && !settingsService.Read("WindowedSheets", AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop"))
+        if (sheetRoot != null && !settingsService.UseMultipleWindows)
         {
             var safeArea = ServiceContainer.Scoped.GetRequiredService<ISafeAreaService>();
 

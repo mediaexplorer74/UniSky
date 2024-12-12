@@ -6,10 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using UniSky.Models;
 using Windows.ApplicationModel;
+using Windows.UI.Xaml;
 
 namespace UniSky;
 
-public class Constants
+public static class Constants
 {
     public static string Version
     {
@@ -32,4 +33,16 @@ public class Constants
 
     public static string UserAgent
         => $"UniSky/{Version} (https://github.com/UnicordDev/UniSky)";
+
+    public static class Settings
+    {
+        public const string REQUESTED_COLOUR_SCHEME = "RequestedColourScheme_v1";
+        public const int REQUESTED_COLOUR_SCHEME_DEFAULT = (int)ElementTheme.Default;
+
+        public const string USE_MULTIPLE_WINDOWS = "UseMultipleWindows_v1";
+        // default: calculated
+
+        public const string AUTO_FEED_REFRESH = "AutoRefreshFeeds_v1";
+        public const bool AUTO_FEED_REFRESH_DEFAULT = true;
+    }
 }

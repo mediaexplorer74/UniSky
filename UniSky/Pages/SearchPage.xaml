@@ -89,12 +89,14 @@
                 BorderBrush="{ThemeResource SystemControlRevealSeparatorBrush}"
                 extensions:Hairline.BorderThickness="0,0,0,1"/>
 
-        <TextBlock Grid.Row="1"
+        <TextBlock x:Uid="SearchPageTitleBlock"
+                   Grid.Row="1"
                    Margin="12,4,0,0"
                    Text="SEARCH"
                    Style="{ThemeResource BaseTextBlockStyle}"/>
 
         <AutoSuggestBox x:Name="SearchBox"
+                        x:Uid="SearchPageSearchBox"
                         Grid.Row="2" 
                         Margin="12,8,12,12"
                         PlaceholderText="Find something cool..."

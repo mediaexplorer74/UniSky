@@ -120,11 +120,11 @@
   <data name="PostsRun.Text" xml:space="preserve">
     <value>Tweets</value>
   </data>
-  <data name="FeedPosts" xml:space="preserve">
+  <data name="Feed_Posts" xml:space="preserve">
     <value>Tweets</value>
   </data>
-  <data name="FeedReplies" xml:space="preserve">
-    <value>Tweets w/ Replies</value>
+  <data name="Feed_Replies" xml:space="preserve">
+    <value>Tweets &amp; Replies</value>
   </data>
   <data name="RetweetedByRun.Text" xml:space="preserve">
     <value>Retweeted by</value>
@@ -162,19 +162,19 @@
   <data name="ComposeSheetTitle.Text" xml:space="preserve">
     <value>NEW TWEET</value>
   </data>
-  <data name="NotificationLikedTweetMultiple" xml:space="preserve">
+  <data name="Notification_LikedTweetMultiple" xml:space="preserve">
     <value>{0} and {1} liked your tweet</value>
   </data>
-  <data name="NotificationLikedTweetSingle" xml:space="preserve">
+  <data name="Notification_LikedTweetSingle" xml:space="preserve">
     <value>{0} liked your tweet</value>
   </data>
-  <data name="NotificationRetweetMultiple" xml:space="preserve">
+  <data name="Notification_RetweetMultiple" xml:space="preserve">
     <value>{0} and {1} retweeted</value>
   </data>
-  <data name="NotificationRetweetSingle" xml:space="preserve">
+  <data name="Notification_RetweetSingle" xml:space="preserve">
     <value>{0} retweeted</value>
   </data>
-  <data name="NotificationQuote" xml:space="preserve">
+  <data name="Notification_Quote" xml:space="preserve">
     <value>{0} quoted your tweet</value>
   </data>
 </root>

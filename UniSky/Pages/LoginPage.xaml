@@ -70,7 +70,8 @@
                     <Path Data="{StaticResource BlueSkyLogoPath}"
                           Fill="{ThemeResource ApplicationForegroundThemeBrush}"/>
                 </Viewbox>
-                <TextBlock x:Name="LoginText" 
+                <TextBlock x:Name="LoginText"
+                           x:Uid="LoginPageHeader"
                            Text="To begin, enter your username and password." 
                            TextWrapping="Wrap"/>
             </StackPanel>
@@ -94,6 +95,7 @@
                     </TransitionCollection>
                 </StackPanel.ChildrenTransitions>
                 <TextBox x:Name="HostBox"
+                         x:Uid="LoginHostBox"
                          x:Load="{x:Bind Is(ViewModel.Advanced)}"
                          Header="Host"
                          InputScope="Url"
@@ -102,32 +104,35 @@
                          Text="{x:Bind ViewModel.Host, Mode=TwoWay}">
                 </TextBox>
 
-                <TextBox Header="Username" 
+                <TextBox x:Uid="LoginUsernameBox" 
+                         Header="Username" 
                          InputScope="EmailNameOrAddress" 
                          TabIndex="0"
                          Margin="0,0,0,16"
                          Text="{x:Bind ViewModel.Username, Mode=TwoWay}">
                 </TextBox>
 
-                <PasswordBox Header="Password" 
+                <PasswordBox x:Uid="LoginPasswordBox" 
+                             Header="Password" 
                              InputScope="Password" 
                              TabIndex="1"
-                         Margin="0,0,0,16"
+                             Margin="0,0,0,16"
                              Password="{x:Bind ViewModel.Password, Mode=TwoWay}">
                 </PasswordBox>
 
                 <TextBlock x:Name="ErrorText"
-                        x:Load="{x:Bind IsNotNull(ViewModel.Error), Mode=OneWay}" 
-                        Text="{x:Bind ViewModel.Error.Message}"
-                        Margin="0,0,0,16"
-                        Foreground="{ThemeResource SystemErrorTextColor}"/>
+                           x:Load="{x:Bind IsNotNull(ViewModel.Error), Mode=OneWay}" 
+                           Text="{x:Bind ViewModel.Error.Message}"
+                           Margin="0,0,0,16"
+                           Foreground="{ThemeResource SystemErrorTextColor}"/>
 
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <Button Content="Advanced"
+                    <Button x:Uid="LoginAdvancedButton"
+                            Content="Advanced"
                             Style="{ThemeResource TextBlockButtonStyle}"
                             Grid.Column="0"
                             TabIndex="3"
@@ -136,8 +141,9 @@
                     <ProgressRing Grid.Column="2" 
                                   IsActive="{x:Bind ViewModel.IsLoading}"
                                   Margin="0,0,8,0"></ProgressRing>
-                    
-                    <Button Content="Login"
+
+                    <Button x:Uid="LoginButton" 
+                            Content="Login"
                             TabIndex="2"
                             Style="{ThemeResource AccentButtonStyle}"
                             Grid.Column="2"

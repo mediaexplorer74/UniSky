@@ -30,10 +30,9 @@ public partial class SearchFeedViewModel : ViewModelBase
         var resources = ResourceLoader.GetForCurrentView();
         this.Name = type switch
         {
-            "latest" => resources.GetString("SearchNew"),
-            "top" => resources.GetString("SearchHot"),
-            "people" => resources.GetString("SearchPeople"),
-            //"posts_and_author_threads" => throw new NotImplementedException(),
+            "latest" => resources.GetString("Search_New"),
+            "top" => resources.GetString("Search_Hot"),
+            "people" => resources.GetString("Search_People"),
             _ => throw new NotImplementedException(),
         };
     }
