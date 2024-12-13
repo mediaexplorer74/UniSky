@@ -198,7 +198,7 @@
     <value>Nie można dodać obrazku gdy ten post zawiera filmik.</value>
   </data>
   <data name="E_UnableToAddVideoToImagePost" xml:space="preserve">
-    <value>Nie można dodać filmiku gdy ten post już ma obraz.</value>
+    <value>Nie można dodać filmiku gdy ten post zawiera obraz.</value>
   </data>
   <data name="ComposePrimaryTextBox.PlaceholderText" xml:space="preserve">
     <value>Co się dzieje?</value>
