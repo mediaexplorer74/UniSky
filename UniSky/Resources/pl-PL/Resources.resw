@@ -274,55 +274,55 @@
     <comment>{0} = nazwa wyświetlająca użytkownika</comment>
   </data>
   <data name="Profile_Blocked" xml:space="preserve">
-    <value>Blocked</value>
+    <value>Zablokowany</value>
   </data>
   <data name="Profile_InvalidHandle" xml:space="preserve">
-    <value>Invalid Handle</value>
+    <value>Nieznany uchwyt</value>
   </data>
   <data name="Profile_BlockedUser" xml:space="preserve">
-    <value>You are blocking this user</value>
+    <value>Narazie blokujesz tą osobę</value>
   </data>
   <data name="Profile_BlockedByUser" xml:space="preserve">
-    <value>You are blocked by this user</value>
+    <value>Jesteś zablokowany przez tą osobę</value>
   </data>
   <data name="ComposeAddAltTextDialog.PrimaryButtonText" xml:space="preserve">
     <value>OK</value>
   </data>
   <data name="ComposeAddAltTextDialog.SecondaryButtonText" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Anuluj</value>
   </data>
   <data name="ComposeAddAltTextDialog.Title" xml:space="preserve">
-    <value>ADD ALT TEXT</value>
+    <value>DODAJ ALTERNATYWNY TEXT</value>
   </data>
   <data name="ComposeAddAltTextTextBox.PlaceholderText" xml:space="preserve">
-    <value>Describe this image! Be as detailed as you like.</value>
+    <value>Opisz ten obraz! Bądź jak szczegółowy jak chcesz.</value>
   </data>
   <data name="ComposeDiscardDraftDialog.PrimaryButtonText" xml:space="preserve">
-    <value>Discard</value>
+    <value>Odrzuć</value>
   </data>
   <data name="ComposeDiscardDraftDialog.SecondaryButtonText" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Anuluj</value>
   </data>
   <data name="ComposeDiscardDraftDialog.Title" xml:space="preserve">
-    <value>Discard draft?</value>
+    <value>Odrzuć próbę?</value>
   </data>
   <data name="ComposeDiscardDraftInfoBlock.Text" xml:space="preserve">
-    <value>Are you sure you want to discard this draft? This action is irreversible!</value>
+    <value>Czy na serio chcesz odrzucisz tą próbę? Ta akcja jest nie-odwócalna!</value>
   </data>
   <data name="FeedMoreCopyLinkItem.Text" xml:space="preserve">
-    <value>Copy Link</value>
+    <value>Skopiuj link</value>
   </data>
   <data name="FeedMoreCopyTextItem.Text" xml:space="preserve">
-    <value>Copy Text</value>
+    <value>Skopiuj tekst</value>
   </data>
   <data name="FeedMoreHidePostItem.Text" xml:space="preserve">
-    <value>Hide Post</value>
+    <value>Ukryj post</value>
   </data>
   <data name="FeedMoreMuteItem.Text" xml:space="preserve">
-    <value>Mute Thread</value>
+    <value>Wycisz wątek</value>
   </data>
   <data name="FeedMoreReportPostItem.Text" xml:space="preserve">
-    <value>Report Post</value>
+    <value>Reportuj Post</value>
   </data>
   <data name="FeedMoreShareItem.Text" xml:space="preserve">
     <value>Share</value>
