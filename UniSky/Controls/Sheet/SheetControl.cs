@@ -109,10 +109,8 @@ public class SheetControl : OverlayControl
         this.DefaultStyleKey = typeof(SheetControl);
 
         // default hide
-        this.SecondaryButtonCommand = new AsyncRelayCommand(() =>
-        {
-            return Controller?.TryHideSheetAsync();
-        });
+        this.PrimaryButtonCommand = new AsyncRelayCommand(() => Controller?.TryHideSheetAsync());
+        this.SecondaryButtonCommand = new AsyncRelayCommand(() => Controller?.TryHideSheetAsync());
     }
 
     protected override void OnHidden(RoutedEventArgs args)
@@ -183,7 +181,7 @@ public class SheetControl : OverlayControl
             titleBarGrid.Padding = new Thickness(0, e.SafeArea.Bounds.Top, 0, 4);
         }
 
-        Margin = new Thickness(e.SafeArea.Bounds.Left, 0, e.SafeArea.Bounds.Right, e.SafeArea.Bounds.Bottom);
+        Margin = e.SafeArea.Bounds with { Top = 0 };
     }
 
     protected virtual void OnBottomInsetsChanged(double leftInset, double rightInset) { }

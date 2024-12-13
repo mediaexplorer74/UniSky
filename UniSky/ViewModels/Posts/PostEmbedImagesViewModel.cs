@@ -1,10 +1,17 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using FishyFlip.Lexicon.App.Bsky.Embed;
 using FishyFlip.Models;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Uwp.UI.Controls;
+using UniSky.Controls.Gallery;
+using UniSky.Services;
+using UniSky.Services.Overlay;
+using UniSky.ViewModels.Gallery;
 
 namespace UniSky.ViewModels.Posts;
 
@@ -19,6 +26,10 @@ public partial class PostEmbedImagesViewModel : PostEmbedViewModel
 
     [ObservableProperty]
     private AspectRatioConstraint aspectRatio;
+
+    private readonly ATIdentifier id;
+    private readonly EmbedImages embed;
+    private readonly ViewImages embedView;
 
     public PostEmbedImageViewModel Image1
         => Images.ElementAtOrDefault(0);
@@ -37,8 +48,11 @@ public partial class PostEmbedImagesViewModel : PostEmbedViewModel
 
     public PostEmbedImagesViewModel(ATIdentifier id, EmbedImages embed) : base(embed)
     {
+        this.id = id;
+        this.embed = embed;
+
         Count = embed.Images.Count;
-        Images = embed.Images.Select(i => new PostEmbedImageViewModel(id, i)).ToArray();
+        Images = embed.Images.Select(i => new PostEmbedImageViewModel(this, id, i)).ToArray();
 
         // this would be problematic
         Debug.Assert(Images.Length > 0 && Images.Length <= 4);
@@ -51,8 +65,9 @@ public partial class PostEmbedImagesViewModel : PostEmbedViewModel
 
     public PostEmbedImagesViewModel(ViewImages embed) : base(embed)
     {
+        this.embedView = embed;
         Count = embed.Images.Count;
-        Images = embed.Images.Select(i => new PostEmbedImageViewModel(i)).ToArray();
+        Images = embed.Images.Select(i => new PostEmbedImageViewModel(this, i)).ToArray();
 
         // this would be problematic
         Debug.Assert(Images.Length > 0 && Images.Length <= 4);
@@ -80,5 +95,16 @@ public partial class PostEmbedImagesViewModel : PostEmbedViewModel
                 _ => throw new NotImplementedException()
             });
         }
+    }
+
+    [RelayCommand]
+    private async Task ShowImageGalleryAsync(object parameter)
+    {
+        var idx = Array.IndexOf(Images, parameter);
+        if (idx == -1)
+            idx = 0;
+
+        var genericOverlay = ServiceContainer.Scoped.GetRequiredService<IStandardOverlayService>();
+        await genericOverlay.ShowAsync<GalleryControl>(new ShowGalleryArgs(id, embedView, embed, idx));
     }
 }
