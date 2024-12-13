@@ -183,16 +183,16 @@
     <value>r</value>
   </data>
   <data name="E_NonImageOrVideo" xml:space="preserve">
-    <value>Only image and video types are supported.</value>
+    <value>Tylko formaty obrazków i filmików są obsługiwane.</value>
   </data>
   <data name="E_ReplyToNonPost" xml:space="preserve">
-    <value>Trying to reply to something that isn't a post?</value>
+    <value>Próbowanie odpowiedzieć do czegoś co nie jest postem?</value>
   </data>
   <data name="E_TooManyPhotos" xml:space="preserve">
-    <value>Posts can contain at most four photos.</value>
+    <value>Posty mogą mieć maks. cztery obrazki.</value>
   </data>
   <data name="E_TooManyVideos" xml:space="preserve">
-    <value>Posts can contain at most one video.</value>
+    <value>Posty mogą mieć maks. jeden filmik.</value>
   </data>
   <data name="E_UnableToAddImageToVideoPost" xml:space="preserve">
     <value>Can't add image when this post contains a video.</value>
