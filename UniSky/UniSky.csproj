@@ -563,6 +563,9 @@
     <PackageReference Include="Humanizer.Core">
       <Version>2.14.1</Version>
     </PackageReference>
+    <PackageReference Include="Humanizer.Core.pl">
+      <Version>2.14.1</Version>
+    </PackageReference>
     <PackageReference Include="ksemenenko.ColorThief">
       <Version>1.1.1.4</Version>
     </PackageReference>
@@ -594,6 +597,8 @@
   <ItemGroup>
     <PRIResource Include="Resources\en-GB\custom-twitter\Resources.resw" />
     <PRIResource Include="Resources\en-GB\Resources.resw" />
+    <PRIResource Include="Resources\pl-PL\Resources.resw" />
+    <PRIResource Include="Resources\pl-PL\custom-twitter\Resources.resw" />
     <None Include="UniSky_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
