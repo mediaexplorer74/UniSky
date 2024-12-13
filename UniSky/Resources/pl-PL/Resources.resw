@@ -325,40 +325,40 @@
     <value>Reportuj Post</value>
   </data>
   <data name="FeedMoreShareItem.Text" xml:space="preserve">
-    <value>Share</value>
+    <value>Udostępnij</value>
   </data>
   <data name="Feed_Following" xml:space="preserve">
     <value>Following</value>
   </data>
   <data name="LoginAdvancedButton.Content" xml:space="preserve">
-    <value>Advanced</value>
-    <comment>Shows the hostname/PDS server textbox</comment>
+    <value>Zaawansowane</value>
+    <comment>Pokazuje pole tekstowe nazwy serwera</comment>
   </data>
   <data name="LoginButton.Content" xml:space="preserve">
-    <value>Login</value>
+    <value>Zaloguj się</value>
   </data>
   <data name="LoginHostBox.Header" xml:space="preserve">
-    <value>Server</value>
+    <value>Serwer</value>
   </data>
   <data name="LoginPageHeader.Text" xml:space="preserve">
-    <value>To begin, enter your username and password.</value>
-    <comment>Taken from Windows XP's Welcome Screen, try to keep that reference if possible :)</comment>
+    <value>Żeby zacząć, podaj swoją nazwę użytkownika i hasło</value>
+    <comment>Wzięte z ekranu powitalnego Windows'a XP, spróbuj zachować te odniesienie jak możliwe :)</comment>
   </data>
   <data name="LoginPasswordBox.Header" xml:space="preserve">
-    <value>Password</value>
+    <value>Hasło</value>
   </data>
   <data name="LoginUsernameBox.Header" xml:space="preserve">
-    <value>Username or Email Address</value>
+    <value>Nazwa Użytkownika lub Adres Email</value>
   </data>
   <data name="NotificationsPageTitleBlock.Text" xml:space="preserve">
-    <value>NOTIFICATIONS</value>
+    <value>POWIADOMIENIA</value>
   </data>
   <data name="SearchPageSearchBox.PlaceholderText" xml:space="preserve">
-    <value>Find something cool...</value>
-    <comment>Can really be anything</comment>
+    <value>Znajdź coś fajnego...</value>
+    <comment>Może to być wszystko</comment>
   </data>
   <data name="SearchPageTitleBlock.Text" xml:space="preserve">
-    <value>SEARCH</value>
+    <value>WYSZUKAJ</value>
   </data>
   <data name="SettingsAboutHeaderBlock.Text" xml:space="preserve">
     <value>About</value>
