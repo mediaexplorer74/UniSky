@@ -7,13 +7,18 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:viewmodels="using:UniSky.ViewModels"
     xmlns:pages="using:UniSky.Pages"
-    mc:Ignorable="d">
+    xmlns:sheet="using:UniSky.Controls.Sheet"
+    mc:Ignorable="d"
+    NavigationCacheMode="Required">
     <Page.DataContext>
         <viewmodels:RootViewModel/>
     </Page.DataContext>
 
     <Grid>
         <Border Background="#FF0085ff"/>
-        <Frame x:Name="RootFrame" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"/>
+        <sheet:SheetRootControl x:Name="SheetRoot"
+                                Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+            <Frame x:Name="RootFrame"/>
+        </sheet:SheetRootControl>
     </Grid>
 </Page>

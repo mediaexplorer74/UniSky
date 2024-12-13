@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.DependencyInjection;
 using FishyFlip;
 using FishyFlip.Events;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using UniSky.Models;
 
@@ -34,7 +30,7 @@ internal class ProtocolService(ILogger<ProtocolService> logger) : IProtocolServi
         logger.LogInformation("Session updated, saving new tokens!");
 
         var session = new SessionModel(true, e.InstanceUri.Host.ToLowerInvariant(), e.Session.Session, e.Session);
-        var sessionService = Ioc.Default.GetRequiredService<SessionService>();
+        var sessionService = ServiceContainer.Scoped.GetRequiredService<SessionService>();
         sessionService.SaveSession(session);
     }
 }

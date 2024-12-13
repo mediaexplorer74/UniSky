@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using FishyFlip;
-using FishyFlip.Events;
 using FishyFlip.Lexicon.App.Bsky.Actor;
 using FishyFlip.Lexicon.App.Bsky.Notification;
 using FishyFlip.Lexicon.Com.Atproto.Server;
 using FishyFlip.Models;
 using FishyFlip.Tools;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using UniSky.Controls.Settings;
 using UniSky.Extensions;
-using UniSky.Helpers;
 using UniSky.Models;
 using UniSky.Pages;
 using UniSky.Services;
+using UniSky.ViewModels.Profile;
 using Windows.Foundation.Metadata;
 using Windows.Phone;
 using Windows.Storage;
@@ -78,8 +78,10 @@ public partial class HomeViewModel : ViewModelBase
     public bool ProfileSelected
         => Page == HomePages.Profile;
 
+    public ProfileViewDetailed Profile => profile;
+
     public HomeViewModel(
-        string session,
+        string profile,
         SessionService sessionService,
         INavigationServiceLocator navigationServiceLocator,
         IProtocolService protocolService,
@@ -89,13 +91,13 @@ public partial class HomeViewModel : ViewModelBase
         this.rootNavigationService = navigationServiceLocator.GetNavigationService("Root");
         this.homeNavigationService = navigationServiceLocator.GetNavigationService("Home");
 
-        if (!sessionService.TryFindSession(session, out var sessionModel))
+        if (!sessionService.TryFindSession(profile, out var sessionModel))
         {
             rootNavigationService.Navigate<LoginPage>();
             return;
         }
 
-        ApplicationData.Current.LocalSettings.Values["LastUsedUser"] = session;
+        ApplicationData.Current.LocalSettings.Values["LastUsedUser"] = profile;
 
         this.sessionService = sessionService;
         this.logger = logger;
@@ -107,6 +109,7 @@ public partial class HomeViewModel : ViewModelBase
             .WithLogger(atLogger)
             .EnableAutoRenewSession(true)
             .WithSessionRefreshInterval(TimeSpan.FromMinutes(30))
+            .WithUserAgent(Constants.UserAgent)
             .Build();
 
         protocolService.SetProtocol(protocol);
@@ -134,31 +137,8 @@ public partial class HomeViewModel : ViewModelBase
 
         try
         {
-            // to ensure the session gets refreshed properly:
-            // - initially authenticate the client with the refresh token
-            // - refresh the sesssion
-            // - reauthenticate with the new session
-
-            var sessionRefresh = sessionModel.Session.Session;
-            var authSessionRefresh = new AuthSession(
-                new Session(sessionRefresh.Did, sessionRefresh.DidDoc, sessionRefresh.Handle, null, sessionRefresh.RefreshJwt, sessionRefresh.RefreshJwt));
-
-            await protocol.AuthenticateWithPasswordSessionAsync(authSessionRefresh);
-            var refreshSession = (await protocol.RefreshSessionAsync().ConfigureAwait(false))
-                .HandleResult();
-
-            var authSession2 = new AuthSession(
-                    new Session(refreshSession.Did, refreshSession.DidDoc, refreshSession.Handle, null, refreshSession.AccessJwt, refreshSession.RefreshJwt));
-            var session2 = await protocol.AuthenticateWithPasswordSessionAsync(authSession2).ConfigureAwait(false);
-
-            if (session2 == null)
-                throw new InvalidOperationException("Authentication failed!");
-
-            var sessionModel2 = new SessionModel(true, sessionModel.Service, authSession2.Session, authSession2);
-            var sessionService = Ioc.Default.GetRequiredService<SessionService>();
-            sessionService.SaveSession(sessionModel2);
-
-            protocolService.SetProtocol(protocol);
+            await RefreshSessionAsync(protocol)
+                .ConfigureAwait(false);
         }
         catch (Exception ex)
         {
@@ -176,19 +156,47 @@ public partial class HomeViewModel : ViewModelBase
 
             this.syncContext.Post(() => notificationUpdateTimer.Start());
         }
-        catch (ATNetworkErrorException ex)
+        catch (ATNetworkErrorException ex) when (ex is { AtError.Detail.Error: "ExpiredToken" })
         {
-            if (ex.AtError?.Detail?.Error == "ExpiredToken")
-            {
-                this.syncContext.Post(() => rootNavigationService.Navigate<LoginPage>());
-                return;
-            }
+            this.syncContext.Post(() => rootNavigationService.Navigate<LoginPage>());
+            return;
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "Failed to fetch user info!");
             this.SetErrored(ex);
         }
+    }
+
+    private async Task RefreshSessionAsync(ATProtocol protocol)
+    {
+        // to ensure the session gets refreshed properly:
+        // - initially authenticate the client with the refresh token
+        // - refresh the sesssion
+        // - reauthenticate with the new session
+
+        var sessionRefresh = sessionModel.Session.Session;
+        var authSessionRefresh = new AuthSession(
+            new Session(sessionRefresh.Did, sessionRefresh.DidDoc, sessionRefresh.Handle, null, sessionRefresh.RefreshJwt, sessionRefresh.RefreshJwt));
+
+        await protocol.AuthenticateWithPasswordSessionAsync(authSessionRefresh);
+        var refreshSession = (await protocol.RefreshSessionAsync()
+            .ConfigureAwait(false))
+            .HandleResult();
+
+        var authSession2 = new AuthSession(
+                new Session(refreshSession.Did, refreshSession.DidDoc, refreshSession.Handle, null, refreshSession.AccessJwt, refreshSession.RefreshJwt));
+        var session2 = await protocol.AuthenticateWithPasswordSessionAsync(authSession2)
+            .ConfigureAwait(false);
+
+        if (session2 == null)
+            throw new InvalidOperationException("Authentication failed!");
+
+        var sessionModel2 = new SessionModel(true, sessionModel.Service, authSession2.Session, authSession2);
+        var sessionService = ServiceContainer.Scoped.GetRequiredService<SessionService>();
+        sessionService.SaveSession(sessionModel2);
+
+        protocolService.SetProtocol(protocol);
     }
 
     private async Task UpdateProfileAsync()
@@ -212,6 +220,13 @@ public partial class HomeViewModel : ViewModelBase
             .HandleResult();
 
         NotificationCount = (int)notifications.Count;
+    }
+
+    [RelayCommand]
+    private async Task OpenSettingsAsync()
+    {
+        var sheetService = ServiceContainer.Scoped.GetRequiredService<ISheetService>();
+        await sheetService.ShowAsync<SettingsSheet>();
     }
 
     private async void OnNotificationTimerTick(object sender, object e)
@@ -275,7 +290,11 @@ public partial class HomeViewModel : ViewModelBase
                 this.homeNavigationService.Navigate<FeedsPage>();
                 break;
             case HomePages.Search:
+                this.homeNavigationService.Navigate<SearchPage>();
+                break;
             case HomePages.Notifications:
+                this.homeNavigationService.Navigate<NotificationsPage>();
+                break;
             case HomePages.Chat:
                 this.homeNavigationService.Navigate<Page>();
                 break;

@@ -97,10 +97,13 @@
                         <TextBlock Grid.Column="1" Text="Notifications" VerticalAlignment="Center"/>
                     </Grid>
                 </mux:NavigationViewItem>
-                <mux:NavigationViewItem Icon="Message" 
-                                    Content="Chat" 
-                                    Tag="{x:Bind viewmodels:HomePages.Chat}"
-                                    IsSelected="{x:Bind ViewModel.ChatSelected, Mode=OneWay}" />
+                <mux:NavigationViewItem Content="Chat" 
+                                        Tag="{x:Bind viewmodels:HomePages.Chat}"
+                                        IsSelected="{x:Bind ViewModel.ChatSelected, Mode=OneWay}">
+                    <mux:NavigationViewItem.Icon>
+                        <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE8F2;"/>
+                    </mux:NavigationViewItem.Icon>
+                </mux:NavigationViewItem>
             </mux:NavigationView.MenuItems>
             <mux:NavigationView.FooterMenuItems>
                 <mux:NavigationViewItem Tag="{x:Bind viewmodels:HomePages.Profile}"
@@ -155,7 +158,7 @@
                     </Viewbox>
 
                     <TextBlock Text="Unisky"
-                               Style="{StaticResource CaptionTextBlockStyle}" 
+                               Style="{ThemeResource CaptionTextBlockStyle}" 
                                VerticalAlignment="Center" 
                                Grid.Column="1"
                                Margin="8,0"/>
@@ -172,7 +175,7 @@
                         HorizontalAlignment="Stretch" 
                         VerticalAlignment="Stretch" 
                         MaxWidth="600"
-                        BorderBrush="{StaticResource SystemControlSeparatorBrush}"
+                        BorderBrush="{ThemeResource SystemControlRevealSeparatorBrush}"
                         ui:UIElementExtensions.ClipToBounds="True">
                     <Frame x:Name="NavigationFrame"
                            HorizontalAlignment="Stretch">
@@ -188,7 +191,7 @@
                       Visibility="Collapsed"
                       Grid.Row="1" 
                       Height="40"
-                      Background="{ThemeResource SystemControlChromeMediumLowAcrylicWindowMediumBrush}">
+                      Background="{ThemeResource HomePageFooterBackgroundBrush}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="40"/>
                         <ColumnDefinition Width="*"/>
@@ -199,10 +202,10 @@
                         <ColumnDefinition Width="40"/>
                     </Grid.ColumnDefinitions>
 
-                    <RadioButton x:Name="HomeButton"
+                    <ToggleButton x:Name="HomeButton"
                                   Grid.Column="1" 
                                   Margin="2,0,0,0" 
-                                  Style="{StaticResource FooterRadioButtonRevealStyle}" 
+                                  Style="{StaticResource FooterToggleButtonRevealStyle}" 
                                   Content="&#xE80F;"
                                   ToolTipService.ToolTip="Home"
                                   ToolTipService.Placement="Top"
@@ -210,10 +213,10 @@
                                   IsChecked="{x:Bind ViewModel.HomeSelected, Mode=OneWay}"
                                   Checked="FooterToggleButton_Checked"
                                   Unchecked="FooterToggleButton_Unchecked"/>
-                    <RadioButton x:Name="SearchButton"
+                    <ToggleButton x:Name="SearchButton"
                                   Grid.Column="2" 
                                   Margin="2,0,0,0" 
-                                  Style="{StaticResource FooterRadioButtonRevealStyle}" 
+                                  Style="{StaticResource FooterToggleButtonRevealStyle}" 
                                   Content="&#xE71E;"
                                   ToolTipService.ToolTip="Search"
                                   ToolTipService.Placement="Top"
@@ -221,10 +224,10 @@
                                   IsChecked="{x:Bind ViewModel.SearchSelected, Mode=OneWay}"
                                   Checked="FooterToggleButton_Checked"
                                   Unchecked="FooterToggleButton_Unchecked"/>
-                    <RadioButton x:Name="NotificationsButton"
+                    <ToggleButton x:Name="NotificationsButton"
                                   Grid.Column="3" 
                                   Margin="2,0,0,0" 
-                                  Style="{StaticResource FooterRadioButtonRevealStyle}"
+                                  Style="{StaticResource FooterToggleButtonRevealStyle}"
                                   ToolTipService.ToolTip="Notifications"
                                   ToolTipService.Placement="Top"
                                   Tag="{x:Bind viewmodels:HomePages.Notifications}"
@@ -243,22 +246,22 @@
                                            VerticalAlignment="Center"
                                            Margin="0,-10,-16,0"/>
                         </Grid>
-                    </RadioButton>
-                    <RadioButton x:Name="ChatButton"
+                    </ToggleButton>
+                    <ToggleButton x:Name="ChatButton"
                                   Grid.Column="4" 
                                   Margin="2,0,0,0"
-                                  Style="{StaticResource FooterRadioButtonRevealStyle}"
-                                  Content="&#xE8BD;"
+                                  Style="{StaticResource FooterToggleButtonRevealStyle}"
+                                  Content="&#xE8F2;"
                                   ToolTipService.ToolTip="Chat"
                                   ToolTipService.Placement="Top"
                                   Tag="{x:Bind viewmodels:HomePages.Chat}"
                                   IsChecked="{x:Bind ViewModel.ChatSelected, Mode=OneWay}"
                                   Checked="FooterToggleButton_Checked"
                                   Unchecked="FooterToggleButton_Unchecked"/>
-                    <RadioButton x:Name="ProfileButton"
+                    <ToggleButton x:Name="ProfileButton"
                                   Grid.Column="5" 
                                   Margin="2,0,0,0" 
-                                  Style="{StaticResource FooterRadioButtonRevealStyle}"
+                                  Style="{StaticResource FooterToggleButtonRevealStyle}"
                                   ToolTipService.ToolTip="Profile"
                                   ToolTipService.Placement="Top"
                                   Tag="{x:Bind viewmodels:HomePages.Profile}"
@@ -286,71 +289,89 @@
                                 </Ellipse.Fill>
                             </Ellipse>
                         </Grid>
-                    </RadioButton>
-                    <RadioButton x:Name="SettingsButton"
-                              Grid.Column="6"
-                              Margin="2,0,0,0"
-                              Style="{StaticResource FooterRadioButtonRevealStyle}" 
-                              Content="&#xE713;" 
-                              ToolTipService.ToolTip="Settings"
-                              ToolTipService.Placement="Top"/>
+                    </ToggleButton>
+                    <Button x:Name="SettingsButton"
+                            Grid.Column="6"
+                            Margin="2,0,0,0"
+                            Style="{StaticResource CleanPaneButtonButtonStyle}" 
+                            Content="&#xE713;" 
+                            Command="{x:Bind ViewModel.OpenSettingsCommand}"
+                            ToolTipService.ToolTip="Settings"
+                            ToolTipService.Placement="Top"/>
                 </Grid>
 
-
-
-                <Grid x:Name="AppTitleBar"
-                      Background="Transparent"
-                      VerticalAlignment="Top">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition x:Name="LeftPaddingColumn" Width="0"/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-
-                    <Grid Grid.Column="1" 
-                          MaxWidth="600" 
-                          HorizontalAlignment="Stretch">
+                <UserControl x:Name="AppTitleBarContainer"
+                             VerticalAlignment="Top">
+                    <Grid x:Name="AppTitleBar"
+                          Background="Transparent">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="32"/>
+                            <ColumnDefinition x:Name="LeftPaddingColumn" Width="0"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <Grid.RenderTransform>
-                            <TranslateTransform x:Name="TitleHeaderTransform"/>
-                        </Grid.RenderTransform>
 
-                        <Button x:Name="BackButton"
-                                x:Load="{x:Bind NavigationFrame.CanGoBack, Mode=OneWay}"
-                                Style="{StaticResource NavigationBackButtonNormalStyle}"
-                                Height="32"
-                                FontSize="13"
-                                ToolTipService.ToolTip="Back"
-                                Command="{x:Bind ViewModel.GoBackCommand}"/>
+                        <Grid Grid.Column="1" 
+                               MaxWidth="600" 
+                               HorizontalAlignment="Stretch">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="32"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RenderTransform>
+                                <TranslateTransform x:Name="TitleHeaderTransform"/>
+                            </Grid.RenderTransform>
 
-                        <Viewbox VerticalAlignment="Center"
-                                 HorizontalAlignment="Center"
-                                 Margin="8,2,0,0"
-                                 Width="16"
-                                 Height="16"
-                                 Grid.Column="1">
-                            <Path x:Name="AppIconPath"
-                                  Data="{StaticResource BlueSkyLogoPath}"
-                                  Fill="{ThemeResource ApplicationForegroundThemeBrush}"/>
-                        </Viewbox>
+                            <Button x:Name="BackButton"
+                                     x:Load="{x:Bind NavigationFrame.CanGoBack, Mode=OneWay}"
+                                     Style="{StaticResource NavigationBackButtonNormalStyle}"
+                                     Height="32"
+                                     FontSize="13"
+                                     ToolTipService.ToolTip="Back"
+                                     Command="{x:Bind ViewModel.GoBackCommand}"/>
 
-                        <TextBlock x:Name="AppTitleTextBlock"
-                                   x:Uid="AppTitle"
-                                   Style="{StaticResource CaptionTextBlockStyle}" 
-                                   Text="Unisky"
-                                   VerticalAlignment="Center" 
-                                   Grid.Column="2"
-                                   Margin="8,0"/>
+                            <Viewbox VerticalAlignment="Center"
+                                      HorizontalAlignment="Center"
+                                      Margin="8,2,0,0"
+                                      Width="16"
+                                      Height="16"
+                                      Grid.Column="1">
+                                <Path x:Name="AppIconPath"
+                                       Data="{StaticResource BlueSkyLogoPath}"
+                                       Fill="{ThemeResource ApplicationForegroundThemeBrush}"/>
+                            </Viewbox>
 
-                        <Border x:Name="TitleBarDrag"
-                                Background="Transparent"
-                                Grid.Column="1"
-                                Grid.ColumnSpan="2"/>
+                            <TextBlock x:Name="AppTitleTextBlock"
+                                        x:Uid="AppTitle"
+                                        Style="{StaticResource CaptionTextBlockStyle}" 
+                                        Text="Unisky"
+                                        VerticalAlignment="Center" 
+                                        Grid.Column="2"
+                                        Margin="8,0"/>
+
+                            <Border x:Name="TitleBarDrag"
+                                     Background="Transparent"
+                                     Grid.Column="1"
+                                     Grid.ColumnSpan="2"/>
+                        </Grid>
+                        
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup>
+                                <VisualState x:Name="Active">
+                                    <VisualState.Setters>
+                                        <Setter Target="AppIconPath.Fill" Value="{ThemeResource ApplicationForegroundThemeBrush}"/>
+                                        <Setter Target="AppTitleTextBlock.Foreground" Value="{ThemeResource ApplicationForegroundThemeBrush}"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Inactive">
+                                    <VisualState.Setters>
+                                        <Setter Target="AppIconPath.Fill" Value="{ThemeResource ApplicationSecondaryForegroundThemeBrush}"/>
+                                        <Setter Target="AppTitleTextBlock.Foreground" Value="{ThemeResource ApplicationSecondaryForegroundThemeBrush}"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
                     </Grid>
-                </Grid>
+                </UserControl>
             </Grid>
 
         </mux:NavigationView>
@@ -364,7 +385,7 @@
                     </VisualState.StateTriggers>
 
                     <VisualState.Setters>
-                        <Setter Target="FrameContainer.(extensions:HairlineBorder.Thickness)" Value="0"/>
+                        <Setter Target="FrameContainer.(extensions:Hairline.BorderThickness)" Value="0"/>
                         <Setter Target="NavView.PaneDisplayMode" Value="LeftMinimal"/>
                         <Setter Target="FooterNavigation.Visibility" Value="Visible"/>
                     </VisualState.Setters>
@@ -375,33 +396,9 @@
                     </VisualState.StateTriggers>
 
                     <VisualState.Setters>
-                        <Setter Target="FrameContainer.(extensions:HairlineBorder.Thickness)" Value="1,0"/>
+                        <Setter Target="FrameContainer.(extensions:Hairline.BorderThickness)" Value="1,0"/>
                         <Setter Target="NavView.PaneDisplayMode" Value="LeftCompact"/>
                         <Setter Target="FooterNavigation.Visibility" Value="Collapsed"/>
-                    </VisualState.Setters>
-                </VisualState>
-                <!--<VisualState x:Name="Wide">
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="1023" />
-                    </VisualState.StateTriggers>
-
-                    <VisualState.Setters>
-                        <Setter Target="NavView.PaneDisplayMode" Value="Left"/>
-                        <Setter Target="FooterNavigation.Visibility" Value="Collapsed"/>
-                    </VisualState.Setters>
-                </VisualState>-->
-            </VisualStateGroup>
-            <VisualStateGroup>
-                <VisualState x:Name="Active">
-                    <VisualState.Setters>
-                        <Setter Target="AppIconPath.Fill" Value="{ThemeResource ApplicationForegroundThemeBrush}"/>
-                        <Setter Target="AppTitleTextBlock.Foreground" Value="{ThemeResource ApplicationForegroundThemeBrush}"/>
-                    </VisualState.Setters>
-                </VisualState>
-                <VisualState x:Name="Inactive">
-                    <VisualState.Setters>
-                        <Setter Target="AppIconPath.Fill" Value="{ThemeResource ApplicationSecondaryForegroundThemeBrush}"/>
-                        <Setter Target="AppTitleTextBlock.Foreground" Value="{ThemeResource ApplicationSecondaryForegroundThemeBrush}"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

@@ -1,26 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using CommunityToolkit.Mvvm.DependencyInjection;
+using Humanizer.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using UniSky.Extensions;
+using UniSky.Helpers.Localisation;
 using UniSky.Services;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.ApplicationModel.Core;
-using Windows.ApplicationModel.Resources.Core;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using UnhandledExceptionEventArgs = Windows.UI.Xaml.UnhandledExceptionEventArgs;
 
 namespace UniSky;
 
@@ -29,18 +19,32 @@ namespace UniSky;
 /// </summary>
 sealed partial class App : Application
 {
+    private ILogger<App> _logger;
+
     /// <summary>
     /// Initializes the singleton application object.  This is the first line of authored code
     /// executed, and as such is the logical equivalent of main() or WinMain().
     /// </summary>
     public App()
     {
-        this.InitializeComponent();
-        this.Suspending += OnSuspending;
-
         this.ConfigureServices();
 
+        this.InitializeComponent();
+        this.Suspending += OnSuspending;
+        this.UnhandledException += OnUnhandledException;
+
+        _logger = ServiceContainer.Default.GetRequiredService<ILoggerFactory>()
+            .CreateLogger<App>();
+
         // ResourceContext.SetGlobalQualifierValue("Custom", "Twitter", ResourceQualifierPersistence.LocalMachine);
+    }
+
+    private void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+    {
+        _logger.LogError(e.Exception, "Unhandled exception!!");
+
+        // hate this
+        e.Handled = true;
     }
 
     private void ConfigureServices()
@@ -49,14 +53,30 @@ sealed partial class App : Application
         collection.AddLogging(c => c.AddDebug()
             .SetMinimumLevel(LogLevel.Trace));
 
+        collection.AddSingleton<IProtocolService, ProtocolService>();
+        collection.AddSingleton<ISettingsService, SettingsService>();
+        collection.AddSingleton<ITypedSettings, SettingsService>();
+        collection.AddSingleton<IThemeService, ThemeService>();
+        collection.AddSingleton<INavigationServiceLocator, NavigationServiceLocator>();
+        collection.AddScoped<ISafeAreaService, CoreWindowSafeAreaService>();
+        collection.AddScoped<ISheetService, SheetService>();
+
         collection.AddTransient<LoginService>();
         collection.AddTransient<SessionService>();
 
-        collection.AddSingleton<INavigationServiceLocator, NavigationServiceLocator>();
-        collection.AddSingleton<IProtocolService, ProtocolService>();
-        collection.AddSingleton<ISafeAreaService, SafeAreaService>();
+        ServiceContainer.Default.ConfigureServices(collection.BuildServiceProvider());
+        
+        Configurator.Formatters.Register("en", (locale) => new ShortTimespanFormatter("en"));
+        Configurator.Formatters.Register("en-GB", (locale) => new ShortTimespanFormatter("en"));
+        Configurator.Formatters.Register("en-US", (locale) => new ShortTimespanFormatter("en"));
+    }
 
-        Ioc.Default.ConfigureServices(collection.BuildServiceProvider());
+    protected override void OnActivated(IActivatedEventArgs args)
+    {
+        if (args is ProtocolActivatedEventArgs e)
+        {
+            this.OnProtocolActivated(e);
+        }
     }
 
     /// <summary>
@@ -66,6 +86,8 @@ sealed partial class App : Application
     /// <param name="e">Details about the launch request and process.</param>
     protected override void OnLaunched(LaunchActivatedEventArgs e)
     {
+        Hairline.Initialize();
+
         // Do not repeat app initialization when the Window already has content,
         // just ensure that the window is active
         if (Window.Current.Content is not Frame rootFrame)
@@ -97,6 +119,21 @@ sealed partial class App : Application
             // Ensure the current window is active
             Window.Current.Activate();
         }
+    }
+
+    private void OnProtocolActivated(ProtocolActivatedEventArgs e)
+    {
+        Hairline.Initialize();
+        if (Window.Current.Content is not Frame rootFrame)
+        {
+            rootFrame = new Frame();
+            rootFrame.NavigationFailed += OnNavigationFailed;
+            rootFrame.Navigate(typeof(RootPage));
+            Window.Current.Content = rootFrame;
+        }
+
+        // Ensure the current window is active
+        Window.Current.Activate();
     }
 
     /// <summary>

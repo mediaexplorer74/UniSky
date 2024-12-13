@@ -1,5 +1,4 @@
-﻿using CommunityToolkit.Mvvm.DependencyInjection;
-using FishyFlip.Models;
+﻿using FishyFlip.Models;
 using Microsoft.Extensions.DependencyInjection;
 using UniSky.Services;
 using UniSky.ViewModels;
@@ -21,8 +20,8 @@ public sealed partial class HomePage : Page
 {
     public HomeViewModel ViewModel
     {
-        get { return (HomeViewModel)GetValue(ViewModelProperty); }
-        set { SetValue(ViewModelProperty, value); }
+        get => (HomeViewModel)GetValue(ViewModelProperty);
+        set => SetValue(ViewModelProperty, value);
     }
 
     public static readonly DependencyProperty ViewModelProperty =
@@ -39,16 +38,16 @@ public sealed partial class HomePage : Page
 
         Window.Current.SetTitleBar(TitleBarDrag);
 
-        var safeAreaService = Ioc.Default.GetRequiredService<ISafeAreaService>();
+        var safeAreaService = ServiceContainer.Scoped.GetRequiredService<ISafeAreaService>();
         safeAreaService.SafeAreaUpdated += OnSafeAreaUpdated;
 
-        var serviceLocator = Ioc.Default.GetRequiredService<INavigationServiceLocator>();
+        var serviceLocator = ServiceContainer.Scoped.GetRequiredService<INavigationServiceLocator>();
         var service = serviceLocator.GetNavigationService("Home");
         service.Frame = NavigationFrame;
 
         if (e.Parameter is string session || e.Parameter is ATDid did && (session = did.Handler) != null)
         {
-            ViewModel = ActivatorUtilities.CreateInstance<HomeViewModel>(Ioc.Default, session);
+            ViewModel = ActivatorUtilities.CreateInstance<HomeViewModel>(ServiceContainer.Scoped, session);
         }
     }
 
@@ -68,20 +67,27 @@ public sealed partial class HomePage : Page
 
         if (e.SafeArea.IsActive)
         {
-            VisualStateManager.GoToState(this, "Active", true);
+            VisualStateManager.GoToState(AppTitleBarContainer, "Active", true);
         }
         else
         {
-            VisualStateManager.GoToState(this, "Inactive", true);
+            VisualStateManager.GoToState(AppTitleBarContainer, "Inactive", true);
         }
 
+        AppTitleBarContainer.RequestedTheme = e.SafeArea.Theme;
         Margin = new Thickness(e.SafeArea.Bounds.Left, 0, e.SafeArea.Bounds.Right, e.SafeArea.Bounds.Bottom);
     }
 
-    private void NavigationView_ItemInvoked(MUXC.NavigationView sender, MUXC.NavigationViewItemInvokedEventArgs args)
+    private async void NavigationView_ItemInvoked(MUXC.NavigationView sender, MUXC.NavigationViewItemInvokedEventArgs args)
     {
         if (args.InvokedItemContainer?.Tag is HomePages page)
             ViewModel.Page = page;
+
+        if (args.IsSettingsInvoked)
+        {
+            ViewModel.Page = ViewModel.Page;
+            await ViewModel.OpenSettingsCommand.ExecuteAsync(null);
+        }
     }
 
     private void FooterToggleButton_Checked(object sender, RoutedEventArgs e)
