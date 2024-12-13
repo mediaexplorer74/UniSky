@@ -1,7 +1,7 @@
 # This workflow will build, sign, and package a WinUI 3 MSIX desktop application
 # built on .NET.
 
-name: Build
+name: WoA32
 
 on:
   push:
@@ -32,17 +32,45 @@ jobs:
 
     - name: Adjust Package Version
       run: |
+        $appx = 'http://schemas.microsoft.com/appx/manifest/foundation/windows10'
+        $rescap = 'http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities'
+        $msbuild = 'http://schemas.microsoft.com/developer/msbuild/2003'
+
         $epoch = (Get-Date) - ([System.DateTime]::new(2024, 11, 01))
         $file = (Resolve-Path "$env:Project_Name/Package.appxmanifest")
         $xml = [System.Xml.XmlDocument]::new()
         $xml.Load($file)
 
-        $node = $xml.GetElementsByTagName("Identity", "http://schemas.microsoft.com/appx/manifest/foundation/windows10")[0]
+        $nsmgr = [System.Xml.XmlNamespaceManager]::new($xml.NameTable)
+        $nsmgr.AddNamespace("appx", $appx);
+        $nsmgr.AddNamespace("rescap", $rescap);
+
+        # adjust package version
+        $node = $xml.GetElementsByTagName("Identity", $appx)[0]
         $version = [System.Version]::Parse($node.GetAttribute("Version"))
         $version = [System.Version]::new($version.Major, $version.Minor, $version.Build, $epoch.TotalMinutes);
         $node.SetAttribute("Version", $version.ToString())
+        
+        # adjust target versionk
+        $node = $xml.GetElementsByTagName("TargetDeviceFamily", $appx)[0]
+        $node.SetAttribute("MinVersion", "10.0.15035.0");
+
+        # remove confirmAppClose rescap
+        $node = $xml.SelectSingleNode('//rescap:Capability[@Name="confirmAppClose"]', $nsmgr)
+        $node.ParentNode.RemoveChild($node)
 
         $xml.Save($file)
+
+        $file = (Resolve-Path "$env:ProjectFile_Name")
+        $xml.Load($file)
+
+        $nsmgr = [System.Xml.XmlNamespaceManager]::new($xml.NameTable)
+        $nsmgr.AddNamespace("msbuild", $msbuild);
+
+        $node = $xml.SelectSingleNode('//msbuild:PackageReference[@Include="Microsoft.UI.Xaml"]/msbuild:Version', $nsmgr)
+        $node.InnerXml = "2.7.4-prerelease.221117002"
+        $xml.Save($file)
+
 
     # Decode the base 64 encoded pfx and save the Signing_Certificate
     - name: Load Certificate
@@ -57,13 +85,13 @@ jobs:
 
     # Restore the application to populate the obj folder with RuntimeIdentifiers
     - name: Restore NuGet Packages
-      run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration /p:Platform=x64
+      run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration /p:Platform=ARM
       env:
         Configuration: ${{ matrix.configuration }}
 
     # Create the app package by building and packaging the project
     - name: Build App Packages
-      run: msbuild $env:ProjectFile_Name /p:Configuration=$env:Configuration /p:SourceRevisionBranch="$env:Head_Ref" /p:SourceRevisionCommit="$($env:Sha.Substring(0, 7))" /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:Appx_Bundle /p:AppxBundlePlatforms="x86|x64|ARM|ARM64" /p:PackageCertificateKeyFile=GitHubActionsWorkflow.pfx /p:AppxPackageDir="$env:Appx_Package_Dir" /p:GenerateAppxPackageOnBuild=true
+      run: msbuild $env:ProjectFile_Name /p:Configuration=$env:Configuration /p:Platform=ARM /p:SourceRevisionBranch="$env:Head_Ref-woa32" /p:SourceRevisionCommit="$($env:Sha.Substring(0, 7))" /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:Appx_Bundle /p:AppxBundlePlatforms="ARM" /p:PackageCertificateKeyFile=GitHubActionsWorkflow.pfx /p:AppxPackageDir="$env:Appx_Package_Dir" /p:GenerateAppxPackageOnBuild=true
       env:
         Appx_Bundle: Always
         Appx_Package_Build_Mode: SideloadOnly
