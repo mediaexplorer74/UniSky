@@ -216,27 +216,27 @@
     <value>Przepraszamy, ten plik jest niedostępny.</value>
   </data>
   <data name="E_VideosUnsupported" xml:space="preserve">
-    <value>Sorry, videos are currently unsupported.</value>
+    <value>Przepraszamy, filmiki są narazie nie-obsługiwane.</value>
   </data>
   <data name="UploadToBluesky" xml:space="preserve">
-    <value>Attach to post</value>
+    <value>Dodaj do postu</value>
   </data>
   <data name="Search_New" xml:space="preserve">
-    <value>Latest</value>
+    <value>Najnowsze</value>
   </data>
   <data name="Search_Hot" xml:space="preserve">
-    <value>Hot</value>
+    <value>Gorące</value>
   </data>
   <data name="Search_People" xml:space="preserve">
-    <value>People</value>
+    <value>Ludzie</value>
   </data>
   <data name="Profile_Follow" xml:space="preserve">
-    <value>Follow</value>
-    <comment>Click to follow the user</comment>
+    <value>Obserwuj</value>
+    <comment>Kliknij żeby obserwować użytkownika</comment>
   </data>
   <data name="Profile_Following" xml:space="preserve">
-    <value>Following</value>
-    <comment>Currently following the user</comment>
+    <value>Obserwując</value>
+    <comment>Narazie obserwując użytkownika</comment>
   </data>
   <data name="Notification_LikedTweetSingle" xml:space="preserve">
     <value>{0} liked your post</value>
