@@ -239,39 +239,39 @@
     <comment>Narazie obserwując użytkownika</comment>
   </data>
   <data name="Notification_LikedTweetSingle" xml:space="preserve">
-    <value>{0} liked your post</value>
-    <comment>{0} = user display name</comment>
+    <value>{0} polubił twój post</value>
+    <comment>{0} = nazwa wyświetlająca użytkownika</comment>
   </data>
   <data name="Notification_LikedTweetMultiple" xml:space="preserve">
-    <value>{0} and {1} liked your post</value>
-    <comment>{0},{1} = user display name</comment>
+    <value>{0} and {1} polubili twój post</value>
+    <comment>{0},{1} = nazwa wyświetlająca użytkownika</comment>
   </data>
   <data name="Notification_Follow" xml:space="preserve">
-    <value>{0} followed you</value>
-    <comment>{0} = user display name</comment>
+    <value>{0} obserwuje cię</value>
+    <comment>{0} = nazwa wyświetlająca użytkownika</comment>
   </data>
   <data name="Notification_Mention" xml:space="preserve">
-    <value>{0} mentioned you</value>
-    <comment>{0} = user display name</comment>
+    <value>{0} wspominął cie</value>
+    <comment>{0} = nazwa wyświetlająca użytkownika</comment>
   </data>
   <data name="Notification_Other" xml:space="preserve">
-    <value>other</value>
+    <value>inny</value>
   </data>
   <data name="Notification_Quote" xml:space="preserve">
-    <value>{0} quoted your post</value>
-    <comment>{0} = user display name</comment>
+    <value>{0} zacytował twój post</value>
+    <comment>{0} = nazwa wyświetlająca użytkownika</comment>
   </data>
   <data name="Notification_Reply" xml:space="preserve">
-    <value>{0} replied to you</value>
-    <comment>{0} = user display name</comment>
+    <value>{0} odpowiedział do ciebie</value>
+    <comment>{0} = nazwa wyświetlająca użytkownika</comment>
   </data>
   <data name="Notification_RetweetMultiple" xml:space="preserve">
-    <value>{0} and {1} reposted</value>
-    <comment>{0},{1} = user display name</comment>
+    <value>{0} and {1} podali dalej</value>
+    <comment>{0},{1} = nazwa wyświetlająca użytkownika</comment>
   </data>
   <data name="Notification_RetweetSingle" xml:space="preserve">
-    <value>{0} reposted</value>
-    <comment>{0} = user display name</comment>
+    <value>{0} podał dalej</value>
+    <comment>{0} = nazwa wyświetlająca użytkownika</comment>
   </data>
   <data name="Profile_Blocked" xml:space="preserve">
     <value>Blocked</value>
