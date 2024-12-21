@@ -61,7 +61,7 @@ public class NotificationsCollection : ObservableCollection<NotificationViewMode
 
         try
         {
-            var notifications = (await service.ListNotificationsAsync(count, cursor: cursor)
+            var notifications = (await service.ListNotificationsAsync(limit: count, cursor: cursor)
                 .ConfigureAwait(false))
                 .HandleResult();
 
