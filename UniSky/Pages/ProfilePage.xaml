@@ -29,7 +29,8 @@
                   HorizontalAlignment="Stretch"
                   HorizontalContentAlignment="Stretch"
                   ScrollViewer.IsVerticalScrollChainingEnabled="True"
-                  w1809:ScrollViewer.CanContentRenderOutsideBounds="True">
+                  w1809:ScrollViewer.CanContentRenderOutsideBounds="True"
+                  ItemClick="RootList_ItemClick">
             <ListView.Resources>
                 <SolidColorBrush Color="Transparent" x:Key="ListViewItemRevealBackground"/>
                 <SolidColorBrush Color="Transparent" x:Key="ListViewItemBackgroundPointerOver"/>

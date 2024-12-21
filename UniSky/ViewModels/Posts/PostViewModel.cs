@@ -68,6 +68,7 @@ public partial class PostViewModel : ViewModelBase
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ShowReplyContainer))]
+    [NotifyPropertyChangedFor(nameof(Borders))]
     private bool hasParent;
 
     [ObservableProperty]
@@ -77,6 +78,8 @@ public partial class PostViewModel : ViewModelBase
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(Text))]
     private RichTextViewModel richText;
+
+    public ATUri Uri { get; }
 
     public Post Post => post;
     public PostView View => view;
@@ -124,6 +127,7 @@ public partial class PostViewModel : ViewModelBase
 
         this.view = view;
         this.post = post;
+        this.Uri = view.Uri;
 
         HasChild = hasChild;
 

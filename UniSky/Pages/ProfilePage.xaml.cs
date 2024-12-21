@@ -8,6 +8,7 @@ using Microsoft.Graphics.Canvas.Effects;
 using Microsoft.Toolkit.Uwp.UI.Animations.Expressions;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
 using UniSky.Services;
+using UniSky.ViewModels.Posts;
 using UniSky.ViewModels.Profile;
 using Windows.UI.Composition;
 using Windows.UI.Xaml;
@@ -269,5 +270,15 @@ public sealed partial class ProfilePage : Page
             return;
 
         scrollView.ChangeView(0, 0, null);
+    }
+
+    private void RootList_ItemClick(object sender, ItemClickEventArgs e)
+    {
+        if (e.ClickedItem is not PostViewModel post)
+            return;
+
+        var navigationService = ServiceContainer.Scoped.GetRequiredService<INavigationServiceLocator>()
+            .GetNavigationService("Home");
+        navigationService.Navigate<ThreadPage>(post.Uri);
     }
 }

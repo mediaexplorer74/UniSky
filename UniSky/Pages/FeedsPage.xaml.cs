@@ -3,6 +3,7 @@ using Microsoft.Toolkit.Uwp.UI.Extensions;
 using UniSky.Services;
 using UniSky.ViewModels;
 using UniSky.ViewModels.Feeds;
+using UniSky.ViewModels.Posts;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -77,5 +78,15 @@ public sealed partial class FeedsPage : Page
             return;
 
         await feedVm.RefreshAsync();
+    }
+
+    private void PART_FeedList_ItemClick(object sender, ItemClickEventArgs e)
+    {
+        if (e.ClickedItem is not PostViewModel post)
+            return;
+
+        var navigationService = ServiceContainer.Scoped.GetRequiredService<INavigationServiceLocator>()
+            .GetNavigationService("Home");
+        navigationService.Navigate<ThreadPage>(post.Uri);
     }
 }

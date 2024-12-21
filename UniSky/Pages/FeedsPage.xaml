@@ -59,7 +59,8 @@
                                       HorizontalContentAlignment="Stretch"
                                       ScrollViewer.IsVerticalScrollChainingEnabled="True"
                                       BorderBrush="{ThemeResource SystemControlRevealSeparatorBrush}"
-                                      extensions:Hairline.BorderThickness="0,1,0,0">
+                                      extensions:Hairline.BorderThickness="0,1,0,0"
+                                      ItemClick="PART_FeedList_ItemClick">
                                 <ListView.Resources>
                                     <SolidColorBrush Color="Transparent" x:Key="ListViewItemRevealBackground"/>
                                     <SolidColorBrush Color="Transparent" x:Key="ListViewItemBackgroundPointerOver"/>
