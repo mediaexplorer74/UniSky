@@ -39,10 +39,6 @@ public sealed partial class ThreadPage : Page
 
     public static readonly DependencyProperty ViewModelProperty =
         DependencyProperty.Register("ViewModel", typeof(ThreadViewModel), typeof(ThreadPage), new PropertyMetadata(null));
-    private Visual _headerGrid;
-    private CompositionPropertySet _props;
-    private CompositionPropertySet _scrollerPropertySet;
-    private Compositor _compositor;
 
     public ThreadPage()
     {
@@ -72,9 +68,10 @@ public sealed partial class ThreadPage : Page
     private void OnSafeAreaUpdated(object sender, SafeAreaUpdatedEventArgs e)
     {
         HeaderGrid.Padding = e.SafeArea.Bounds with { Bottom = 0, Left = 0, Right = 0 };
-        UpdateSizeDependentProperties();
     }
 
+    private Visual _headerGrid;
+    private CompositionPropertySet _scrollerPropertySet;
     private void Page_Loaded(object sender, RoutedEventArgs e)
     {
         // Retrieve the ScrollViewer that the GridView is using internally
@@ -87,57 +84,10 @@ public sealed partial class ThreadPage : Page
 
         // Get the PropertySet that contains the scroll values from the ScrollViewer
         _scrollerPropertySet = ElementCompositionPreview.GetScrollViewerManipulationPropertySet(scrollViewer);
-        _compositor = _scrollerPropertySet.Compositor;
-
-        // snag all the element visuals
         _headerGrid = ElementCompositionPreview.GetElementVisual(HeaderContainer);
 
-        // properties, most of these get updated when the size changes
-        _props = _compositor.CreatePropertySet();
-        _props.InsertScalar("progress", 0);
-
-        UpdateSizeDependentProperties();
-
-        var props = _props.GetReference();
-        var progressNode = props.GetScalarProperty("progress");
-        var totalSizeNode = props.GetScalarProperty("totalSize");
         var scrollingProperties = _scrollerPropertySet.GetSpecializedReference<ManipulationPropertySetReferenceNode>();
-
-        var progressAnimation = EF.Clamp(-scrollingProperties.Translation.Y / totalSizeNode, 0, 1);
-        _props.StartAnimation("progress", progressAnimation);
-
-        // move everything with the scroll viewer, make it sticky
         var headerTranslationAnimation = -scrollingProperties.Translation.Y;
         _headerGrid.StartAnimation("Offset.Y", headerTranslationAnimation);
-
-        // create a springy effect when overscrolled
-        var headerScaleAnimation = EF.Lerp(1, 1.25f, EF.Clamp(scrollingProperties.Translation.Y / 50, 0, 1));
-        _headerGrid.StartAnimation("Scale.X", headerScaleAnimation);
-        _headerGrid.StartAnimation("Scale.Y", headerScaleAnimation);
     }
-
-    private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
-    {
-        UpdateSizeDependentProperties();
-    }
-
-    private void UpdateSizeDependentProperties()
-    {
-        if (HeaderContainer.ActualHeight == 0)
-            return;
-
-        var safeAreaService = ServiceContainer.Scoped.GetRequiredService<ISafeAreaService>();
-
-        var titleBarHeight = (float)safeAreaService.State.Bounds.Top + 4;
-        var totalSize = (float)HeaderContainer.ActualHeight;
-
-        if (_props != null)
-        {
-            _props.InsertScalar("totalSize", totalSize);
-        }
-
-        if (_headerGrid != null)
-            _headerGrid.CenterPoint = new Vector3((float)(HeaderContainer.ActualWidth / 2), (float)HeaderContainer.ActualHeight, 0);
-    }
-
 }

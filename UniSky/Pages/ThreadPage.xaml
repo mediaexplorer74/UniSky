@@ -19,20 +19,18 @@
                   HorizontalAlignment="Stretch"
                   HorizontalContentAlignment="Stretch"
                   ScrollViewer.IsVerticalScrollChainingEnabled="True"
-                  BorderBrush="{ThemeResource SystemControlRevealSeparatorBrush}"
-                  extensions:Hairline.BorderThickness="0,1,0,0">
+                  BorderBrush="{ThemeResource SystemControlRevealSeparatorBrush}">
             <ListView.Header>
                 <Grid x:Name="HeaderContainer">
                     <Grid x:Name="HeaderGrid"
-       Background="{ThemeResource SystemControlChromeMediumAcrylicElementMediumBrush}"
-       BorderBrush="{ThemeResource SystemControlRevealSeparatorBrush}"
-       extensions:Hairline.BorderThickness="0,0,0,1">
-
+                          Background="{ThemeResource SystemControlChromeMediumAcrylicElementMediumBrush}"
+                          BorderBrush="{ThemeResource SystemControlRevealSeparatorBrush}"
+                          extensions:Hairline.BorderThickness="0,0,0,1">
                         <TextBlock x:Uid="ThreadPageTitleBlock"
-                Grid.Row="1"
-                Margin="12,4,12,12"
-                Text="POST"
-                Style="{ThemeResource BaseTextBlockStyle}"/>
+                                   Grid.Row="1"
+                                   Margin="12,4,12,12"
+                                   Text="POST"
+                                   Style="{ThemeResource BaseTextBlockStyle}"/>
                     </Grid>
                 </Grid>
             </ListView.Header>
