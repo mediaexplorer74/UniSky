@@ -56,6 +56,11 @@ internal class SettingsService : ISettingsService, ITypedSettings
         set => Save(AUTO_FEED_REFRESH, value);
     }
 
+    public bool UseTwitterLocale
+    {
+        get => Read(USE_TWITTER_LOCALE, USE_TWITTER_LOCALE_DEFAULT);
+        set => Save(USE_TWITTER_LOCALE, value);
+    }
 
     /// <summary>
     /// Determines whether a setting already exists.

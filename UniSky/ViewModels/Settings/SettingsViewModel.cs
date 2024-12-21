@@ -9,6 +9,7 @@ namespace UniSky.ViewModels.Settings;
 public class SettingsViewModel(ITypedSettings settingsService, IThemeService themeService) : ViewModelBase
 {
     private readonly int _initialColour = (int)settingsService.RequestedColourScheme;
+    private readonly bool _initialTwitterLocale = settingsService.UseTwitterLocale;
     private readonly int _initialTheme = (int)themeService.GetThemeForDisplay();
 
     public bool SunValleyThemeSupported
@@ -48,6 +49,12 @@ public class SettingsViewModel(ITypedSettings settingsService, IThemeService the
         set => settingsService.AutoRefreshFeeds = value;
     }
 
+    public bool UseTwitterLocale
+    {
+        get => settingsService.UseTwitterLocale;
+        set => settingsService.UseTwitterLocale = value;
+    }
+
     public bool IsDirty
-        => ApplicationTheme != _initialTheme || ColourScheme != _initialColour;
+        => ApplicationTheme != _initialTheme || ColourScheme != _initialColour || _initialTwitterLocale != UseTwitterLocale;
 }
