@@ -18,6 +18,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Extensions;
 using UniSky.Controls.Compose;
 using UniSky.Helpers;
+using UniSky.Pages;
 using UniSky.Services;
 using UniSky.ViewModels.Profile;
 using UniSky.ViewModels.Text;
@@ -251,6 +252,14 @@ public partial class PostViewModel : ViewModelBase
         manager.DataRequested += OnDataRequested;
 
         DataTransferManager.ShowShareUI();
+    }
+
+    [RelayCommand]
+    private void OpenThread()
+    {
+        var navigationService = ServiceContainer.Scoped.GetRequiredService<INavigationServiceLocator>()
+            .GetNavigationService("Home");
+        navigationService.Navigate<ThreadPage>(this.Uri);
     }
 
     private string ToNumberString(int n)

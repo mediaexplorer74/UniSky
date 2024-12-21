@@ -79,14 +79,4 @@ public sealed partial class FeedsPage : Page
 
         await feedVm.RefreshAsync();
     }
-
-    private void PART_FeedList_ItemClick(object sender, ItemClickEventArgs e)
-    {
-        if (e.ClickedItem is not PostViewModel post)
-            return;
-
-        var navigationService = ServiceContainer.Scoped.GetRequiredService<INavigationServiceLocator>()
-            .GetNavigationService("Home");
-        navigationService.Navigate<ThreadPage>(post.Uri);
-    }
 }

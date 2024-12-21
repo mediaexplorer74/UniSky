@@ -84,5 +84,4 @@ public sealed partial class ThreadPage : Page
 
         stackPanel.Margin = new Thickness(0, HeaderContainer.ActualHeight, 0, ActualHeight - HeaderContainer.ActualHeight);
     }
-
 }

@@ -29,7 +29,6 @@
                   ItemsSource="{x:Bind ViewModel.Posts}" 
                   ItemTemplateSelector="{StaticResource ThreadItemTemplateSelector}"
                   SelectionMode="None"
-                  IsItemClickEnabled="True"
                   HorizontalAlignment="Stretch"
                   HorizontalContentAlignment="Stretch"
                   ScrollViewer.IsVerticalScrollChainingEnabled="True"

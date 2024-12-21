@@ -26,12 +26,10 @@
                   ItemsSource="{Binding SelectedFeed.Items}" 
                   ItemTemplate="{StaticResource FeedItemContentTemplate}"
                   SelectionMode="None"
-                  IsItemClickEnabled="True"
                   HorizontalAlignment="Stretch"
                   HorizontalContentAlignment="Stretch"
                   ScrollViewer.IsVerticalScrollChainingEnabled="True"
-                  w1809:ScrollViewer.CanContentRenderOutsideBounds="True"
-                  ItemClick="RootList_ItemClick">
+                  w1809:ScrollViewer.CanContentRenderOutsideBounds="True">
             <ListView.Resources>
                 <SolidColorBrush Color="Transparent" x:Key="ListViewItemRevealBackground"/>
                 <SolidColorBrush Color="Transparent" x:Key="ListViewItemBackgroundPointerOver"/>

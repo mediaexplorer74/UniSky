@@ -54,13 +54,11 @@
                                       ItemsSource="{x:Bind Items}" 
                                       ItemTemplate="{StaticResource FeedItemContentTemplate}"
                                       SelectionMode="None"
-                                      IsItemClickEnabled="True"
                                       HorizontalAlignment="Stretch"
                                       HorizontalContentAlignment="Stretch"
                                       ScrollViewer.IsVerticalScrollChainingEnabled="True"
                                       BorderBrush="{ThemeResource SystemControlRevealSeparatorBrush}"
-                                      extensions:Hairline.BorderThickness="0,1,0,0"
-                                      ItemClick="PART_FeedList_ItemClick">
+                                      extensions:Hairline.BorderThickness="0,1,0,0">
                                 <ListView.Resources>
                                     <SolidColorBrush Color="Transparent" x:Key="ListViewItemRevealBackground"/>
                                     <SolidColorBrush Color="Transparent" x:Key="ListViewItemBackgroundPointerOver"/>

@@ -36,7 +36,7 @@ namespace UniSky.Controls
         }
 
         public static readonly DependencyProperty IsTextSelectionEnabledProperty =
-            DependencyProperty.Register("IsTextSelectionEnabled", typeof(bool), typeof(RichTextBlock), new PropertyMetadata(true));
+            DependencyProperty.Register("IsTextSelectionEnabled", typeof(bool), typeof(RichTextBlock), new PropertyMetadata(false));
 
         public IList<FacetInline> Inlines
         {
