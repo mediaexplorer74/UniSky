@@ -277,6 +277,7 @@
     <Compile Include="Services\Sheet\SheetRootController.cs" />
     <Compile Include="Services\Sheet\SheetService.cs" />
     <Compile Include="Services\ThemeService.cs" />
+    <Compile Include="Services\TypedSettingsService.cs" />
     <Compile Include="Themes\ThemeResources.cs" />
     <Compile Include="ViewModels\Compose\ComposeViewAttachmentViewModel.cs" />
     <Compile Include="ViewModels\Compose\ComposeViewModel.cs" />

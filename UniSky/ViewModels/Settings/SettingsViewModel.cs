@@ -1,5 +1,6 @@
 ﻿using Microsoft.Toolkit.Uwp.Helpers;
 using UniSky.Services;
+using Windows.ApplicationModel.Resources.Core;
 using Windows.UI.Xaml;
 
 using static UniSky.Constants.Settings;
@@ -52,7 +53,11 @@ public class SettingsViewModel(ITypedSettings settingsService, IThemeService the
     public bool UseTwitterLocale
     {
         get => settingsService.UseTwitterLocale;
-        set => settingsService.UseTwitterLocale = value;
+        set
+        {
+            settingsService.UseTwitterLocale = value;
+            ResourceContext.SetGlobalQualifierValue("Custom", value ? "Twitter" : "", ResourceQualifierPersistence.LocalMachine);
+        }
     }
 
     public bool IsDirty

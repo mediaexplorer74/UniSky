@@ -422,4 +422,7 @@
   <data name="GalleryControl.TitleContent" xml:space="preserve">
     <value>GALLERY</value>
   </data>
+  <data name="ThreadPageTitleBlock.Text" xml:space="preserve">
+    <value>POST</value>
+  </data>
 </root>

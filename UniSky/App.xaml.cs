@@ -66,7 +66,7 @@ sealed partial class App : Application
 
         collection.AddSingleton<IProtocolService, ProtocolService>();
         collection.AddSingleton<ISettingsService, SettingsService>();
-        collection.AddSingleton<ITypedSettings, SettingsService>();
+        collection.AddSingleton<ITypedSettings, TypedSettingsService>();
         collection.AddSingleton<IThemeService, ThemeService>();
         collection.AddSingleton<INavigationServiceLocator, NavigationServiceLocator>();
         collection.AddScoped<ISafeAreaService, ApplicationViewSafeAreaService>();
