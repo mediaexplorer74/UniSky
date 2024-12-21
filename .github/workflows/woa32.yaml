@@ -36,7 +36,7 @@ jobs:
         $rescap = 'http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities'
         $msbuild = 'http://schemas.microsoft.com/developer/msbuild/2003'
 
-        $epoch = (Get-Date) - ([System.DateTime]::new(2024, 11, 01))
+        $epoch = (Get-Date) - (Get-Date -Day 1)
         $file = (Resolve-Path "$env:Project_Name/Package.appxmanifest")
         $xml = [System.Xml.XmlDocument]::new()
         $xml.Load($file)

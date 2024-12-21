@@ -32,7 +32,7 @@ jobs:
 
     - name: Adjust Package Version
       run: |
-        $epoch = (Get-Date) - ([System.DateTime]::new(2024, 11, 01))
+        $epoch = (Get-Date) - (Get-Date -Day 1)
         $file = (Resolve-Path "$env:Project_Name/Package.appxmanifest")
         $xml = [System.Xml.XmlDocument]::new()
         $xml.Load($file)
