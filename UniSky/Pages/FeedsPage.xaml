@@ -54,7 +54,6 @@
                                       ItemsSource="{x:Bind Items}" 
                                       ItemTemplate="{StaticResource FeedItemContentTemplate}"
                                       SelectionMode="None"
-                                      IsItemClickEnabled="True"
                                       HorizontalAlignment="Stretch"
                                       HorizontalContentAlignment="Stretch"
                                       ScrollViewer.IsVerticalScrollChainingEnabled="True"

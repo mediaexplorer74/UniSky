@@ -32,6 +32,8 @@ public enum HomePages
     Home,
     Search,
     Notifications,
+    Feeds,
+    Lists,
     Chat,
     Profile
 }
@@ -63,6 +65,8 @@ public partial class HomeViewModel : ViewModelBase
         nameof(HomeSelected),
         nameof(SearchSelected),
         nameof(NotificationsSelected),
+        nameof(FeedsSelected),
+        nameof(ListsSelected),
         nameof(ChatSelected),
         nameof(ProfileSelected))]
     private HomePages _page = (HomePages)(-1);
@@ -73,6 +77,10 @@ public partial class HomeViewModel : ViewModelBase
         => Page == HomePages.Search;
     public bool NotificationsSelected
         => Page == HomePages.Notifications;
+    public bool FeedsSelected
+        => Page == HomePages.Feeds;
+    public bool ListsSelected
+        => Page == HomePages.Lists;
     public bool ChatSelected
         => Page == HomePages.Chat;
     public bool ProfileSelected

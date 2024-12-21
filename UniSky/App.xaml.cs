@@ -8,6 +8,7 @@ using UniSky.Services;
 using UniSky.Services.Overlay;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.Resources.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -20,7 +21,8 @@ namespace UniSky;
 /// </summary>
 sealed partial class App : Application
 {
-    private ILogger<App> _logger;
+    private readonly ILogger<App> _logger;
+    private readonly ITypedSettings _settings;
 
     /// <summary>
     /// Initializes the singleton application object.  This is the first line of authored code
@@ -36,8 +38,16 @@ sealed partial class App : Application
 
         _logger = ServiceContainer.Default.GetRequiredService<ILoggerFactory>()
             .CreateLogger<App>();
+        _settings = ServiceContainer.Default.GetRequiredService<ITypedSettings>();
 
-        // ResourceContext.SetGlobalQualifierValue("Custom", "Twitter", ResourceQualifierPersistence.LocalMachine);
+        if (_settings.UseTwitterLocale)
+        {
+            ResourceContext.SetGlobalQualifierValue("Custom", "Twitter", ResourceQualifierPersistence.LocalMachine);
+        }
+        else
+        {
+            ResourceContext.SetGlobalQualifierValue("Custom", "", ResourceQualifierPersistence.LocalMachine);
+        }
     }
 
     private void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -56,7 +66,7 @@ sealed partial class App : Application
 
         collection.AddSingleton<IProtocolService, ProtocolService>();
         collection.AddSingleton<ISettingsService, SettingsService>();
-        collection.AddSingleton<ITypedSettings, SettingsService>();
+        collection.AddSingleton<ITypedSettings, TypedSettingsService>();
         collection.AddSingleton<IThemeService, ThemeService>();
         collection.AddSingleton<INavigationServiceLocator, NavigationServiceLocator>();
         collection.AddScoped<ISafeAreaService, ApplicationViewSafeAreaService>();

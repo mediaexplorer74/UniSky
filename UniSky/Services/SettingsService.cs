@@ -6,8 +6,6 @@ using Windows.Storage;
 using Windows.System.Profile;
 using Windows.UI.Xaml;
 
-using static UniSky.Constants.Settings;
-
 namespace UniSky.Services;
 
 #nullable enable
@@ -31,31 +29,11 @@ namespace UniSky.Services;
 [JsonSourceGenerationOptions(WriteIndented = false, PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
 public partial class SettingsJsonContext : JsonSerializerContext { }
 
-internal class SettingsService : ISettingsService, ITypedSettings
+internal class SettingsService : ISettingsService
 {
     private static readonly JsonSerializerOptions Options
         = new JsonSerializerOptions { TypeInfoResolver = SettingsJsonContext.Default };
     private readonly ApplicationDataContainer Settings = ApplicationData.Current.LocalSettings;
-
-    // typed settings
-    public ElementTheme RequestedColourScheme
-    {
-        get => (ElementTheme)Read<int>(REQUESTED_COLOUR_SCHEME, REQUESTED_COLOUR_SCHEME_DEFAULT);
-        set => Save(REQUESTED_COLOUR_SCHEME, (int)value);
-    }
-
-    public bool UseMultipleWindows
-    {
-        get => Read(USE_MULTIPLE_WINDOWS, AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop");
-        set => Save(USE_MULTIPLE_WINDOWS, value);
-    }
-
-    public bool AutoRefreshFeeds
-    {
-        get => Read(AUTO_FEED_REFRESH, AUTO_FEED_REFRESH_DEFAULT);
-        set => Save(AUTO_FEED_REFRESH, value);
-    }
-
 
     /// <summary>
     /// Determines whether a setting already exists.

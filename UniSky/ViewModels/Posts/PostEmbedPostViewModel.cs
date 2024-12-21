@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using FishyFlip.Lexicon.App.Bsky.Embed;
 using FishyFlip.Lexicon.App.Bsky.Feed;
 using Humanizer;
+using Microsoft.Extensions.DependencyInjection;
+using UniSky.Pages;
+using UniSky.Services;
 using UniSky.ViewModels.Profile;
 using UniSky.ViewModels.Text;
 
@@ -39,5 +43,13 @@ public partial class PostEmbedPostViewModel : PostEmbedViewModel
         var timeSinceIndex = DateTime.Now - (view.IndexedAt.Value.ToLocalTime());
         var date = timeSinceIndex.Humanize(1, minUnit: Humanizer.Localisation.TimeUnit.Second);
         Date = date;
+    }
+
+    [RelayCommand]
+    private void OpenThread()
+    {
+        var navigationService = ServiceContainer.Scoped.GetRequiredService<INavigationServiceLocator>()
+            .GetNavigationService("Home");
+        navigationService.Navigate<ThreadPage>(this.view.Uri);
     }
 }

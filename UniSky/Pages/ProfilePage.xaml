@@ -15,6 +15,7 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     Loaded="Page_Loaded"
+    NavigationCacheMode="Enabled"
     d:MaxWidth="600">
     <d:Page.DataContext>
         <profile:ProfilePageViewModel/>
@@ -25,7 +26,6 @@
                   ItemsSource="{Binding SelectedFeed.Items}" 
                   ItemTemplate="{StaticResource FeedItemContentTemplate}"
                   SelectionMode="None"
-                  IsItemClickEnabled="True"
                   HorizontalAlignment="Stretch"
                   HorizontalContentAlignment="Stretch"
                   ScrollViewer.IsVerticalScrollChainingEnabled="True"
@@ -97,14 +97,7 @@
                              VerticalAlignment="Bottom"
                              ContinuumNavigationTransitionInfo.IsEntranceElement="True">
                         <Ellipse.Fill>
-                            <ImageBrush>
-                                <ImageBrush.ImageSource>
-                                    <BitmapImage UriSource="{Binding AvatarUrl}"
-                                                    DecodePixelWidth="128"
-                                                    DecodePixelHeight="128"
-                                                    DecodePixelType="Logical"/>
-                                </ImageBrush.ImageSource>
-                            </ImageBrush>
+                            <ImageBrush ImageSource="{Binding AvatarUrl}"/>
                         </Ellipse.Fill>
                     </Ellipse>
 

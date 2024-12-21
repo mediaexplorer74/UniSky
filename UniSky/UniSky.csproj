@@ -187,7 +187,12 @@
     <Compile Include="Converters\Static.cs" />
     <Compile Include="DataTemplates\FeedItemTemplateSelector.cs" />
     <Compile Include="DataTemplates\PostEmbedTemplateSelector.cs" />
+    <Compile Include="DataTemplates\ThreadItemTemplateSelector.cs" />
+    <Compile Include="DataTemplates\ThreadTemplates.xaml.cs">
+      <DependentUpon>ThreadTemplates.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Extensions\Hairline.cs" />
+    <Compile Include="Extensions\ScrollToSelectedBehaviour.cs" />
     <Compile Include="Extensions\SynchronizationContextExtensions.cs" />
     <Compile Include="Helpers\Composition\BirdAnimation.cs" />
     <Compile Include="Helpers\Geometry\CanvasPathBuilderExtensions.cs" />
@@ -243,6 +248,9 @@
     <Compile Include="Pages\SearchPage.xaml.cs">
       <DependentUpon>SearchPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\ThreadPage.xaml.cs">
+      <DependentUpon>ThreadPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Services\INavigationService.cs" />
     <Compile Include="Services\INavigationServiceLocator.cs" />
     <Compile Include="Services\IProtocolService.cs" />
@@ -269,6 +277,7 @@
     <Compile Include="Services\Sheet\SheetRootController.cs" />
     <Compile Include="Services\Sheet\SheetService.cs" />
     <Compile Include="Services\ThemeService.cs" />
+    <Compile Include="Services\TypedSettingsService.cs" />
     <Compile Include="Themes\ThemeResources.cs" />
     <Compile Include="ViewModels\Compose\ComposeViewAttachmentViewModel.cs" />
     <Compile Include="ViewModels\Compose\ComposeViewModel.cs" />
@@ -294,6 +303,8 @@
     <Compile Include="ViewModels\Search\SearchProfileCollection.cs" />
     <Compile Include="ViewModels\Settings\SettingsViewModel.cs" />
     <Compile Include="ViewModels\Text\RichTextViewModel.cs" />
+    <Compile Include="ViewModels\Thread\ThreadPostViewModel.cs" />
+    <Compile Include="ViewModels\Thread\ThreadViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Pages\FeedsPage.xaml.cs">
       <DependentUpon>FeedsPage.xaml</DependentUpon>
@@ -476,6 +487,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="DataTemplates\ThreadTemplates.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\FeedsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -499,6 +514,10 @@
     <Page Include="Pages\SearchPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\ThreadPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="RootPage.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -555,10 +574,10 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm">
-      <Version>8.3.2</Version>
+      <Version>8.4.0</Version>
     </PackageReference>
     <PackageReference Include="FishyFlip">
-      <Version>3.1.0-alpha.9</Version>
+      <Version>3.1.0-alpha.23</Version>
     </PackageReference>
     <PackageReference Include="Humanizer.Core">
       <Version>2.14.1</Version>

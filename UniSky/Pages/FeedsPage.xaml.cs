@@ -3,6 +3,7 @@ using Microsoft.Toolkit.Uwp.UI.Extensions;
 using UniSky.Services;
 using UniSky.ViewModels;
 using UniSky.ViewModels.Feeds;
+using UniSky.ViewModels.Posts;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;

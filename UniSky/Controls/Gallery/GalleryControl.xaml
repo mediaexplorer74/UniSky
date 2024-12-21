@@ -15,8 +15,8 @@
     d:DataContext="{d:DesignInstance Type=gallery:GalleryViewModel}">
 
     <FlipView x:Name="FlippyView"
-                  ItemsSource="{Binding Images}"
-                  SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}">
+              ItemsSource="{Binding Images}"
+              SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}">
         <FlipView.ItemTemplate>
             <DataTemplate>
                 <ScrollViewer x:Name="OutputScrollViewer" 

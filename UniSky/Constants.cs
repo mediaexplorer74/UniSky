@@ -44,5 +44,8 @@ public static class Constants
 
         public const string AUTO_FEED_REFRESH = "AutoRefreshFeeds_v1";
         public const bool AUTO_FEED_REFRESH_DEFAULT = true;
+
+        public const string USE_TWITTER_LOCALE = "UseTwitterLocale_v1";
+        public const bool USE_TWITTER_LOCALE_DEFAULT = false;
     }
 }

@@ -56,6 +56,12 @@
                           Margin="0,0,0,4" 
                           IsOn="{Binding AutoRefreshFeeds, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
+            <ToggleSwitch x:Uid="UseTwitterLocaleSwitch"
+                          Header="Use Twitter locale (experimental)" 
+                          HorizontalAlignment="Stretch" 
+                          Margin="0,0,0,4" 
+                          IsOn="{Binding UseTwitterLocale, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
             <TextBlock x:Uid="SettingsAboutHeaderBlock"
                        Style="{ThemeResource SubtitleTextBlockStyle}" Text="About"/>
             <TextBlock TextWrapping="Wrap">

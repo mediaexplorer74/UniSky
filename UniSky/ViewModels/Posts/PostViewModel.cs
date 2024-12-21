@@ -18,6 +18,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Extensions;
 using UniSky.Controls.Compose;
 using UniSky.Helpers;
+using UniSky.Pages;
 using UniSky.Services;
 using UniSky.ViewModels.Profile;
 using UniSky.ViewModels.Text;
@@ -68,6 +69,7 @@ public partial class PostViewModel : ViewModelBase
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ShowReplyContainer))]
+    [NotifyPropertyChangedFor(nameof(Borders))]
     private bool hasParent;
 
     [ObservableProperty]
@@ -77,6 +79,8 @@ public partial class PostViewModel : ViewModelBase
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(Text))]
     private RichTextViewModel richText;
+
+    public ATUri Uri { get; }
 
     public Post Post => post;
     public PostView View => view;
@@ -124,6 +128,7 @@ public partial class PostViewModel : ViewModelBase
 
         this.view = view;
         this.post = post;
+        this.Uri = view.Uri;
 
         HasChild = hasChild;
 
@@ -247,6 +252,14 @@ public partial class PostViewModel : ViewModelBase
         manager.DataRequested += OnDataRequested;
 
         DataTransferManager.ShowShareUI();
+    }
+
+    [RelayCommand]
+    private void OpenThread()
+    {
+        var navigationService = ServiceContainer.Scoped.GetRequiredService<INavigationServiceLocator>()
+            .GetNavigationService("Home");
+        navigationService.Navigate<ThreadPage>(this.Uri);
     }
 
     private string ToNumberString(int n)
