@@ -97,6 +97,20 @@
                         <TextBlock Grid.Column="1" Text="Notifications" VerticalAlignment="Center"/>
                     </Grid>
                 </mux:NavigationViewItem>
+                <mux:NavigationViewItem Content="Feeds" 
+                                        Tag="{x:Bind viewmodels:HomePages.Feeds}"
+                                        IsSelected="{x:Bind ViewModel.FeedsSelected, Mode=OneWay}">
+                    <mux:NavigationViewItem.Icon>
+                        <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE728;"/>
+                    </mux:NavigationViewItem.Icon>
+                </mux:NavigationViewItem>
+                <mux:NavigationViewItem Content="Lists" 
+                                        Tag="{x:Bind viewmodels:HomePages.Lists}"
+                                        IsSelected="{x:Bind ViewModel.ListsSelected, Mode=OneWay}">
+                    <mux:NavigationViewItem.Icon>
+                        <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE71D;"/>
+                    </mux:NavigationViewItem.Icon>
+                </mux:NavigationViewItem>
                 <mux:NavigationViewItem Content="Chat" 
                                         Tag="{x:Bind viewmodels:HomePages.Chat}"
                                         IsSelected="{x:Bind ViewModel.ChatSelected, Mode=OneWay}">
