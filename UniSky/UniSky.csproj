@@ -187,7 +187,12 @@
     <Compile Include="Converters\Static.cs" />
     <Compile Include="DataTemplates\FeedItemTemplateSelector.cs" />
     <Compile Include="DataTemplates\PostEmbedTemplateSelector.cs" />
+    <Compile Include="DataTemplates\ThreadItemTemplateSelector.cs" />
+    <Compile Include="DataTemplates\ThreadTemplates.xaml.cs">
+      <DependentUpon>ThreadTemplates.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Extensions\Hairline.cs" />
+    <Compile Include="Extensions\ScrollToSelectedBehaviour.cs" />
     <Compile Include="Extensions\SynchronizationContextExtensions.cs" />
     <Compile Include="Helpers\Composition\BirdAnimation.cs" />
     <Compile Include="Helpers\Geometry\CanvasPathBuilderExtensions.cs" />
@@ -478,6 +483,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Sheet\SheetRootControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DataTemplates\ThreadTemplates.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -206,7 +206,6 @@
                                         Inlines="{Binding RichText.Facets}"
                                         TextWrapping="Wrap"
                                         Margin="0,2,0,0"
-                                        IsTextSelectionEnabled="True"
                                         VerticalAlignment="Top"/>
 
                 <Grid x:Name="EmbedContentContainer"
@@ -523,7 +522,6 @@
                                             Inlines="{x:Bind RichText.Facets}"
                                             TextWrapping="Wrap"
                                             Margin="0,0,0,4"
-                                            IsTextSelectionEnabled="True"
                                             VerticalAlignment="Top"/>
 
                     <Grid x:Name="EmbedContentContainer"

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
 using FishyFlip.Lexicon.App.Bsky.Feed;
 using FishyFlip.Models;
 using FishyFlip.Tools;
@@ -12,9 +13,12 @@ using UniSky.Services;
 
 namespace UniSky.ViewModels.Thread;
 
-public class ThreadViewModel : ViewModelBase
+public partial class ThreadViewModel : ViewModelBase
 {
-    private ATUri uri;
+    private readonly ATUri uri;
+
+    [ObservableProperty]
+    private ThreadPostViewModel selected;
 
     public ObservableCollection<ThreadPostViewModel> Posts { get; }
 
@@ -73,6 +77,8 @@ public class ThreadViewModel : ViewModelBase
 
                 foreach (var item in replies)
                     Posts.Add(new ThreadPostViewModel(item));
+
+                Selected = primaryVm;
             });
         }
         catch (Exception ex)

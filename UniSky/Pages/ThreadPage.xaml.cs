@@ -68,26 +68,21 @@ public sealed partial class ThreadPage : Page
     private void OnSafeAreaUpdated(object sender, SafeAreaUpdatedEventArgs e)
     {
         HeaderGrid.Padding = e.SafeArea.Bounds with { Bottom = 0, Left = 0, Right = 0 };
+        HandleScrolling();
     }
 
-    private Visual _headerGrid;
-    private CompositionPropertySet _scrollerPropertySet;
     private void Page_Loaded(object sender, RoutedEventArgs e)
     {
-        // Retrieve the ScrollViewer that the GridView is using internally
-        var scrollViewer = RootList.FindDescendant<ScrollViewer>();
-
-        // Update the ZIndex of the header container so that the header is above the items when scrolling
-        var headerPresenter = (UIElement)VisualTreeHelper.GetParent((UIElement)RootList.Header);
-        var headerContainer = (UIElement)VisualTreeHelper.GetParent(headerPresenter);
-        Canvas.SetZIndex(headerContainer, 1);
-
-        // Get the PropertySet that contains the scroll values from the ScrollViewer
-        _scrollerPropertySet = ElementCompositionPreview.GetScrollViewerManipulationPropertySet(scrollViewer);
-        _headerGrid = ElementCompositionPreview.GetElementVisual(HeaderContainer);
-
-        var scrollingProperties = _scrollerPropertySet.GetSpecializedReference<ManipulationPropertySetReferenceNode>();
-        var headerTranslationAnimation = -scrollingProperties.Translation.Y;
-        _headerGrid.StartAnimation("Offset.Y", headerTranslationAnimation);
+        HandleScrolling();
     }
+
+    private void HandleScrolling()
+    {
+        var stackPanel = RootList.FindDescendant<ItemsStackPanel>();
+        if (stackPanel == null)
+            return;
+
+        stackPanel.Margin = new Thickness(0, HeaderContainer.ActualHeight, 0, ActualHeight - HeaderContainer.ActualHeight);
+    }
+
 }
