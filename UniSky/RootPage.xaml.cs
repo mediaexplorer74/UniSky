@@ -30,7 +30,6 @@ public sealed partial class RootPage : Page
         var service = serviceLocator.GetNavigationService("Root");
         service.Frame = RootFrame;
 
-        var sessionService = ServiceContainer.Scoped.GetRequiredService<SessionService>();
         if (ApplicationData.Current.LocalSettings.Values.TryGetValue("LastUsedUser", out var userObj) &&
             userObj is string user)
         {

@@ -17,8 +17,8 @@ namespace UniSky.ViewModels;
 
 public partial class LoginViewModel : ViewModelBase
 {
-    private readonly LoginService loginService;
-    private readonly SessionService sessionService;
+    private readonly ILoginService loginService;
+    private readonly ISessionService sessionService;
     private readonly INavigationService navigationService;
 
     [ObservableProperty]
@@ -30,7 +30,7 @@ public partial class LoginViewModel : ViewModelBase
     [ObservableProperty]
     private string _host;
 
-    public LoginViewModel(LoginService loginService, SessionService sessionService, INavigationServiceLocator navigationServiceLocator)
+    public LoginViewModel(ILoginService loginService, ISessionService sessionService, INavigationServiceLocator navigationServiceLocator)
     {
         this.loginService = loginService;
         this.sessionService = sessionService;

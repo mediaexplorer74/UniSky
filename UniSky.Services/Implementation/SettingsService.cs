@@ -3,8 +3,6 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Windows.Foundation;
 using Windows.Storage;
-using Windows.System.Profile;
-using Windows.UI.Xaml;
 
 namespace UniSky.Services;
 
@@ -29,7 +27,7 @@ namespace UniSky.Services;
 [JsonSourceGenerationOptions(WriteIndented = false, PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
 public partial class SettingsJsonContext : JsonSerializerContext { }
 
-internal class SettingsService : ISettingsService
+public class SettingsService : ISettingsService
 {
     private static readonly JsonSerializerOptions Options
         = new JsonSerializerOptions { TypeInfoResolver = SettingsJsonContext.Default };

@@ -17,7 +17,7 @@ public class OverlayHidingEventArgs : RoutedEventArgs
 
     public bool Cancel { get; set; } = false;
 
-    internal Task WaitOnDeferral()
+    public Task WaitOnDeferral()
     {
         if (_deferral == null)
             return Task.CompletedTask;

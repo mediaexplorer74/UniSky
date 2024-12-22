@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -15,7 +16,6 @@ using UniSky.Extensions;
 using UniSky.Models;
 using UniSky.Pages;
 using UniSky.Services;
-using UniSky.ViewModels.Profile;
 using Windows.Foundation.Metadata;
 using Windows.Phone;
 using Windows.Storage;
@@ -40,14 +40,17 @@ public enum HomePages
 
 public partial class HomeViewModel : ViewModelBase
 {
-    private readonly SessionService sessionService;
+    private readonly ISessionService sessionService;
     private readonly INavigationService rootNavigationService;
     private readonly INavigationService homeNavigationService;
     private readonly ILogger<HomeViewModel> logger;
     private readonly ILogger<ATProtocol> atLogger;
     private readonly IProtocolService protocolService;
+    private readonly INotificationsService notificationsService;
     private readonly SessionModel sessionModel;
+
     private readonly DispatcherTimer notificationUpdateTimer;
+    private readonly DispatcherTimer refreshTokenTimer;
 
     private ProfileViewDetailed profile;
 
@@ -86,13 +89,12 @@ public partial class HomeViewModel : ViewModelBase
     public bool ProfileSelected
         => Page == HomePages.Profile;
 
-    public ProfileViewDetailed Profile => profile;
-
     public HomeViewModel(
         string profile,
-        SessionService sessionService,
+        ISessionService sessionService,
         INavigationServiceLocator navigationServiceLocator,
         IProtocolService protocolService,
+        INotificationsService notificationsService,
         ILogger<HomeViewModel> logger,
         ILogger<ATProtocol> protocolLogger)
     {
@@ -111,6 +113,7 @@ public partial class HomeViewModel : ViewModelBase
         this.logger = logger;
         this.protocolService = protocolService;
         this.sessionModel = sessionModel;
+        this.notificationsService = notificationsService;
         this.atLogger = protocolLogger;
 
         var protocol = new ATProtocolBuilder()
@@ -126,10 +129,16 @@ public partial class HomeViewModel : ViewModelBase
         this.notificationUpdateTimer = new DispatcherTimer() { Interval = TimeSpan.FromMinutes(1) };
         this.notificationUpdateTimer.Tick += OnNotificationTimerTick;
 
+        this.refreshTokenTimer = new DispatcherTimer() { Interval = TimeSpan.FromHours(1) };
+        this.refreshTokenTimer.Tick += OnRefreshTokenTimerTick;
+
         var navigationManager = SystemNavigationManager.GetForCurrentView();
         navigationManager.BackRequested += OnBackRequested;
 
-        Task.Run(LoadAsync);
+        var window = Window.Current;
+        window.VisibilityChanged += OnVisibilityChanged;
+
+        //Task.Run(LoadAsync);
     }
 
     [RelayCommand]
@@ -145,7 +154,7 @@ public partial class HomeViewModel : ViewModelBase
 
         try
         {
-            await RefreshSessionAsync(protocol)
+            await RefreshSessionAsync()
                 .ConfigureAwait(false);
         }
         catch (Exception ex)
@@ -156,6 +165,15 @@ public partial class HomeViewModel : ViewModelBase
         }
 
         this.Page = HomePages.Home;
+
+        try
+        {
+            await this.notificationsService.InitializeAsync();
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Failed to start notifications service!");
+        }
 
         try
         {
@@ -176,35 +194,9 @@ public partial class HomeViewModel : ViewModelBase
         }
     }
 
-    private async Task RefreshSessionAsync(ATProtocol protocol)
+    private Task RefreshSessionAsync()
     {
-        // to ensure the session gets refreshed properly:
-        // - initially authenticate the client with the refresh token
-        // - refresh the sesssion
-        // - reauthenticate with the new session
-
-        var sessionRefresh = sessionModel.Session.Session;
-        var authSessionRefresh = new AuthSession(
-            new Session(sessionRefresh.Did, sessionRefresh.DidDoc, sessionRefresh.Handle, null, sessionRefresh.RefreshJwt, sessionRefresh.RefreshJwt));
-
-        await protocol.AuthenticateWithPasswordSessionAsync(authSessionRefresh);
-        var refreshSession = (await protocol.RefreshSessionAsync()
-            .ConfigureAwait(false))
-            .HandleResult();
-
-        var authSession2 = new AuthSession(
-                new Session(refreshSession.Did, refreshSession.DidDoc, refreshSession.Handle, null, refreshSession.AccessJwt, refreshSession.RefreshJwt));
-        var session2 = await protocol.AuthenticateWithPasswordSessionAsync(authSession2)
-            .ConfigureAwait(false);
-
-        if (session2 == null)
-            throw new InvalidOperationException("Authentication failed!");
-
-        var sessionModel2 = new SessionModel(true, sessionModel.Service, authSession2.Session, authSession2);
-        var sessionService = ServiceContainer.Scoped.GetRequiredService<SessionService>();
-        sessionService.SaveSession(sessionModel2);
-
-        protocolService.SetProtocol(protocol);
+        return protocolService.RefreshSessionAsync(sessionModel);
     }
 
     private async Task UpdateProfileAsync()
@@ -250,12 +242,35 @@ public partial class HomeViewModel : ViewModelBase
         }
     }
 
+    private async void OnRefreshTokenTimerTick(object sender, object e)
+    {
+        try
+        {
+            await RefreshSessionAsync()
+                .ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Failed to authenticate!");
+            this.syncContext.Post(() => rootNavigationService.Navigate<LoginPage>());
+            return;
+        }
+    }
+
     private void OnBackRequested(object sender, BackRequestedEventArgs e)
     {
         if (homeNavigationService.CanGoBack)
         {
             e.Handled = true;
             homeNavigationService.GoBack();
+        }
+    }
+
+    private void OnVisibilityChanged(object sender, VisibilityChangedEventArgs e)
+    {
+        if (e.Visible)
+        {
+            Task.Run(LoadAsync);
         }
     }
 

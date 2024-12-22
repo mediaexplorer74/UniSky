@@ -8,6 +8,7 @@ using UniSky.Services;
 using UniSky.Services.Overlay;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -69,12 +70,14 @@ sealed partial class App : Application
         collection.AddSingleton<ITypedSettings, TypedSettingsService>();
         collection.AddSingleton<IThemeService, ThemeService>();
         collection.AddSingleton<INavigationServiceLocator, NavigationServiceLocator>();
+        collection.AddSingleton<INotificationsService, BackgroundNotificationsService>();
+
         collection.AddScoped<ISafeAreaService, ApplicationViewSafeAreaService>();
         collection.AddScoped<ISheetService, SheetService>();
         collection.AddScoped<IStandardOverlayService, StandardOverlayService>();
 
-        collection.AddTransient<LoginService>();
-        collection.AddTransient<SessionService>();
+        collection.AddTransient<ILoginService, LoginService>();
+        collection.AddTransient<ISessionService, SessionService>();
 
         ServiceContainer.Default.ConfigureServices(collection.BuildServiceProvider());
         
@@ -120,6 +123,8 @@ sealed partial class App : Application
 
         if (e.PrelaunchActivated == false)
         {
+            CoreApplication.EnablePrelaunch(true);
+
             if (rootFrame.Content == null)
             {
                 // When the navigation stack isn't restored navigate to the first page,
@@ -136,6 +141,7 @@ sealed partial class App : Application
     private void OnProtocolActivated(ProtocolActivatedEventArgs e)
     {
         Hairline.Initialize();
+
         if (Window.Current.Content is not Frame rootFrame)
         {
             rootFrame = new Frame();

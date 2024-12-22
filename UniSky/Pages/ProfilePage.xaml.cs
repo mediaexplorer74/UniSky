@@ -8,7 +8,6 @@ using Microsoft.Graphics.Canvas.Effects;
 using Microsoft.Toolkit.Uwp.UI.Animations.Expressions;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
 using UniSky.Services;
-using UniSky.ViewModels.Posts;
 using UniSky.ViewModels.Profile;
 using Windows.UI.Composition;
 using Windows.UI.Xaml;

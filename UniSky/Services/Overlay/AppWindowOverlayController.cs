@@ -13,13 +13,15 @@ namespace UniSky.Services.Overlay;
 internal class AppWindowOverlayController : IOverlayController
 {
     private readonly AppWindow appWindow;
-    private readonly OverlayControl control;
+    private readonly IOverlayControl control;
     private readonly ISettingsService settingsService;
 
     private readonly string settingsKey;
     private readonly long titlePropertyChangedRef;
+    private FrameworkElement Control
+        => (FrameworkElement)control;
 
-    public AppWindowOverlayController(AppWindow window, OverlayControl control, IOverlaySizeProvider overlaySizeProvider)
+    public AppWindowOverlayController(AppWindow window, IOverlayControl control, IOverlaySizeProvider overlaySizeProvider)
     {
         this.appWindow = window;
         this.control = control;
@@ -43,11 +45,11 @@ internal class AppWindowOverlayController : IOverlayController
 
         PlaceAppWindow(initialSize);
 
-        this.titlePropertyChangedRef = this.control.RegisterPropertyChangedCallback(OverlayControl.TitleContentProperty, OnTitleChanged);
-        OnTitleChanged(this.control, OverlayControl.TitleContentProperty);
+        this.titlePropertyChangedRef = this.Control.RegisterPropertyChangedCallback(OverlayControl.TitleContentProperty, OnTitleChanged);
+        OnTitleChanged(Control, OverlayControl.TitleContentProperty);
     }
 
-    public UIElement Root => control;
+    public UIElement Root => (UIElement)control;
     public bool IsStandalone => true;
     public ISafeAreaService SafeAreaService { get; }
 
@@ -73,7 +75,7 @@ internal class AppWindowOverlayController : IOverlayController
 
     private void OnClosed(AppWindow sender, AppWindowClosedEventArgs args)
     {
-        control.UnregisterPropertyChangedCallback(OverlayControl.TitleContentProperty, titlePropertyChangedRef);
+        Control.UnregisterPropertyChangedCallback(OverlayControl.TitleContentProperty, titlePropertyChangedRef);
         control.InvokeHidden();
     }
 
@@ -82,7 +84,7 @@ internal class AppWindowOverlayController : IOverlayController
         if (args.DidSizeChange)
         {
             var settingsKey = "AppWindow_LastSize_" + control.GetType().FullName.Replace(".", "_");
-            settingsService.Save(settingsKey, new Size(control.ActualSize.X, control.ActualSize.Y));
+            settingsService.Save(settingsKey, new Size(Control.ActualSize.X, Control.ActualSize.Y));
         }
     }
 

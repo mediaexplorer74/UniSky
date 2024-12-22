@@ -14,7 +14,7 @@ namespace UniSky.Services.Overlay;
 
 internal abstract class OverlayService
 {
-    protected async Task<IOverlayController> ShowOverlayForWindow<T>(Func<OverlayControl> factory, object parameter) where T : OverlayControl
+    protected async Task<IOverlayController> ShowOverlayForWindow<T>(Func<T> factory, object parameter) where T : FrameworkElement, IOverlayControl
     {
         if (ApiInformation.IsApiContractPresent(typeof(UniversalApiContract).FullName, 8, 0))
         {
@@ -26,7 +26,7 @@ internal abstract class OverlayService
         }
     }
 
-    protected async Task<IOverlayController> ShowOverlayForAppWindow<T>(Func<OverlayControl> factory, object parameter) where T : OverlayControl
+    protected async Task<IOverlayController> ShowOverlayForAppWindow<T>(Func<T> factory, object parameter) where T : FrameworkElement, IOverlayControl
     {
         var control = factory();
         var appWindow = await AppWindow.TryCreateAsync();
@@ -44,7 +44,7 @@ internal abstract class OverlayService
         return controller;
     }
 
-    protected async Task<IOverlayController> ShowOverlayForCoreWindow<T>(Func<OverlayControl> factory, object parameter) where T : OverlayControl
+    protected async Task<IOverlayController> ShowOverlayForCoreWindow<T>(Func<T> factory, object parameter) where T : FrameworkElement, IOverlayControl
     {
         IOverlayController controller = null;
 

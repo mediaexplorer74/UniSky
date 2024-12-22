@@ -3,8 +3,6 @@ using UniSky.Services;
 using Windows.ApplicationModel.Resources.Core;
 using Windows.UI.Xaml;
 
-using static UniSky.Constants.Settings;
-
 namespace UniSky.ViewModels.Settings;
 
 public class SettingsViewModel(ITypedSettings settingsService, IThemeService themeService) : ViewModelBase

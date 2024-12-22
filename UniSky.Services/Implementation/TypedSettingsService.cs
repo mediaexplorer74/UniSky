@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.System.Profile;
+﻿using Windows.System.Profile;
 using Windows.UI.Xaml;
 
 using static UniSky.Constants.Settings;
 
 namespace UniSky.Services;
 
-internal class TypedSettingsService(ISettingsService settings) : ITypedSettings
+public class TypedSettingsService(ISettingsService settings) : ITypedSettings
 {
     // typed settings
     public ElementTheme RequestedColourScheme

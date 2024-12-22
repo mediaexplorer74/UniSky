@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json;
+using System.Threading.Tasks;
 using UniSky.Helpers;
 using UniSky.Models;
 using Windows.Storage;
 
 namespace UniSky.Services;
 
-public class SessionService
+public class SessionService : ISessionService
 {
     private const string COMPOSITE_KEY = "UniSky_Sessions_v2";
 
@@ -59,5 +60,4 @@ public class SessionService
             value = [];
         return value;
     }
-
 }

@@ -7,7 +7,7 @@ namespace UniSky.Services;
 //
 // TODO: figure out if we actually need this or not
 //
-public class LoginService
+public class LoginService : ILoginService
 {
     private readonly PasswordVault vault = new PasswordVault();
 

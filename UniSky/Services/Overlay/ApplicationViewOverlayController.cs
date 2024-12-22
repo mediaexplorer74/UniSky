@@ -12,7 +12,7 @@ namespace UniSky.Services.Overlay;
 
 internal class ApplicationViewOverlayController : IOverlayController
 {
-    private readonly OverlayControl control;
+    private readonly IOverlayControl control;
     private readonly int hostViewId;
     private readonly int viewId;
     private readonly ISettingsService settingsService;
@@ -22,7 +22,10 @@ internal class ApplicationViewOverlayController : IOverlayController
     private bool hasActivated = false;
     private long titlePropertyChangedRef;
 
-    public ApplicationViewOverlayController(OverlayControl control,
+    private FrameworkElement Control 
+        => (FrameworkElement)control;
+
+    public ApplicationViewOverlayController(IOverlayControl control,
                                             int hostViewId,
                                             int viewId,
                                             IOverlaySizeProvider overlaySizeProvider)
@@ -52,8 +55,8 @@ internal class ApplicationViewOverlayController : IOverlayController
         coreWindow.Activated += OnActivated;
         coreWindow.Closed += OnWindowClosed;
 
-        titlePropertyChangedRef = control.RegisterPropertyChangedCallback(OverlayControl.TitleContentProperty, OnTitleChanged);
-        OnTitleChanged(control, OverlayControl.TitleContentProperty);
+        titlePropertyChangedRef = Control.RegisterPropertyChangedCallback(OverlayControl.TitleContentProperty, OnTitleChanged);
+        OnTitleChanged(Control, OverlayControl.TitleContentProperty);
     }
 
     private void OnTitleChanged(DependencyObject sender, DependencyProperty dp)
@@ -84,7 +87,7 @@ internal class ApplicationViewOverlayController : IOverlayController
         }
     }
 
-    public UIElement Root => control;
+    public UIElement Root => (UIElement)control;
     public bool IsStandalone => true;
     public ISafeAreaService SafeAreaService { get; }
 
@@ -93,7 +96,7 @@ internal class ApplicationViewOverlayController : IOverlayController
         if (await control.InvokeHidingAsync())
         {
             await ApplicationViewSwitcher.SwitchAsync(hostViewId, viewId, ApplicationViewSwitchingOptions.ConsolidateViews);
-            this.control.UnregisterPropertyChangedCallback(OverlayControl.TitleContentProperty, this.titlePropertyChangedRef);
+            this.Control.UnregisterPropertyChangedCallback(OverlayControl.TitleContentProperty, this.titlePropertyChangedRef);
             return true;
         }
 
