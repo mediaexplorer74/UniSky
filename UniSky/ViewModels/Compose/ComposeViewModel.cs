@@ -123,10 +123,12 @@ public partial class ComposeViewModel : ViewModelBase
         try
         {
             var text = Text;
-            var replyRef = await GetReplyDefAsync().ConfigureAwait(false);
+            // todo: text processing step, for now, normalise newlines
+            text = text.Replace("\r\n", "\n")
+                       .Replace('\r', '\n');
 
-            ATObject embed = await GetImageEmbed()
-                .ConfigureAwait(false);
+            var replyRef = await GetReplyDefAsync().ConfigureAwait(false);
+            var embed = await CreateEmbedAsync().ConfigureAwait(false);
 
             var postModel = new Post(text, reply: replyRef, embed: embed);
             var post = (await protocolService.Protocol.CreatePostAsync(postModel)
@@ -146,7 +148,7 @@ public partial class ComposeViewModel : ViewModelBase
         }
     }
 
-    private async Task<ATObject> GetImageEmbed()
+    private async Task<ATObject> CreateEmbedAsync()
     {
         EmbedImages embed = null;
         foreach (var image in this.AttachedFiles.Where(f => f.AttachmentType == ComposeViewAttachmentType.Image))
