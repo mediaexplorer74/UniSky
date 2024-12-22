@@ -13,6 +13,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
+    <ResourceDictionary.MergedDictionaries>
+        <FeedTemplates xmlns="using:UniSky.Templates"/>
+    </ResourceDictionary.MergedDictionaries>
+
     <local:ThreadItemTemplateSelector x:Key="ThreadItemTemplateSelector"
                                       ThreadPostTemplate="{StaticResource ThreadItemContentTemplate}"
                                       ThreadHighlightedPostTemplate="{StaticResource ThreadItemHighlightedContentTemplate}"/>

@@ -17,6 +17,9 @@
     Loaded="Page_Loaded"
     NavigationCacheMode="Enabled"
     d:MaxWidth="600">
+    <Page.Resources>
+        <FeedTemplates xmlns="using:UniSky.Templates"/>
+    </Page.Resources>
     <d:Page.DataContext>
         <profile:ProfilePageViewModel/>
     </d:Page.DataContext>

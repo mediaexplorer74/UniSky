@@ -26,6 +26,7 @@ public sealed class BadgeBackgroundTask : IBackgroundTask
 
         collection.AddTransient<ILoginService, LoginService>();
         collection.AddTransient<ISessionService, SessionService>();
+        collection.AddTransient<IBadgeService, BadgeService>();
 
         ServiceContainer.Default.ConfigureServices(collection.BuildServiceProvider());
     }
@@ -34,7 +35,7 @@ public sealed class BadgeBackgroundTask : IBackgroundTask
     {
         var deferral = taskInstance.GetDeferral();
         var logger = ServiceContainer.Default.GetRequiredService<ILogger<BadgeBackgroundTask>>();
-        var badgeManager = BadgeUpdateManager.CreateBadgeUpdaterForApplication();
+        var badgeService = ServiceContainer.Default.GetRequiredService<IBadgeService>();
         var badgeCount = 0;
 
         try
@@ -77,18 +78,7 @@ public sealed class BadgeBackgroundTask : IBackgroundTask
                 }
             }
 
-            if (badgeCount == 0)
-            {
-                badgeManager.Clear();
-            }
-            else
-            {
-                var badgeXml = BadgeUpdateManager.GetTemplateContent(BadgeTemplateType.BadgeNumber);
-                var badgeElement = badgeXml.SelectSingleNode("/badge") as XmlElement;
-                badgeElement.SetAttribute("value", badgeCount.ToString(CultureInfo.InvariantCulture));
-
-                badgeManager.Update(new BadgeNotification(badgeXml));
-            }
+            badgeService.UpdateBadge(badgeCount);
         }
         catch (Exception ex)
         {

@@ -16,6 +16,9 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     NavigationCacheMode="Enabled"
     w1803:KeyboardAcceleratorPlacementMode="Hidden">
+    <Page.Resources>
+        <FeedTemplates xmlns="using:UniSky.Templates"/>
+    </Page.Resources>
     <w1709:Page.KeyboardAccelerators>
         <w1709:KeyboardAccelerator x:Name="RefreshAccelerator"
                                    Key="F5"

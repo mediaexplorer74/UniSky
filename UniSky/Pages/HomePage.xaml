@@ -344,11 +344,12 @@
                                      Command="{x:Bind ViewModel.GoBackCommand}"/>
 
                             <Viewbox VerticalAlignment="Center"
-                                      HorizontalAlignment="Center"
-                                      Margin="8,2,0,0"
-                                      Width="16"
-                                      Height="16"
-                                      Grid.Column="1">
+                                     HorizontalAlignment="Center"
+                                     Margin="8,2,0,0"
+                                     Width="16"
+                                     Height="16"
+                                     Grid.Column="1"
+                                     CacheMode="BitmapCache">
                                 <Path x:Name="AppIconPath"
                                        Data="{StaticResource BlueSkyLogoPath}"
                                        Fill="{ThemeResource ApplicationForegroundThemeBrush}"/>

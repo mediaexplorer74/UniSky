@@ -66,7 +66,8 @@
             <StackPanel>
                 <Viewbox x:Name="BSkyLogo"
                          MaxWidth="125" 
-                         Margin="0,0,0,16">
+                         Margin="0,0,0,16"
+                         CacheMode="BitmapCache">
                     <Path Data="{StaticResource BlueSkyLogoPath}"
                           Fill="{ThemeResource ApplicationForegroundThemeBrush}"/>
                 </Viewbox>

@@ -11,11 +11,7 @@
     Loaded="Page_Loaded">
 
     <Page.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ThreadTemplates xmlns="using:UniSky.DataTemplates"/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
+        <ThreadTemplates xmlns="using:UniSky.DataTemplates"/>
     </Page.Resources>
 
     <Grid>

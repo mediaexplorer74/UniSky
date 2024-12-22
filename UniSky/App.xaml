@@ -23,9 +23,6 @@
                         <ResourceDictionary Source="/Templates/RichTextBlockStyles.xaml"/>
                         <ResourceDictionary Source="/Templates/MediaTransportControlsStyles.xaml"/>
 
-                        <!-- Templates -->
-                        <FeedTemplates xmlns="using:UniSky.Templates"/>
-
                         <!-- Controls -->
                         <ResourceDictionary Source="/Controls/Overlay/StandardOverlayControl.xaml"/>
                         <ResourceDictionary Source="/Controls/Sheet/SheetControl.xaml"/>

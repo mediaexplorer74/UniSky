@@ -121,7 +121,9 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Implementation\BadgeService.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="IBadgeService.cs" />
     <Compile Include="INotificationsService.cs" />
     <Compile Include="ILoginService.cs" />
     <Compile Include="INavigationService.cs" />

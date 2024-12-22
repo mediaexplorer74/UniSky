@@ -47,6 +47,7 @@ public partial class HomeViewModel : ViewModelBase
     private readonly ILogger<ATProtocol> atLogger;
     private readonly IProtocolService protocolService;
     private readonly INotificationsService notificationsService;
+    private readonly IBadgeService badgeService;
     private readonly SessionModel sessionModel;
 
     private readonly DispatcherTimer notificationUpdateTimer;
@@ -95,6 +96,7 @@ public partial class HomeViewModel : ViewModelBase
         INavigationServiceLocator navigationServiceLocator,
         IProtocolService protocolService,
         INotificationsService notificationsService,
+        IBadgeService badgeService,
         ILogger<HomeViewModel> logger,
         ILogger<ATProtocol> protocolLogger)
     {
@@ -114,6 +116,7 @@ public partial class HomeViewModel : ViewModelBase
         this.protocolService = protocolService;
         this.sessionModel = sessionModel;
         this.notificationsService = notificationsService;
+        this.badgeService = badgeService;
         this.atLogger = protocolLogger;
 
         var protocol = new ATProtocolBuilder()
@@ -220,6 +223,7 @@ public partial class HomeViewModel : ViewModelBase
             .HandleResult();
 
         NotificationCount = (int)notifications.Count;
+        this.badgeService.UpdateBadge(NotificationCount);
     }
 
     [RelayCommand]
@@ -318,6 +322,8 @@ public partial class HomeViewModel : ViewModelBase
             case HomePages.Notifications:
                 this.homeNavigationService.Navigate<NotificationsPage>();
                 break;
+            case HomePages.Feeds:
+            case HomePages.Lists:
             case HomePages.Chat:
                 this.homeNavigationService.Navigate<Page>();
                 break;
@@ -330,9 +336,11 @@ public partial class HomeViewModel : ViewModelBase
     internal void UpdateChecked()
     {
         this.OnPropertyChanged(nameof(HomeSelected),
-            nameof(SearchSelected),
-            nameof(NotificationsSelected),
-            nameof(ChatSelected),
-            nameof(ProfileSelected));
+                nameof(SearchSelected),
+                nameof(NotificationsSelected),
+                nameof(FeedsSelected),
+                nameof(ListsSelected),
+                nameof(ChatSelected),
+                nameof(ProfileSelected));
     }
 }
