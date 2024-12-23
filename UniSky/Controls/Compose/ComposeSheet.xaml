@@ -13,7 +13,6 @@
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls" 
     xmlns:compose="using:UniSky.ViewModels.Compose"
     mc:Ignorable="d" d:DesignHeight="350" d:DesignWidth="480"
-    Style="{StaticResource DefaultSheetControlStyle}"
     DataContext="{x:Bind ViewModel, Mode=OneWay}"
     PrimaryButtonCommand="{x:Bind ViewModel.PostCommand}"
     IsPrimaryButtonEnabled="{x:Bind ViewModel.CanPost, Mode=OneWay}"

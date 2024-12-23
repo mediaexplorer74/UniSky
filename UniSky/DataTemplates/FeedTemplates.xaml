@@ -60,6 +60,30 @@
         <Setter Property="Foreground" Value="{ThemeResource ApplicationSecondaryForegroundThemeBrush}"/>
     </Style>
 
+    <DataTemplate x:Key="PostContentWarningTemplate"
+                  x:DataType="posts:ContentWarningViewModel">
+        <Grid Padding="12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Viewbox Width="16"
+                     Height="16"
+                     Margin="0,2,0,0"
+                     VerticalAlignment="Top">
+                <TextBlock FontFamily="{ThemeResource SymbolThemeFontFamily}">&#xE7BA;</TextBlock>
+            </Viewbox>
+
+            <TextBlock Text="{Binding Warning}"
+                       TextWrapping="Wrap"
+                       Margin="8,0"
+                       Grid.Column="1"
+                       MaxLines="2"/>
+        </Grid>
+    </DataTemplate>
+
     <DataTemplate x:Key="RecordWithMediaEmbedContentTemplate" 
                x:DataType="posts:PostEmbedRecordWithMediaViewModel">
         <StackPanel>
@@ -209,15 +233,14 @@
                                         Margin="0,2,0,0"
                                         VerticalAlignment="Top"/>
 
-                <Grid x:Name="EmbedContentContainer"
-                      Visibility="{Binding Embed, Converter={StaticResource VisibilityConverter}}">
-                    <ContentControl x:Name="EmbedContent"
-                                    Margin="0,4,0,0"
-                                    HorizontalAlignment="Stretch"
-                                    HorizontalContentAlignment="Stretch"
-                                    ContentTemplateSelector="{StaticResource PostEmbedTemplateSelector}"
-                                    Content="{Binding Embed}"/>
-                </Grid>
+                <controls:SpoilerControl x:Name="EmbedContentContainer"
+                                         Margin="0,4,0,0"
+                                         Warning="{Binding Warning}"
+                                         WarningTemplate="{StaticResource PostContentWarningTemplate}"
+                                         IsHidden="{Binding Warning.IsHidden, Mode=TwoWay}"
+                                         Visibility="{Binding Embed, Converter={StaticResource VisibilityConverter}}"
+                                         Content="{Binding Embed}"
+                                         ContentTemplateSelector="{StaticResource PostEmbedTemplateSelector}"/>
             </StackPanel>
         </Button>
     </DataTemplate>
@@ -527,16 +550,16 @@
                                                 Margin="0,0,0,4"
                                                 VerticalAlignment="Top"/>
 
-                        <Grid x:Name="EmbedContentContainer"
-                              x:Load="{x:Bind converters:Static.NotNull(Embed)}"
-                              x:Phase="2">
-                            <ContentControl x:Name="EmbedContent"
-                                            Margin="0,4,0,4"
-                                            HorizontalAlignment="Stretch"
-                                            HorizontalContentAlignment="Stretch"
-                                            ContentTemplateSelector="{StaticResource PostEmbedTemplateSelector}"
-                                            Content="{x:Bind Embed}"/>
-                        </Grid>
+                        <controls:SpoilerControl x:Name="EmbedContentContainer"
+                                                 x:Load="{x:Bind converters:Static.NotNull(Embed)}"
+                                                 x:Phase="2"
+                                                 Warning="{x:Bind Warning}"
+                                                 WarningTemplate="{StaticResource PostContentWarningTemplate}"
+                                                 IsHidden="{x:Bind Warning.IsHidden, Mode=TwoWay}"
+                                                 Margin="0,4,0,0"
+                                                 Visibility="{Binding Embed, Converter={StaticResource VisibilityConverter}}"
+                                                 Content="{x:Bind Embed}"
+                                                 ContentTemplateSelector="{StaticResource PostEmbedTemplateSelector}"/>
 
                         <Grid x:Name="Interactions">
                             <Grid.ColumnDefinitions>

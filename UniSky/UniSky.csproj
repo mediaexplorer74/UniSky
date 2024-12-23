@@ -180,6 +180,7 @@
     <Compile Include="Controls\Sheet\SheetRootControl.xaml.cs">
       <DependentUpon>SheetRootControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Spoiler\SpoilerControl.cs" />
     <Compile Include="Converters\VisibilityConverter.cs" />
     <Compile Include="Converters\Static.cs" />
     <Compile Include="DataTemplates\FeedItemTemplateSelector.cs" />
@@ -552,6 +553,14 @@
     <Page Include="Templates\RichTextBlockStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Spoiler\SpoilerControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Generic.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Themes\Performance.xaml">
       <Generator>MSBuild:Compile</Generator>

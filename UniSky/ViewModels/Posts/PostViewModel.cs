@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
@@ -10,6 +11,7 @@ using FishyFlip.Lexicon;
 using FishyFlip.Lexicon.App.Bsky.Actor;
 using FishyFlip.Lexicon.App.Bsky.Embed;
 using FishyFlip.Lexicon.App.Bsky.Feed;
+using FishyFlip.Lexicon.Com.Atproto.Label;
 using FishyFlip.Lexicon.Com.Atproto.Repo;
 using FishyFlip.Models;
 using FishyFlip.Tools;
@@ -26,6 +28,22 @@ using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml;
 
 namespace UniSky.ViewModels.Posts;
+
+
+public partial class ContentWarningViewModel : ViewModelBase
+{
+    [ObservableProperty]
+    private string warning;
+
+    [ObservableProperty]
+    private bool isHidden;
+
+    public ContentWarningViewModel(List<Label> labels)
+    {
+        Warning = "Hidden!";
+        IsHidden = true;
+    }
+}
 
 public partial class PostViewModel : ViewModelBase
 {
@@ -78,6 +96,9 @@ public partial class PostViewModel : ViewModelBase
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(Text))]
     private RichTextViewModel richText;
+
+    [ObservableProperty]
+    private ContentWarningViewModel warning;
 
     public ATUri Uri { get; }
 
@@ -135,10 +156,15 @@ public partial class PostViewModel : ViewModelBase
         Author = new ProfileViewModel(view.Author);
         Embed = CreateEmbedViewModel(view.Embed, false);
 
+        if (this.view.Labels?.Count is not (null or 0))
+        {
+            Warning = new ContentWarningViewModel(this.view.Labels);
+        }
+
         var timeSinceIndex = DateTime.Now - (view.IndexedAt.Value.ToLocalTime());
         var date = timeSinceIndex.Humanize(1, minUnit: Humanizer.Localisation.TimeUnit.Second);
         Date = date;
-        
+
         LikeCount = (int)(view.LikeCount ?? 0);
         RetweetCount = (int)(view.RepostCount ?? 0);
         ReplyCount = (int)(view.ReplyCount ?? 0);
@@ -281,7 +307,7 @@ public partial class PostViewModel : ViewModelBase
             ViewImages images => new PostEmbedImagesViewModel(images),
             ViewVideo video => new PostEmbedVideoViewModel(video),
             ViewExternal external => new PostEmbedExternalViewModel(external),
-            ViewRecordWithMedia recordWithMedia => isNested ? 
+            ViewRecordWithMedia recordWithMedia => isNested ?
                 CreateEmbedViewModel(recordWithMedia.Media, isNested) :
                 new PostEmbedRecordWithMediaViewModel(recordWithMedia, isNested),
             ViewRecordDef and { Record: ViewRecord viewRecord } when !isNested => viewRecord.Value switch
