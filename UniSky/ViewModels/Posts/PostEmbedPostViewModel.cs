@@ -41,15 +41,15 @@ public partial class PostEmbedPostViewModel : PostEmbedViewModel
         RichText = new RichTextViewModel(post.Text, post.Facets ?? []);
         Author = new ProfileViewModel(view.Author);
 
-        Embed = PostViewModel.CreateEmbedViewModel(view.Embeds?.FirstOrDefault(), true);
-
+        // TODO: this better
         var moderator = new Moderator(ServiceContainer.Default.GetRequiredService<IModerationService>().ModerationOptions);
         var decision = moderator.ModeratePost(new ModerationSubjectPost(view, post));
-
-        var ui = decision.GetUI(ModerationContext.ContentMedia);
-        Warning = (ui.Alert || ui.Blur || ui.Filter) ?
-            new ContentWarningViewModel() :
-            null;
+        var media = decision.GetUI(ModerationContext.ContentMedia);
+        if (!media.Filter)
+        {
+            Warning = (media.Alert || media.Blur) ? new ContentWarningViewModel(media) : null;
+            Embed = PostViewModel.CreateEmbedViewModel(view.Embeds?.FirstOrDefault(), true);
+        }
 
         var timeSinceIndex = DateTime.Now - (view.IndexedAt.Value.ToLocalTime());
         var date = timeSinceIndex.Humanize(1, minUnit: Humanizer.Localisation.TimeUnit.Second);

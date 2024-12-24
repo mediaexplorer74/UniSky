@@ -6,4 +6,9 @@ public class ModerationCause
     public ModerationCauseSource Source { get; internal set; }
     public byte Priority { get; internal set; }
     public bool Downgraded { get; internal set; }
+
+    public override string ToString()
+    {
+        return $"{{ Type = {Type}, Source = {Source}, Priority = {Priority}, Downgraded = {Downgraded} }}";
+    }
 }

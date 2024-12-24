@@ -1,9 +1,14 @@
-﻿using UniSky.Moderation;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using FishyFlip.Lexicon.App.Bsky.Labeler;
+using UniSky.Moderation;
 
-namespace UniSky.Services
+namespace UniSky.Services;
+
+public interface IModerationService
 {
-    public interface IModerationService
-    {
-        ModerationOptions ModerationOptions { get; set; }
-    }
+    ModerationOptions ModerationOptions { get; set; }
+
+    Task ConfigureModerationAsync();
+    bool TryGetLocalisedStringsForLabel(InterpretedLabelValueDefinition labelDef, out LabelStrings label);
 }

@@ -1,4 +1,5 @@
-﻿using FishyFlip.Lexicon.Com.Atproto.Label;
+﻿using System.Collections.Generic;
+using FishyFlip.Lexicon.Com.Atproto.Label;
 using FishyFlip.Models;
 
 namespace UniSky.Moderation;
@@ -12,6 +13,7 @@ public class InterpretedLabelValueDefinition
     public InterpretedLabelValueDefinition()
     {
         Identifier = "";
+        Locales = [];
     }
 
     public InterpretedLabelValueDefinition(LabelValueDefinition def, ATDid definedBy)
@@ -100,6 +102,7 @@ public class InterpretedLabelValueDefinition
         DefaultSetting = defaultSetting;
         Flags = flags;
         Behaviors = behaviors;
+        Locales = def.Locales != null ? [.. def.Locales] : [];
     }
 
     public string Identifier { get; init; }
@@ -111,4 +114,5 @@ public class InterpretedLabelValueDefinition
     public LabelPreference? DefaultSetting { get; init; }
     public LabelValueDefinitionFlags Flags { get; init; }
     public ModerationBehaviors Behaviors { get; init; }
+    public IReadOnlyList<LabelValueDefinitionStrings> Locales { get; set; }
 }

@@ -163,6 +163,7 @@
     <Compile Include="Controls\Gallery\GalleryControl.xaml.cs">
       <DependentUpon>GalleryControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Labels\LabelsControl.cs" />
     <Compile Include="Controls\Overlay\StandardOverlayControl.cs" />
     <Compile Include="Controls\PreviewPaneAuroraControl.xaml.cs">
       <DependentUpon>PreviewPaneAuroraControl.xaml</DependentUpon>
@@ -181,6 +182,14 @@
       <DependentUpon>SheetRootControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Spoiler\SpoilerControl.cs" />
+    <Compile Include="Controls\WrapLayout\UvBounds.cs" />
+    <Compile Include="Controls\WrapLayout\UvMeasure.cs" />
+    <Compile Include="Controls\WrapLayout\WrapItem.cs" />
+    <Compile Include="Controls\WrapLayout\WrapLayout.cs" />
+    <Compile Include="Controls\WrapLayout\WrapLayoutState.cs" />
+    <Compile Include="Controls\WrapPanel\StretchChild.cs" />
+    <Compile Include="Controls\WrapPanel\WrapPanel.cs" />
+    <Compile Include="Controls\WrapPanel\WrapPanel.Data.cs" />
     <Compile Include="Converters\VisibilityConverter.cs" />
     <Compile Include="Converters\Static.cs" />
     <Compile Include="DataTemplates\FeedItemTemplateSelector.cs" />
@@ -269,6 +278,7 @@
     <Compile Include="ViewModels\Compose\ComposeViewModel.cs" />
     <Compile Include="ViewModels\Error\ExceptionViewModel.cs" />
     <Compile Include="ViewModels\Gallery\GalleryViewModel.cs" />
+    <Compile Include="ViewModels\Moderation\LabelViewModel.cs" />
     <Compile Include="ViewModels\Notifications\NotificationsCollection.cs" />
     <Compile Include="ViewModels\Notifications\NotificationsPageViewModel.cs" />
     <Compile Include="ViewModels\Notifications\NotificationViewModel.cs" />
@@ -448,6 +458,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Gallery\GalleryControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Labels\LabelsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -173,17 +173,8 @@ public partial class HomeViewModel : ViewModelBase
 
         this.Page = HomePages.Home;
 
-        var moderationPrefs = await protocol.GetModerationPrefsAsync()
+        await moderationService.ConfigureModerationAsync()
             .ConfigureAwait(false);
-
-        var labelDefs = await protocol.GetLabelDefinitionsAsync(moderationPrefs)
-            .ConfigureAwait(false);
-
-        await protocol.ConfigureLabelersAsync(moderationPrefs.Labelers)
-            .ConfigureAwait(false);
-
-        moderationService.ModerationOptions 
-            = new ModerationOptions(protocol.Session.Did, moderationPrefs, labelDefs);
 
         try
         {

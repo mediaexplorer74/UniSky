@@ -40,18 +40,31 @@ public partial class ContentWarningViewModel : ViewModelBase
     [ObservableProperty]
     private bool isHidden;
 
-    public ContentWarningViewModel()
+    public ContentWarningViewModel(ModerationUI mediaFilter)
     {
-        Warning = "Hidden!";
+        var moderationService = ServiceContainer.Default.GetRequiredService<IModerationService>();
+        var cause = (mediaFilter.Alerts.FirstOrDefault() ?? mediaFilter.Blurs.FirstOrDefault());
+        if (cause is LabelModerationCause label)
+        {
+            if (moderationService.TryGetLocalisedStringsForLabel(label.LabelDef, out var strings))
+            {
+                Warning = strings.Name;
+            }
+            else
+            {
+                Warning = label.LabelDef.Identifier.ToString();
+            }
+        }
+        else
+        {
+            Warning = "Hidden";
+        }
         IsHidden = true;
     }
 }
 
 public partial class PostViewModel : ViewModelBase
 {
-    private readonly PostView view;
-    private readonly Post post;
-
     private ATUri like;
     private ATUri repost;
 
@@ -104,8 +117,9 @@ public partial class PostViewModel : ViewModelBase
 
     public ATUri Uri { get; }
 
-    public Post Post => post;
-    public PostView View => view;
+    public Post Post { get; }
+    public PostView View { get; }
+    public ModerationDecision Moderation { get; }
 
     public string Text
         => string.Concat(RichText.Facets.Select(s => s.Text));
@@ -148,23 +162,25 @@ public partial class PostViewModel : ViewModelBase
         if (view.Record is not Post post)
             throw new InvalidOperationException();
 
-        this.view = view;
-        this.post = post;
+        this.View = view;
+        this.Post = post;
         this.Uri = view.Uri;
 
         var moderator = new Moderator(ServiceContainer.Default.GetRequiredService<IModerationService>().ModerationOptions);
-        var decision = moderator.ModeratePost(view);
-        var ui = decision.GetUI(ModerationContext.ContentMedia);
-        Warning = (ui.Alert || ui.Blur || ui.Filter) ?
-            new ContentWarningViewModel() :
-            null;
-        Debug.WriteLine($"alert: {ui.Alert} blur: {ui.Blur} filter: {ui.Filter} inform: {ui.Inform}");
+        Moderation = moderator.ModeratePost(view);
 
         HasChild = hasChild;
 
         RichText = new RichTextViewModel(post.Text, post.Facets ?? []);
         Author = new ProfileViewModel(view.Author);
-        Embed = CreateEmbedViewModel(view.Embed, false);
+
+        // TODO: this better
+        var media = Moderation.GetUI(ModerationContext.ContentMedia);
+        if (!media.Filter)
+        {
+            Warning = (media.Alert || media.Blur) ? new ContentWarningViewModel(media) : null;
+            Embed = CreateEmbedViewModel(view.Embed, false);
+        }
 
         var timeSinceIndex = DateTime.Now - (view.IndexedAt.Value.ToLocalTime());
         var date = timeSinceIndex.Humanize(1, minUnit: Humanizer.Localisation.TimeUnit.Second);
@@ -213,7 +229,7 @@ public partial class PostViewModel : ViewModelBase
             IsLiked = true;
             LikeCount++;
 
-            this.like = (await protocol.CreateLikeAsync(new StrongRef(view.Uri, view.Cid)).ConfigureAwait(false))
+            this.like = (await protocol.CreateLikeAsync(new StrongRef(View.Uri, View.Cid)).ConfigureAwait(false))
                 .HandleResult()?.Uri;
         }
     }
@@ -228,7 +244,7 @@ public partial class PostViewModel : ViewModelBase
     [RelayCommand]
     private void CopyLink()
     {
-        var url = UrlHelpers.GetPostURL(this.view);
+        var url = UrlHelpers.GetPostURL(this.View);
         var uri = new Uri(url);
 
         var attribute = HttpUtility.HtmlAttributeEncode(url);
@@ -246,7 +262,7 @@ public partial class PostViewModel : ViewModelBase
     private void CopyText()
     {
         var package = new DataPackage();
-        package.SetText(this.post.Text);
+        package.SetText(this.Post.Text);
 
         // TODO: parse facets to HTML
         // package.SetHtmlFormat(this.post.Text); 
@@ -264,7 +280,7 @@ public partial class PostViewModel : ViewModelBase
         {
             var resources = ResourceLoader.GetForViewIndependentUse();
 
-            var url = UrlHelpers.GetPostURL(this.view);
+            var url = UrlHelpers.GetPostURL(this.View);
             var uri = new Uri(url);
 
             var attribute = HttpUtility.HtmlAttributeEncode(url);
@@ -273,7 +289,7 @@ public partial class PostViewModel : ViewModelBase
             var request = args.Request;
             request.Data.Properties.Title = string.Format(resources.GetString("Share_Username"), Author.Handle);
 
-            request.Data.SetText(post.Text);
+            request.Data.SetText(Post.Text);
             request.Data.SetWebLink(uri);
             request.Data.SetHtmlFormat($"<a href=\"{attribute}\">{escaped}</a>");
         }

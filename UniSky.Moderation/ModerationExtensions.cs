@@ -16,11 +16,12 @@ namespace UniSky.Moderation;
 
 public static class ModerationExtensions
 {
-    private const string ATPROTO_CONTENT_LABELERS = "Atproto-Content-Labelers";
+    private const string ATPROTO_ACCEPT_LABELERS = "Atproto-Accept-Labelers";
 
     public static Task ConfigureLabelersAsync(this ATProtocol protocol, IReadOnlyList<ModerationPrefsLabeler> labelers)
     {
-        protocol.Client.DefaultRequestHeaders.Add(ATPROTO_CONTENT_LABELERS, string.Join(", ", labelers.Select(l => l.Id)));
+        protocol.Client.DefaultRequestHeaders.Remove(ATPROTO_ACCEPT_LABELERS);
+        protocol.Client.DefaultRequestHeaders.Add(ATPROTO_ACCEPT_LABELERS, string.Join(", ", labelers.Select(l => l.Id)));
         return Task.CompletedTask;
     }
 
@@ -98,7 +99,7 @@ public static class ModerationExtensions
         return new ModerationPrefs(adultContent, labels, labelers, mutedWords, hiddenPosts);
     }
 
-    public static async Task<IReadOnlyDictionary<string, InterpretedLabelValueDefinition[]>> GetLabelDefinitionsAsync(
+    public static async Task<LabelDefinitionsResult> GetLabelDefinitionsAsync(
         this ATProtocol protocol,
         ModerationPrefs prefs)
     {
@@ -107,6 +108,7 @@ public static class ModerationExtensions
             .ConfigureAwait(false))
             .HandleResult();
 
+        var labelersDict = new Dictionary<string, LabelerViewDetailed>();
         var labelDefs = new Dictionary<string, InterpretedLabelValueDefinition[]>();
         var defs = (labelers?.Views?.OfType<LabelerViewDetailed>()?.ToList()) ?? [];
         foreach (var def in defs)
@@ -114,10 +116,17 @@ public static class ModerationExtensions
             if (def.Creator?.Did == null)
                 continue;
 
+            labelersDict[def.Creator.Did.Handler] = def;
             labelDefs[def.Creator.Did.Handler] =
                 def.Policies?.LabelValueDefinitions?.Select(s => new InterpretedLabelValueDefinition(s, def.Creator.Did)).ToArray() ?? [];
         }
 
-        return labelDefs.ToFrozenDictionary();
+        return new(labelersDict.ToFrozenDictionary(), labelDefs.ToFrozenDictionary());
     }
+}
+
+public record struct LabelDefinitionsResult(
+    IReadOnlyDictionary<string, LabelerViewDetailed> Labelers,
+    IReadOnlyDictionary<string, InterpretedLabelValueDefinition[]> LabelDefs)
+{
 }
