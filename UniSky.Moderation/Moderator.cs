@@ -2,16 +2,14 @@
 
 namespace UniSky.Moderation;
 
-public class Moderator(ModerationOptions options)
+public readonly struct Moderator(ModerationOptions options)
 {
     private readonly ModerationOptions options = options;
 
-    public ModerationDecision ModerateProfile(ModerationSubjectProfile profile)
-    {
-        return ModerationDecision.Merge(
+    public ModerationDecision ModerateProfile(ModerationSubjectProfile profile) 
+        => ModerationDecision.Merge(
             AccountDecider.Decide(profile, options),
             ProfileDecider.Decide(profile, options));
-    }
 
     public ModerationDecision ModeratePost(ModerationSubjectPost post)
         => PostDecider.Decide(post, options);

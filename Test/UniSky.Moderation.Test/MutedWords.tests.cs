@@ -54,7 +54,7 @@ public class MutedWordsTests
 
             var moderator = new Moderator(options);
             var result = moderator.ModeratePost(postView);
-            var ui = result.GetUI(ModerationBehaviorContext.ContentList);
+            var ui = result.GetUI(ModerationContext.ContentList);
 
             Helpers.AssertModerationUI(ui, filter: true, blur: true);
         }
@@ -98,7 +98,7 @@ public class MutedWordsTests
 
             var moderator = new Moderator(options);
             var result = moderator.ModeratePost(postView);
-            var ui = result.GetUI(ModerationBehaviorContext.ContentList);
+            var ui = result.GetUI(ModerationContext.ContentList);
 
             Helpers.AssertModerationUI(ui, filter: true, blur: true);
         }
@@ -142,7 +142,7 @@ public class MutedWordsTests
 
             var moderator = new Moderator(options);
             var result = moderator.ModeratePost(postView);
-            var ui = result.GetUI(ModerationBehaviorContext.ContentList);
+            var ui = result.GetUI(ModerationContext.ContentList);
 
             Helpers.AssertModerationUI(ui, filter: true, blur: true);
         }
@@ -185,7 +185,7 @@ public class MutedWordsTests
 
             var moderator = new Moderator(options);
             var result = moderator.ModeratePost(postView);
-            var ui = result.GetUI(ModerationBehaviorContext.ContentList);
+            var ui = result.GetUI(ModerationContext.ContentList);
 
             Helpers.AssertModerationUI(ui, filter: true, blur: true);
         }
@@ -224,7 +224,7 @@ public class MutedWordsTests
 
             var moderator = new Moderator(options);
             var result = moderator.ModeratePost(postView);
-            var ui = result.GetUI(ModerationBehaviorContext.ContentList);
+            var ui = result.GetUI(ModerationContext.ContentList);
 
             Helpers.AssertModerationUI(ui, filter: true, blur: true);
         }
@@ -263,7 +263,7 @@ public class MutedWordsTests
 
             var moderator = new Moderator(options);
             var result = moderator.ModeratePost(postView);
-            var ui = result.GetUI(ModerationBehaviorContext.ContentList);
+            var ui = result.GetUI(ModerationContext.ContentList);
 
             Helpers.AssertModerationUI(ui);
         }
@@ -302,7 +302,7 @@ public class MutedWordsTests
 
             var moderator = new Moderator(options);
             var result = moderator.ModeratePost(postView);
-            var ui = result.GetUI(ModerationBehaviorContext.ContentList);
+            var ui = result.GetUI(ModerationContext.ContentList);
 
             Helpers.AssertModerationUI(ui, filter: true, blur: true);
         }
@@ -346,7 +346,7 @@ public class MutedWordsTests
 
             var moderator = new Moderator(options);
             var result = moderator.ModeratePost(postView);
-            var ui = result.GetUI(ModerationBehaviorContext.ContentList);
+            var ui = result.GetUI(ModerationContext.ContentList);
 
             Helpers.AssertModerationUI(ui, filter: true, blur: true);
         }
@@ -385,7 +385,7 @@ public class MutedWordsTests
 
             var moderator = new Moderator(options);
             var result = moderator.ModeratePost(postView);
-            var ui = result.GetUI(ModerationBehaviorContext.ContentList);
+            var ui = result.GetUI(ModerationContext.ContentList);
 
             Helpers.AssertModerationUI(ui);
         }
@@ -424,7 +424,7 @@ public class MutedWordsTests
 
             var moderator = new Moderator(options);
             var result = moderator.ModeratePost(postView);
-            var ui = result.GetUI(ModerationBehaviorContext.ContentList);
+            var ui = result.GetUI(ModerationContext.ContentList);
 
             Helpers.AssertModerationUI(ui, filter: true, blur: true);
         }
@@ -463,7 +463,7 @@ public class MutedWordsTests
 
             var moderator = new Moderator(options);
             var result = moderator.ModeratePost(postView);
-            var ui = result.GetUI(ModerationBehaviorContext.ContentList);
+            var ui = result.GetUI(ModerationContext.ContentList);
 
             Helpers.AssertModerationUI(ui, filter: true, blur: true);
         }

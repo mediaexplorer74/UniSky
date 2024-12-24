@@ -2,15 +2,46 @@
 
 namespace UniSky.Moderation;
 
-public enum ModerationBehaviorContext
+public enum ModerationContext
 {
+    /// <summary>
+    /// A profile being listed, e.g. search or follower list
+    /// </summary>
     ProfileList,
+
+    /// <summary>
+    /// A profile being viewed directly
+    /// </summary>
     ProfileView,
+
+    /// <summary>
+    /// The user's avatar in any context
+    /// </summary>
     Avatar,
+
+    /// <summary>
+    /// The user's banner in any context
+    /// </summary>
     Banner,
+
+    /// <summary>
+    /// The user's display name in any context
+    /// </summary>
     DisplayName,
+
+    /// <summary>
+    /// Content being listed, e.g. posts in a feed/as replies, a list of user lists, a list of feed generators, etc.
+    /// </summary>
     ContentList,
+
+    /// <summary>
+    /// Conent being viewed directly, e.g. an open post, the user list page, the feed generator page, etc.
+    /// </summary>
     ContentView,
+
+    /// <summary>
+    /// Media inside content, e.g. images embedded in a post
+    /// </summary>
     ContentMedia
 }
 
@@ -43,17 +74,17 @@ public struct ModerationBehavior
     public static readonly ModerationBehavior HideBehaviour
         = MuteWordBehavour;
 
-    public readonly ModerationBehaviorType this[ModerationBehaviorContext target]
+    public readonly ModerationBehaviorType this[ModerationContext target]
         => target switch
         {
-            ModerationBehaviorContext.ProfileList => ProfileList,
-            ModerationBehaviorContext.ProfileView => ProfileView,
-            ModerationBehaviorContext.Avatar => Avatar,
-            ModerationBehaviorContext.Banner => Banner,
-            ModerationBehaviorContext.DisplayName => DisplayName,
-            ModerationBehaviorContext.ContentList => ContentList,
-            ModerationBehaviorContext.ContentView => ContentView,
-            ModerationBehaviorContext.ContentMedia => ContentMedia,
+            ModerationContext.ProfileList => ProfileList,
+            ModerationContext.ProfileView => ProfileView,
+            ModerationContext.Avatar => Avatar,
+            ModerationContext.Banner => Banner,
+            ModerationContext.DisplayName => DisplayName,
+            ModerationContext.ContentList => ContentList,
+            ModerationContext.ContentView => ContentView,
+            ModerationContext.ContentMedia => ContentMedia,
             _ => throw new InvalidOperationException()
         };
 

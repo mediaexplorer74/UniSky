@@ -53,7 +53,7 @@ public class ModerationDecision
         return this;
     }
 
-    public ModerationUI GetUI(ModerationBehaviorContext context)
+    public ModerationUI GetUI(ModerationContext context)
     {
         var filters = new List<ModerationCause>();
         var blurs = new List<ModerationCause>();
@@ -61,9 +61,9 @@ public class ModerationDecision
         var informs = new List<ModerationCause>();
         var noOverride = false;
 
-        void HandleStandardCause(ModerationBehaviorContext context,
+        void HandleStandardCause(ModerationContext context,
                             ModerationCause cause,
-                            ReadOnlySpan<ModerationBehaviorContext> contexts,
+                            ReadOnlySpan<ModerationContext> contexts,
                             ModerationBehavior behavior)
         {
             for (var i = 0; i < contexts.Length; i++)
@@ -101,7 +101,7 @@ public class ModerationDecision
                 HandleStandardCause(
                     context,
                     cause,
-                    [ModerationBehaviorContext.ProfileList, ModerationBehaviorContext.ContentList],
+                    [ModerationContext.ProfileList, ModerationContext.ContentList],
                     ModerationBehavior.BlockBehaviour);
 
                 if (!cause.Downgraded && ModerationBehavior.BlockBehaviour[context] == ModerationBehaviorType.Blur)
@@ -114,7 +114,7 @@ public class ModerationDecision
                 HandleStandardCause(
                     context,
                     cause,
-                    [ModerationBehaviorContext.ProfileList, ModerationBehaviorContext.ContentList],
+                    [ModerationContext.ProfileList, ModerationContext.ContentList],
                     ModerationBehavior.MuteBehaviour);
             }
             else if (cause.Type is ModerationCauseType.MuteWord)
@@ -124,7 +124,7 @@ public class ModerationDecision
                 HandleStandardCause(
                     context,
                     cause,
-                    [ModerationBehaviorContext.ContentList],
+                    [ModerationContext.ContentList],
                     ModerationBehavior.MuteWordBehavour);
             }
             else if (cause.Type is ModerationCauseType.Hidden)
@@ -132,7 +132,7 @@ public class ModerationDecision
                 HandleStandardCause(
                     context,
                     cause,
-                    [ModerationBehaviorContext.ProfileList, ModerationBehaviorContext.ContentList],
+                    [ModerationContext.ProfileList, ModerationContext.ContentList],
                     ModerationBehavior.HideBehaviour);
             }
             else if (cause.Type is ModerationCauseType.Label)
@@ -140,12 +140,12 @@ public class ModerationDecision
                 if (cause is not LabelModerationCause labelCause)
                     throw new InvalidOperationException();
 
-                if (context is ModerationBehaviorContext.ProfileList && labelCause.Target == LabelTarget.Account)
+                if (context is ModerationContext.ProfileList && labelCause.Target == LabelTarget.Account)
                 {
                     if (labelCause.Setting == LabelPreference.Hide && !IsMe)
                         filters.Add(cause);
                 }
-                else if (context is ModerationBehaviorContext.ContentList && (labelCause.Target is (LabelTarget.Account or LabelTarget.Content)))
+                else if (context is ModerationContext.ContentList && (labelCause.Target is (LabelTarget.Account or LabelTarget.Content)))
                 {
                     if (labelCause.Setting == LabelPreference.Hide && !IsMe)
                         filters.Add(cause);

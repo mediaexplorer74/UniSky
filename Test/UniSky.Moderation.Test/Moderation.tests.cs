@@ -30,7 +30,7 @@ public class ModerationTests
 
         var moderator = new Moderator(options);
         var result = moderator.ModerateProfile(profileViewBasic);
-        var ui = result.GetUI(ModerationBehaviorContext.Avatar);
+        var ui = result.GetUI(ModerationContext.Avatar);
 
         Assert.True(ui.Blur);
         Assert.False(ui.Alert);
@@ -59,7 +59,7 @@ public class ModerationTests
 
         var moderator = new Moderator(options);
         var result = moderator.ModerateProfile(profileViewBasic);
-        var ui = result.GetUI(ModerationBehaviorContext.Avatar);
+        var ui = result.GetUI(ModerationContext.Avatar);
 
         Assert.False(ui.Blur);
         Assert.False(ui.Alert);
@@ -88,7 +88,7 @@ public class ModerationTests
 
         var moderator = new Moderator(options);
         var result = moderator.ModerateProfile(profileViewBasic);
-        foreach (var item in Enum.GetValues<ModerationBehaviorContext>())
+        foreach (var item in Enum.GetValues<ModerationContext>())
         {
             var ui = result.GetUI(item);
             Assert.False(ui.Blur);
@@ -133,7 +133,7 @@ public class ModerationTests
 
         var moderator = new Moderator(options);
         var result = moderator.ModerateProfile(profileViewBasic);
-        foreach (var item in Enum.GetValues<ModerationBehaviorContext>())
+        foreach (var item in Enum.GetValues<ModerationContext>())
         {
             var ui = result.GetUI(item);
             Assert.False(ui.Blur);
@@ -166,8 +166,8 @@ public class ModerationTests
         var result = moderator.ModeratePost(postView);
         result.AddHidden(true);
 
-        var contentList = result.GetUI(ModerationBehaviorContext.ContentList);
-        var contentView = result.GetUI(ModerationBehaviorContext.ContentView);
+        var contentList = result.GetUI(ModerationContext.ContentList);
+        var contentView = result.GetUI(ModerationContext.ContentView);
         Helpers.
                 AssertModerationUI(contentList, blur: true, filter: true);
         Helpers.AssertModerationUI(contentView, blur: true);
@@ -199,8 +199,8 @@ public class ModerationTests
         var moderator = new Moderator(options);
         var result = moderator.ModeratePost(postView);
 
-        var contentList = result.GetUI(ModerationBehaviorContext.ContentList);
-        var contentMedia = result.GetUI(ModerationBehaviorContext.ContentMedia);
+        var contentList = result.GetUI(ModerationContext.ContentList);
+        var contentMedia = result.GetUI(ModerationContext.ContentMedia);
 
         Assert.Equal(2, contentList.Filters.Count);
         Assert.Single(contentList.Blurs);
@@ -265,14 +265,14 @@ public class ModerationTests
         var moderator = new Moderator(options);
         var result = moderator.ModeratePost(postView);
         Helpers.
-                AssertModerationUI(result.GetUI(ModerationBehaviorContext.ProfileList));
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.ProfileView));
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.Avatar));
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.Banner));
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.DisplayName));
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.ContentList), inform: true);
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.ContentView), inform: true);
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.ContentMedia));
+                AssertModerationUI(result.GetUI(ModerationContext.ProfileList));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.ProfileView));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.Avatar));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.Banner));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.DisplayName));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.ContentList), inform: true);
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.ContentView), inform: true);
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.ContentMedia));
     }
 
     [Fact]
@@ -330,14 +330,14 @@ public class ModerationTests
 
         var moderator = new Moderator(options);
         var result = moderator.ModeratePost(postView);
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.ProfileList));
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.ProfileView));
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.Avatar));
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.Banner));
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.DisplayName));
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.ContentList), filter: true, blur: true, noOverride: true);
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.ContentView), blur: true, noOverride: true);
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.ContentMedia));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.ProfileList));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.ProfileView));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.Avatar));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.Banner));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.DisplayName));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.ContentList), filter: true, blur: true, noOverride: true);
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.ContentView), blur: true, noOverride: true);
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.ContentMedia));
     }
 
     [Fact]
@@ -417,14 +417,14 @@ public class ModerationTests
 
         var moderator = new Moderator(options);
         var result = moderator.ModeratePost(postView);
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.ProfileList));
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.ProfileView));
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.Avatar));
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.Banner));
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.DisplayName));
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.ContentList));
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.ContentView));
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.ContentMedia));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.ProfileList));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.ProfileView));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.Avatar));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.Banner));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.DisplayName));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.ContentList));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.ContentView));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.ContentMedia));
     }
 
 
@@ -504,14 +504,14 @@ public class ModerationTests
 
         var moderator = new Moderator(options);
         var result = moderator.ModeratePost(hiddenPost);
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.ProfileList));
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.ProfileView));
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.Avatar));
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.Banner));
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.DisplayName));
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.ContentList), filter: true, blur: true);
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.ContentView), inform: true);
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.ContentMedia));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.ProfileList));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.ProfileView));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.Avatar));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.Banner));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.DisplayName));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.ContentList), filter: true, blur: true);
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.ContentView), inform: true);
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.ContentMedia));
 
         var warnPost = new PostView(
             record: new Post(
@@ -534,14 +534,14 @@ public class ModerationTests
         );
 
         result = moderator.ModeratePost(warnPost);
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.ProfileList));
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.ProfileView));
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.Avatar));
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.Banner));
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.DisplayName));
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.ContentList), blur: true);
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.ContentView), inform: true);
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.ContentMedia));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.ProfileList));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.ProfileView));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.Avatar));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.Banner));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.DisplayName));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.ContentList), blur: true);
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.ContentView), inform: true);
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.ContentMedia));
 
         var ignorePost = new PostView(
             record: new Post(
@@ -564,14 +564,14 @@ public class ModerationTests
         );
 
         result = moderator.ModeratePost(ignorePost);
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.ProfileList));
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.ProfileView));
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.Avatar));
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.Banner));
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.DisplayName));
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.ContentList));
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.ContentView));
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.ContentMedia));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.ProfileList));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.ProfileView));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.Avatar));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.Banner));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.DisplayName));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.ContentList));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.ContentView));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.ContentMedia));
     }
 
     [Fact]
@@ -633,14 +633,14 @@ public class ModerationTests
 
         var moderator = new Moderator(options);
         var result = moderator.ModeratePost(postView);
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.ProfileList));
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.ProfileView));
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.Avatar));
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.Banner));
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.DisplayName));
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.ContentList), filter: true, blur: true, noOverride: true);
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.ContentView), blur: true, noOverride: true);
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.ContentMedia));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.ProfileList));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.ProfileView));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.Avatar));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.Banner));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.DisplayName));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.ContentList), filter: true, blur: true, noOverride: true);
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.ContentView), blur: true, noOverride: true);
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.ContentMedia));
     }
 
     [Fact]
@@ -685,13 +685,13 @@ public class ModerationTests
 
         var moderator = new Moderator(options);
         var result = moderator.ModeratePost(postView);
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.ProfileList));
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.ProfileView));
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.Avatar));
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.Banner));
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.DisplayName));
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.ContentList), filter: true);
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.ContentView));
-        Helpers.AssertModerationUI(result.GetUI(ModerationBehaviorContext.ContentMedia), blur: true, noOverride: true);
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.ProfileList));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.ProfileView));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.Avatar));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.Banner));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.DisplayName));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.ContentList), filter: true);
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.ContentView));
+        Helpers.AssertModerationUI(result.GetUI(ModerationContext.ContentMedia), blur: true, noOverride: true);
     }
 }

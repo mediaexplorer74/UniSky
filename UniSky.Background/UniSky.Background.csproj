@@ -126,6 +126,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="FishyFlip">
+      <Version>3.1.0-alpha.26</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Logging">
       <Version>9.0.0</Version>
     </PackageReference>
@@ -143,10 +146,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Libraries\FishyFlip\src\FishyFlip\FishyFlip.csproj">
-      <Project>{f6c3e504-4aa1-4ce9-a0f0-8218216676f0}</Project>
-      <Name>FishyFlip</Name>
-    </ProjectReference>
     <ProjectReference Include="..\UniSky.Models\UniSky.Models.csproj">
       <Project>{7491ea1a-e1b7-469c-a3c2-5202aa14ce26}</Project>
       <Name>UniSky.Models</Name>
