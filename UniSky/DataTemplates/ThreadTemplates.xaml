@@ -4,13 +4,14 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:UniSky.DataTemplates"
     xmlns:controls="using:UniSky.Controls"
+    xmlns:labels="using:UniSky.Controls.Labels"    
     xmlns:converters="using:UniSky.Converters"
     xmlns:extensions="using:UniSky.Extensions"
     xmlns:thread="using:UniSky.ViewModels.Thread"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:labels="using:UniSky.Controls.Labels"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     mc:Ignorable="d">
 
     <ResourceDictionary.MergedDictionaries>
@@ -124,7 +125,6 @@
                                         IsTextSelectionEnabled="True"
                                         Margin="0,4,0,4"
                                         VerticalAlignment="Top"/>
-
 
                 <controls:SpoilerControl x:Name="EmbedContentContainer"
                                          x:Load="{x:Bind converters:Static.NotNull(Embed)}"
