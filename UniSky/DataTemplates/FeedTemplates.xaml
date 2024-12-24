@@ -229,7 +229,7 @@
                 <labels:LabelsControl x:Name="LabelViewer"
                                       Visibility="{Binding Author.Labels, Converter={StaticResource VisibilityConverter}}"
                                       Labels="{Binding Author.Labels}"
-                                      Margin="0,2,0,2"/>
+                                      Margin="0,4,0,0"/>
                 
                 <controls:RichTextBlock x:Name="MainContent"
                                         Visibility="{Binding Text, Converter={StaticResource VisibilityConverter}}"

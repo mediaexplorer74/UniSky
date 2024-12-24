@@ -16,9 +16,6 @@ namespace UniSky.ViewModels.Posts;
 
 public partial class PostEmbedPostViewModel : PostEmbedViewModel
 {
-    private readonly ViewRecord view;
-    private readonly Post post;
-
     [ObservableProperty]
     private string text;
     [ObservableProperty]
@@ -32,10 +29,13 @@ public partial class PostEmbedPostViewModel : PostEmbedViewModel
     [ObservableProperty]
     private ContentWarningViewModel warning;
 
+    public ViewRecord View { get; }
+    public Post Post { get; }
+
     public PostEmbedPostViewModel(ViewRecord view, Post post) : base(view)
     {
-        this.view = view;
-        this.post = post;
+        this.View = view;
+        this.Post = post;
 
         Text = post.Text;
         RichText = new RichTextViewModel(post.Text, post.Facets ?? []);
@@ -61,6 +61,6 @@ public partial class PostEmbedPostViewModel : PostEmbedViewModel
     {
         var navigationService = ServiceContainer.Scoped.GetRequiredService<INavigationServiceLocator>()
             .GetNavigationService("Home");
-        navigationService.Navigate<ThreadPage>(this.view.Uri);
+        navigationService.Navigate<ThreadPage>(this.View.Uri);
     }
 }
