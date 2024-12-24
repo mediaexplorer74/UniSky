@@ -67,6 +67,9 @@
                 <Run x:Uid="SettingsAboutVersionRun" Text="Version"/>
                 <Run Text="{x:Bind root:Constants.Version, FallbackValue='1.0.0.0-abcdefg'}"/>
             </TextBlock>
+            <TextBlock TextWrapping="Wrap">
+                Icon by <Hyperlink NavigateUri="https://bsky.app/profile/xubiod.net">@xubiod.net</Hyperlink> &lt;3
+            </TextBlock>
         </StackPanel>        
     </ScrollViewer>
 </sheets:SheetControl>
