@@ -268,10 +268,10 @@
     <DataTemplate x:Key="ThreadItemContentTemplate"
                   x:DataType="thread:ThreadPostViewModel">
         <Button Style="{ThemeResource CleanButtonStyle}"
-                Command="{x:Bind OpenThreadCommand}">
-            <StackPanel BorderBrush="{ThemeResource SystemControlRevealSeparatorBrush}"
-                        extensions:Hairline.BorderThickness="{Binding Borders, Mode=OneWay}"
-                        HorizontalAlignment="Stretch"
+                Command="{x:Bind OpenThreadCommand}"
+                BorderBrush="{ThemeResource SystemControlRevealSeparatorBrush}"
+                extensions:Hairline.BorderThickness="{Binding Borders, Mode=OneWay}">
+            <StackPanel HorizontalAlignment="Stretch"
                         Padding="12,8,12,4"> 
                 <Grid>
                     <Grid.ColumnDefinitions>
