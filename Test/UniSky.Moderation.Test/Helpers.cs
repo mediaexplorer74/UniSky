@@ -2,7 +2,6 @@
 
 internal static class Helpers
 {
-
     internal static void AssertModerationUI(
         ModerationUI ui,
         bool alert = false,
