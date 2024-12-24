@@ -7,6 +7,9 @@ using System.Web;
 using FishyFlip.Lexicon.App.Bsky.Feed;
 using FishyFlip.Models;
 using FishyFlip.Tools;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using UniSky.Moderation;
 using UniSky.Services;
 using UniSky.ViewModels.Posts;
 using UniSky.ViewModels.Profile;
@@ -27,6 +30,8 @@ public class FeedItemCollection : ObservableCollection<PostViewModel>, ISupportI
     private readonly ATDid did;
     private readonly string filterType;
     private readonly IProtocolService protocolService;
+    private readonly IModerationService moderationService;
+    private readonly ILogger<FeedItemCollection> logger;
     private readonly HashSet<string> ids = [];
 
     private string cursor;
@@ -37,6 +42,8 @@ public class FeedItemCollection : ObservableCollection<PostViewModel>, ISupportI
         this.type = type;
         this.uri = uri;
         this.protocolService = protocolService;
+        this.moderationService = ServiceContainer.Scoped.GetRequiredService<IModerationService>();
+        this.logger = ServiceContainer.Scoped.GetRequiredService<ILogger<FeedItemCollection>>();
     }
 
     public FeedItemCollection(ProfileFeedViewModel parent, FeedType type, ATDid did, string filterType, IProtocolService protocolService)
@@ -46,6 +53,8 @@ public class FeedItemCollection : ObservableCollection<PostViewModel>, ISupportI
         this.did = did;
         this.filterType = filterType;
         this.protocolService = protocolService;
+        this.moderationService = ServiceContainer.Scoped.GetRequiredService<IModerationService>();
+        this.logger = ServiceContainer.Scoped.GetRequiredService<ILogger<FeedItemCollection>>();
     }
 
     public bool HasMoreItems { get; private set; } = true;
@@ -135,6 +144,7 @@ public class FeedItemCollection : ObservableCollection<PostViewModel>, ISupportI
                 default:
                     throw new InvalidOperationException();
             }
+
 
             await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {

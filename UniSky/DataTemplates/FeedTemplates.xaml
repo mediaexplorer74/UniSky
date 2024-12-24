@@ -238,9 +238,13 @@
                                          Warning="{Binding Warning}"
                                          WarningTemplate="{StaticResource PostContentWarningTemplate}"
                                          IsHidden="{Binding Warning.IsHidden, Mode=TwoWay}"
-                                         Visibility="{Binding Embed, Converter={StaticResource VisibilityConverter}}"
-                                         Content="{Binding Embed}"
-                                         ContentTemplateSelector="{StaticResource PostEmbedTemplateSelector}"/>
+                                         Visibility="{Binding Embed, Converter={StaticResource VisibilityConverter}}">
+                    <ContentControl x:Name="EmbedContent"
+                                            HorizontalAlignment="Stretch"
+                                            HorizontalContentAlignment="Stretch"
+                                            ContentTemplateSelector="{StaticResource PostEmbedTemplateSelector}"
+                                            Content="{Binding Embed}"/>
+                </controls:SpoilerControl>
             </StackPanel>
         </Button>
     </DataTemplate>
@@ -556,10 +560,13 @@
                                                  Warning="{x:Bind Warning}"
                                                  WarningTemplate="{StaticResource PostContentWarningTemplate}"
                                                  IsHidden="{x:Bind Warning.IsHidden, Mode=TwoWay}"
-                                                 Margin="0,4,0,0"
-                                                 Visibility="{Binding Embed, Converter={StaticResource VisibilityConverter}}"
-                                                 Content="{x:Bind Embed}"
-                                                 ContentTemplateSelector="{StaticResource PostEmbedTemplateSelector}"/>
+                                                 Margin="0,4,0,0">
+                            <ContentControl x:Name="EmbedContent"
+                                            HorizontalAlignment="Stretch"
+                                            HorizontalContentAlignment="Stretch"
+                                            ContentTemplateSelector="{StaticResource PostEmbedTemplateSelector}"
+                                            Content="{x:Bind Embed}"/>
+                        </controls:SpoilerControl>
 
                         <Grid x:Name="Interactions">
                             <Grid.ColumnDefinitions>

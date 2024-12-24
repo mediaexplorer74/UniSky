@@ -42,11 +42,6 @@ public partial class PostEmbedPostViewModel : PostEmbedViewModel
 
         Embed = PostViewModel.CreateEmbedViewModel(view.Embeds?.FirstOrDefault(), true);
 
-        if (this.view.Labels?.Count is not (null or 0))
-        {
-            Warning = new ContentWarningViewModel(this.view.Labels);
-        }
-
         var timeSinceIndex = DateTime.Now - (view.IndexedAt.Value.ToLocalTime());
         var date = timeSinceIndex.Humanize(1, minUnit: Humanizer.Localisation.TimeUnit.Second);
         Date = date;

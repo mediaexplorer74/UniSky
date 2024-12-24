@@ -121,6 +121,7 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="IModerationService.cs" />
     <Compile Include="Implementation\BadgeService.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="IBadgeService.cs" />
@@ -135,10 +136,12 @@
     <Compile Include="IThemeService.cs" />
     <Compile Include="ITypedSettings.cs" />
     <Compile Include="Implementation\LoginService.cs" />
+    <Compile Include="ModerationService.cs" />
     <Compile Include="Overlay\IOverlayControl.cs" />
     <Compile Include="Overlay\IOverlayController.cs" />
     <Compile Include="Overlay\OverlayHidingEventArgs.cs" />
     <Compile Include="Overlay\OverlayShowingEventArgs.cs" />
+    <Compile Include="Polyfill\IsExternalInit.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Implementation\ProtocolService.cs" />
     <Compile Include="SafeArea\ISafeAreaService.cs" />
@@ -160,9 +163,17 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Libraries\FishyFlip\src\FishyFlip\FishyFlip.csproj">
+      <Project>{f6c3e504-4aa1-4ce9-a0f0-8218216676f0}</Project>
+      <Name>FishyFlip</Name>
+    </ProjectReference>
     <ProjectReference Include="..\UniSky.Models\UniSky.Models.csproj">
       <Project>{7491ea1a-e1b7-469c-a3c2-5202aa14ce26}</Project>
       <Name>UniSky.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UniSky.Moderation\UniSky.Moderation.csproj">
+      <Project>{ebad0b40-6694-488f-9dca-da1bf453645a}</Project>
+      <Name>UniSky.Moderation</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

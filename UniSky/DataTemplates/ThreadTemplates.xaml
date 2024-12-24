@@ -120,17 +120,20 @@
                                         Margin="0,4,0,4"
                                         VerticalAlignment="Top"/>
 
-                <Grid x:Name="EmbedContentContainer"
-                        x:Load="{x:Bind converters:Static.NotNull(Embed)}"
-                        x:Phase="2">
+
+                <controls:SpoilerControl x:Name="EmbedContentContainer"
+                                         x:Load="{x:Bind converters:Static.NotNull(Embed)}"
+                                         x:Phase="2"
+                                         Warning="{x:Bind Warning}"
+                                         WarningTemplate="{StaticResource PostContentWarningTemplate}"
+                                         IsHidden="{x:Bind Warning.IsHidden, Mode=TwoWay}"
+                                         Margin="0,4,0,0">
                     <ContentControl x:Name="EmbedContent"
-                                    Margin="0,4,0,4"
                                     HorizontalAlignment="Stretch"
                                     HorizontalContentAlignment="Stretch"
                                     ContentTemplateSelector="{StaticResource PostEmbedTemplateSelector}"
                                     Content="{x:Bind Embed}"/>
-                </Grid>
-
+                </controls:SpoilerControl>
 
 
                 <TextBlock x:Name="DateBlock"

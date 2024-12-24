@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using UniSky.Controls.Settings;
 using UniSky.Extensions;
 using UniSky.Models;
+using UniSky.Moderation;
 using UniSky.Pages;
 using UniSky.Services;
 using Windows.Foundation.Metadata;
@@ -48,6 +49,7 @@ public partial class HomeViewModel : ViewModelBase
     private readonly IProtocolService protocolService;
     private readonly INotificationsService notificationsService;
     private readonly IBadgeService badgeService;
+    private readonly IModerationService moderationService;
     private readonly SessionModel sessionModel;
 
     private readonly DispatcherTimer notificationUpdateTimer;
@@ -97,6 +99,7 @@ public partial class HomeViewModel : ViewModelBase
         IProtocolService protocolService,
         INotificationsService notificationsService,
         IBadgeService badgeService,
+        IModerationService moderationService,
         ILogger<HomeViewModel> logger,
         ILogger<ATProtocol> protocolLogger)
     {
@@ -117,6 +120,7 @@ public partial class HomeViewModel : ViewModelBase
         this.sessionModel = sessionModel;
         this.notificationsService = notificationsService;
         this.badgeService = badgeService;
+        this.moderationService = moderationService;
         this.atLogger = protocolLogger;
 
         var protocol = new ATProtocolBuilder()
@@ -168,6 +172,18 @@ public partial class HomeViewModel : ViewModelBase
         }
 
         this.Page = HomePages.Home;
+
+        var moderationPrefs = await protocol.GetModerationPrefsAsync()
+            .ConfigureAwait(false);
+
+        var labelDefs = await protocol.GetLabelDefinitionsAsync(moderationPrefs)
+            .ConfigureAwait(false);
+
+        await protocol.ConfigureLabelersAsync(moderationPrefs.Labelers)
+            .ConfigureAwait(false);
+
+        moderationService.ModerationOptions 
+            = new ModerationOptions(protocol.Session.Did, moderationPrefs, labelDefs);
 
         try
         {

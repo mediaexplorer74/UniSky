@@ -17,8 +17,10 @@ using FishyFlip.Models;
 using FishyFlip.Tools;
 using Humanizer;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using UniSky.Controls.Compose;
 using UniSky.Helpers;
+using UniSky.Moderation;
 using UniSky.Pages;
 using UniSky.Services;
 using UniSky.ViewModels.Profile;
@@ -38,7 +40,7 @@ public partial class ContentWarningViewModel : ViewModelBase
     [ObservableProperty]
     private bool isHidden;
 
-    public ContentWarningViewModel(List<Label> labels)
+    public ContentWarningViewModel()
     {
         Warning = "Hidden!";
         IsHidden = true;
@@ -150,16 +152,20 @@ public partial class PostViewModel : ViewModelBase
         this.post = post;
         this.Uri = view.Uri;
 
+        var moderator = new Moderator(ServiceContainer.Default.GetRequiredService<IModerationService>().ModerationOptions);
+        var decision = moderator.ModeratePost(view);
+
+        var ui = decision.GetUI(ModerationBehaviorContext.ContentMedia);
+        Warning = (ui.Alert || ui.Blur || ui.Filter || ui.Inform) ?
+            new ContentWarningViewModel() :
+            null;
+        Debug.WriteLine($"alert: {ui.Alert} blur: {ui.Blur} filter: {ui.Filter} inform: {ui.Inform}");
+
         HasChild = hasChild;
 
         RichText = new RichTextViewModel(post.Text, post.Facets ?? []);
         Author = new ProfileViewModel(view.Author);
         Embed = CreateEmbedViewModel(view.Embed, false);
-
-        if (this.view.Labels?.Count is not (null or 0))
-        {
-            Warning = new ContentWarningViewModel(this.view.Labels);
-        }
 
         var timeSinceIndex = DateTime.Now - (view.IndexedAt.Value.ToLocalTime());
         var date = timeSinceIndex.Humanize(1, minUnit: Humanizer.Localisation.TimeUnit.Second);
