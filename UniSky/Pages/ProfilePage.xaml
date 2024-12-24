@@ -112,7 +112,8 @@
                     <Grid x:Name="TextContainer"
                             Padding="4,8,8,8"
                             Grid.Column="1"
-                            Grid.Row="1">
+                            Grid.Row="1"
+                            Canvas.ZIndex="2">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
@@ -203,11 +204,11 @@
                     </Grid>
 
                     <Grid x:Name="ScrolledDisplayNameContainer"
-                            Margin="60,8,8,8"
-                            Grid.ColumnSpan="2"
-                            Grid.Row="1"
-                            VerticalAlignment="Bottom"
-                            RequestedTheme="{Binding Theme}">
+                          Margin="60,8,8,8"
+                          Grid.ColumnSpan="2"
+                          Grid.Row="1"
+                          VerticalAlignment="Bottom"
+                          RequestedTheme="{Binding Theme}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>

@@ -15,8 +15,8 @@
                     x:DefaultBindMode="OneWay">
 
     <!-- TODO: un-steal these colours -->
-    <SolidColorBrush x:Key="LikeBrush">#ea4298</SolidColorBrush>
-    <SolidColorBrush x:Key="RetweetBrush">#5cefaa</SolidColorBrush>
+    <SolidColorBrush x:Key="LikeBrush">#ff405d</SolidColorBrush>
+    <SolidColorBrush x:Key="RetweetBrush">#15bc3c</SolidColorBrush>
 
     <datatemplates:PostEmbedTemplateSelector x:Key="PostEmbedTemplateSelector"
                                              ImagesEmbedTemplate="{StaticResource ImagesEmbedContentTemplate}"
@@ -398,10 +398,10 @@
     <DataTemplate x:Key="FeedItemContentTemplate"
                   x:DataType="posts:PostViewModel">
         <Button Style="{ThemeResource CleanButtonStyle}"
-                Command="{x:Bind OpenThreadCommand}">
-            <StackPanel BorderBrush="{ThemeResource SystemControlRevealSeparatorBrush}"
-                        extensions:Hairline.BorderThickness="{Binding Borders, Mode=OneWay}"
-                        HorizontalAlignment="Stretch"
+                Command="{x:Bind OpenThreadCommand}" 
+                BorderBrush="{ThemeResource SystemControlRevealSeparatorBrush}"
+                extensions:Hairline.BorderThickness="{Binding Borders, Mode=OneWay}">
+            <StackPanel HorizontalAlignment="Stretch"
                         Padding="12,8,12,4">
 
                 <Grid x:Name="RetweetContainer"

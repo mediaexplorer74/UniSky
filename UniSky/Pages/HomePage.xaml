@@ -323,9 +323,14 @@
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
 
+                        <Border x:Name="TitleBarDrag"
+                                     Background="Transparent"
+                                     Grid.Column="1"
+                                     Grid.ColumnSpan="2"/>
+
                         <Grid Grid.Column="1" 
-                               MaxWidth="600" 
-                               HorizontalAlignment="Stretch">
+                              MaxWidth="600"
+                              HorizontalAlignment="Stretch">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="32"/>
@@ -336,12 +341,12 @@
                             </Grid.RenderTransform>
 
                             <Button x:Name="BackButton"
-                                     x:Load="{x:Bind NavigationFrame.CanGoBack, Mode=OneWay}"
-                                     Style="{StaticResource NavigationBackButtonNormalStyle}"
-                                     Height="32"
-                                     FontSize="13"
-                                     ToolTipService.ToolTip="Back"
-                                     Command="{x:Bind ViewModel.GoBackCommand}"/>
+                                    x:Load="{x:Bind NavigationFrame.CanGoBack, Mode=OneWay}"
+                                    Style="{StaticResource NavigationBackButtonNormalStyle}"
+                                    Height="32"
+                                    FontSize="13"
+                                    ToolTipService.ToolTip="Back"
+                                    Command="{x:Bind ViewModel.GoBackCommand}" />
 
                             <Viewbox VerticalAlignment="Center"
                                      HorizontalAlignment="Center"
@@ -349,26 +354,23 @@
                                      Width="16"
                                      Height="16"
                                      Grid.Column="1"
+                                     IsHitTestVisible="False"
                                      CacheMode="BitmapCache">
                                 <Path x:Name="AppIconPath"
-                                       Data="{StaticResource BlueSkyLogoPath}"
-                                       Fill="{ThemeResource ApplicationForegroundThemeBrush}"/>
+                                     Data="{StaticResource BlueSkyLogoPath}"
+                                     Fill="{ThemeResource ApplicationForegroundThemeBrush}"/>
                             </Viewbox>
 
                             <TextBlock x:Name="AppTitleTextBlock"
-                                        x:Uid="AppTitle"
-                                        Style="{StaticResource CaptionTextBlockStyle}" 
-                                        Text="Unisky"
-                                        VerticalAlignment="Center" 
-                                        Grid.Column="2"
-                                        Margin="8,0"/>
-
-                            <Border x:Name="TitleBarDrag"
-                                     Background="Transparent"
-                                     Grid.Column="1"
-                                     Grid.ColumnSpan="2"/>
+                                       x:Uid="AppTitle"
+                                       Style="{StaticResource CaptionTextBlockStyle}" 
+                                       Text="Unisky"
+                                       VerticalAlignment="Center" 
+                                       Grid.Column="2"
+                                       Margin="8,0"
+                                       IsHitTestVisible="False"/>
                         </Grid>
-                        
+
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup>
                                 <VisualState x:Name="Active">
