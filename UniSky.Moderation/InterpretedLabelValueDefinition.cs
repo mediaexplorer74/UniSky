@@ -26,7 +26,6 @@ public class InterpretedLabelValueDefinition
             _ => ModerationBehaviorType.None
         };
 
-
         if (def.Blurs == "content")
         {
             // target=account, blurs=content

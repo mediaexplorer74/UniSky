@@ -17,6 +17,7 @@ public class ModerationService(IProtocolService protocolService) : IModerationSe
 {
     private readonly ResourceLoader resources
         = ResourceLoader.GetForCurrentView();
+    private IReadOnlyDictionary<string, LabelerViewDetailed> labelers;
 
     public ModerationOptions ModerationOptions { get; set; }
 
@@ -32,7 +33,26 @@ public class ModerationService(IProtocolService protocolService) : IModerationSe
         await protocol.ConfigureLabelersAsync(moderationPrefs.Labelers)
             .ConfigureAwait(false);
 
+        labelers = labelDefs.Labelers;
         ModerationOptions = new ModerationOptions(protocol.Session.Did, moderationPrefs, labelDefs.LabelDefs);
+    }
+
+    public bool TryGetDisplayNameForLabeler(InterpretedLabelValueDefinition labelDef, out string displayName)
+    {
+        if (labelDef.DefinedBy == null)
+        {
+            displayName = "Bluesky Moderation Service";
+            return true;
+        }
+
+        if (labelers.TryGetValue(labelDef.DefinedBy.ToString(), out var labelerViewDetailed))
+        {
+            displayName = labelerViewDetailed.Creator?.DisplayName ?? "Unknown Labeler";
+            return true;
+        }
+
+        displayName = null;
+        return false;
     }
 
     public bool TryGetLocalisedStringsForLabel(InterpretedLabelValueDefinition labelDef, out LabelStrings label)
