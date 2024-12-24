@@ -20,7 +20,7 @@ public static class ModerationExtensions
 
     public static Task ConfigureLabelersAsync(this ATProtocol protocol, IReadOnlyList<ModerationPrefsLabeler> labelers)
     {
-        protocol.Client.DefaultRequestHeaders.Add(ATPROTO_CONTENT_LABELERS, string.Join(", ", labelers.Select(l => l.Did.Handler)));
+        protocol.Client.DefaultRequestHeaders.Add(ATPROTO_CONTENT_LABELERS, string.Join(", ", labelers.Select(l => l.Id)));
         return Task.CompletedTask;
     }
 

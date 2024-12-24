@@ -154,7 +154,6 @@ public partial class PostViewModel : ViewModelBase
 
         var moderator = new Moderator(ServiceContainer.Default.GetRequiredService<IModerationService>().ModerationOptions);
         var decision = moderator.ModeratePost(view);
-
         var ui = decision.GetUI(ModerationContext.ContentMedia);
         Warning = (ui.Alert || ui.Blur || ui.Filter) ?
             new ContentWarningViewModel() :

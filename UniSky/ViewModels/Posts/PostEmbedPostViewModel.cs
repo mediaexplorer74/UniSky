@@ -6,6 +6,7 @@ using FishyFlip.Lexicon.App.Bsky.Embed;
 using FishyFlip.Lexicon.App.Bsky.Feed;
 using Humanizer;
 using Microsoft.Extensions.DependencyInjection;
+using UniSky.Moderation;
 using UniSky.Pages;
 using UniSky.Services;
 using UniSky.ViewModels.Profile;
@@ -41,6 +42,14 @@ public partial class PostEmbedPostViewModel : PostEmbedViewModel
         Author = new ProfileViewModel(view.Author);
 
         Embed = PostViewModel.CreateEmbedViewModel(view.Embeds?.FirstOrDefault(), true);
+
+        var moderator = new Moderator(ServiceContainer.Default.GetRequiredService<IModerationService>().ModerationOptions);
+        var decision = moderator.ModeratePost(new ModerationSubjectPost(view, post));
+
+        var ui = decision.GetUI(ModerationContext.ContentMedia);
+        Warning = (ui.Alert || ui.Blur || ui.Filter) ?
+            new ContentWarningViewModel() :
+            null;
 
         var timeSinceIndex = DateTime.Now - (view.IndexedAt.Value.ToLocalTime());
         var date = timeSinceIndex.Humanize(1, minUnit: Humanizer.Localisation.TimeUnit.Second);
