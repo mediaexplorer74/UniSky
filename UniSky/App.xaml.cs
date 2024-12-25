@@ -72,10 +72,13 @@ sealed partial class App : Application
         collection.AddSingleton<INavigationServiceLocator, NavigationServiceLocator>();
         collection.AddSingleton<INotificationsService, BackgroundNotificationsService>();
         collection.AddSingleton<IModerationService, ModerationService>();
+        collection.AddSingleton<IEmbedExtractor, AngleSharpEmbedExtractor>();
 
         collection.AddScoped<ISafeAreaService, ApplicationViewSafeAreaService>();
         collection.AddScoped<ISheetService, SheetService>();
         collection.AddScoped<IStandardOverlayService, StandardOverlayService>();
+        collection.AddScoped<IElementCaptureService, XamlElementCaptureService>();
+        collection.AddScoped<IEmbedThumbnailGenerator, XamlEmbedThumbnailGenerator>();
 
         collection.AddTransient<ILoginService, LoginService>();
         collection.AddTransient<ISessionService, SessionService>();

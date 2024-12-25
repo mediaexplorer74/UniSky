@@ -121,7 +121,7 @@ public partial class ComposeViewAttachmentViewModel : ViewModelBase
     {
         base.OnLoadingChanged(value);
 
-        syncContext.Post(() => parent.UpdateLoading(this, value));
+        syncContext.Post(() => parent.UpdateLoading(value));
     }
 
     private async Task TryDeleteTemporaryFile(IStorageFile storageFile)

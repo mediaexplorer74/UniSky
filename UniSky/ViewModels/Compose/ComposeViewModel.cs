@@ -1,21 +1,27 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text.RegularExpressions;
+using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using FishyFlip;
 using FishyFlip.Lexicon;
 using FishyFlip.Lexicon.App.Bsky.Actor;
 using FishyFlip.Lexicon.App.Bsky.Embed;
 using FishyFlip.Lexicon.App.Bsky.Feed;
 using FishyFlip.Lexicon.Com.Atproto.Repo;
+using FishyFlip.Models;
 using FishyFlip.Tools;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using UniSky.Extensions;
+using UniSky.Helpers;
 using UniSky.Helpers.Interop;
 using UniSky.Services;
 using UniSky.ViewModels.Posts;
@@ -25,6 +31,8 @@ using Windows.Media.Capture;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
+using System.Threading;
+using OwlCore;
 
 namespace UniSky.ViewModels.Compose;
 
@@ -36,6 +44,7 @@ public partial class ComposeViewModel : ViewModelBase
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanPost))]
     [NotifyPropertyChangedFor(nameof(Characters))]
+    [NotifyPropertyChangedFor(nameof(IsDirty))]
     private string _text;
     [ObservableProperty]
     private string _avatarUrl;
@@ -46,19 +55,27 @@ public partial class ComposeViewModel : ViewModelBase
     [NotifyPropertyChangedFor(nameof(HasReply))]
     private PostViewModel replyTo;
 
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanPost))]
+    [NotifyPropertyChangedFor(nameof(IsDirty))]
+    private ComposeViewLinkCardViewModel attachedUri;
+
     private readonly ResourceLoader resources;
     private readonly IProtocolService protocolService;
     private readonly ILogger<ComposeViewModel> logger;
 
     // TODO: this but better
     public bool IsDirty
-        => (!string.IsNullOrEmpty(Text) || HasAttachments);
+        => (!string.IsNullOrEmpty(Text) || HasAttachments || AttachedUri != null);
     // TODO: ditto
     public bool CanPost
-        => (!string.IsNullOrEmpty(Text) || HasAttachments) && Text.Length <= 300 && !AttachedFiles.Any(a => a.IsLoading || a.IsErrored);
+        => (!string.IsNullOrEmpty(Text) || HasAttachments || AttachedUri != null) &&
+            Text.Length <= 300 &&
+            AttachedUri?.IsLoading != true &&
+            !AttachedFiles.Any(a => a.IsLoading || a.IsErrored);
+
     public int Characters
         => Text?.Length ?? 0;
-
     public bool HasReply
         => ReplyTo != null;
 
@@ -69,8 +86,8 @@ public partial class ComposeViewModel : ViewModelBase
 
     public IOverlayController SheetController { get; }
 
-    public ComposeViewModel(IProtocolService protocolService,
-                            IOverlayController sheetController,
+    public ComposeViewModel(IOverlayController sheetController,
+                            IProtocolService protocolService,
                             ILogger<ComposeViewModel> logger,
                             PostViewModel replyTo = null)
     {
@@ -89,9 +106,44 @@ public partial class ComposeViewModel : ViewModelBase
             this.OnPropertyChanged(nameof(HasAttachments));
             this.OnPropertyChanged(nameof(CanPost));
         };
-
         Task.Run(LoadAsync);
     }
+
+    partial void OnTextChanged(string value)
+    {
+        if (AttachedFiles != null && AttachedFiles.Count != 0)
+            return;
+
+        Uri attachedUri = null;
+        var matches = Regex.Matches(value, @"(https?://[^\s]+)");
+        foreach (Match match in matches)
+        {
+            if (!Uri.TryCreate(match.Value, UriKind.Absolute, out var uri))
+                continue;
+
+            attachedUri = uri;
+            break;
+        }
+
+        if (attachedUri != null)
+        {
+            if (AttachedUri != null)
+            {
+                if (AttachedUri.Url == attachedUri)
+                    return;
+
+                AttachedUri.Dispose();
+            }
+
+            AttachedUri = new ComposeViewLinkCardViewModel(this, attachedUri);
+        }
+        else
+        {
+            AttachedUri?.Dispose();
+            AttachedUri = null;
+        }
+    }
+
 
     private async Task LoadAsync()
     {
@@ -120,6 +172,8 @@ public partial class ComposeViewModel : ViewModelBase
         this.SetErrored(null);
         using var ctx = this.GetLoadingContext();
 
+        var protocol = protocolService.Protocol;
+
         try
         {
             var text = Text;
@@ -127,6 +181,19 @@ public partial class ComposeViewModel : ViewModelBase
             text = text.Replace("\r\n", "\n")
                        .Replace('\r', '\n');
 
+            var handles = FacetHelpers.HandlesForMentions(text);
+
+            ProfileViewDetailed[] profiles = [];
+            if (handles.Length > 0)
+            {
+                var feedProfiles = (await protocol.Actor.GetProfilesAsync(handles.Cast<ATIdentifier>().ToList())
+                    .ConfigureAwait(false))
+                    .HandleResult();
+
+                profiles = [.. feedProfiles.Profiles];
+            }
+
+            var facets = FacetHelpers.Parse(text, profiles);
             var replyRef = await GetReplyDefAsync().ConfigureAwait(false);
             var embed = await CreateEmbedAsync().ConfigureAwait(false);
 
@@ -328,6 +395,9 @@ public partial class ComposeViewModel : ViewModelBase
     {
         if (storageFile == null) return;
 
+        if (AttachedUri != null)
+            throw new InvalidOperationException("A link is attached to this post!");
+
         if (storageFile is IStorageFilePropertiesWithAvailability properties && !properties.IsAvailable)
             throw new InvalidOperationException(resources.GetString("E_FileUnavailable"));
 
@@ -359,7 +429,7 @@ public partial class ComposeViewModel : ViewModelBase
         AttachedFiles.Add(ActivatorUtilities.CreateInstance<ComposeViewAttachmentViewModel>(ServiceContainer.Scoped, this, storageFile, type, isTemporary));
     }
 
-    internal void UpdateLoading(ComposeViewAttachmentViewModel attachmentViewModel, bool value)
+    internal void UpdateLoading(bool value)
     {
         OnPropertyChanged(nameof(CanPost));
     }

@@ -34,7 +34,7 @@
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <GenerateTestArtifacts>False</GenerateTestArtifacts>
     <AppxBundle>Always</AppxBundle>
-    <AppxBundlePlatforms>x86|x64|arm|arm64</AppxBundlePlatforms>
+    <AppxBundlePlatforms>arm</AppxBundlePlatforms>
     <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
   </PropertyGroup>
@@ -157,6 +157,9 @@
     <Compile Include="Controls\Compose\ComposeSheet.xaml.cs">
       <DependentUpon>ComposeSheet.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Compose\Renderer\ComposeImageRenderer.xaml.cs">
+      <DependentUpon>ComposeImageRenderer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ConstrainedBox\AspectRatioConstraint.cs" />
     <Compile Include="Controls\ConstrainedBox\ConstrainedBox.cs" />
     <Compile Include="Controls\ConstrainedBox\ConstrainedBox.Properties.cs" />
@@ -201,7 +204,9 @@
     <Compile Include="Extensions\Hairline.cs" />
     <Compile Include="Extensions\ScrollToSelectedBehaviour.cs" />
     <Compile Include="Extensions\SynchronizationContextExtensions.cs" />
+    <Compile Include="Helpers\AngleSharp\CustomHttpClientRequester.cs" />
     <Compile Include="Helpers\Composition\BirdAnimation.cs" />
+    <Compile Include="Helpers\FacetHelpers.cs" />
     <Compile Include="Helpers\Geometry\CanvasPathBuilderExtensions.cs" />
     <Compile Include="Helpers\Geometry\CanvasPathGeometry.cs" />
     <Compile Include="Helpers\Geometry\CanvasStroke.cs" />
@@ -260,6 +265,7 @@
     </Compile>
     <Compile Include="Polyfill\IsExternalInit.cs" />
     <Compile Include="Services\BackgroundNotificationsService.cs" />
+    <Compile Include="Services\XamlEmbedThumbnailGenerator.cs" />
     <Compile Include="Services\NavigationServiceLocator.cs" />
     <Compile Include="DataTemplates\FeedTemplates.xaml.cs">
       <DependentUpon>FeedTemplates.xaml</DependentUpon>
@@ -273,8 +279,11 @@
     <Compile Include="Services\Sheet\SheetRootController.cs" />
     <Compile Include="Services\Sheet\SheetService.cs" />
     <Compile Include="Services\ThemeService.cs" />
+    <Compile Include="Services\AngleSharpEmbedExtractor.cs" />
+    <Compile Include="Services\XamlElementCaptureService.cs" />
     <Compile Include="Themes\ThemeResources.cs" />
     <Compile Include="ViewModels\Compose\ComposeViewAttachmentViewModel.cs" />
+    <Compile Include="ViewModels\Compose\ComposeViewLinkCardViewModel.cs" />
     <Compile Include="ViewModels\Compose\ComposeViewModel.cs" />
     <Compile Include="ViewModels\Error\ExceptionViewModel.cs" />
     <Compile Include="ViewModels\Gallery\GalleryViewModel.cs" />
@@ -427,6 +436,7 @@
     <Content Include="Assets\StoreLogo.scale-150.png" />
     <Content Include="Assets\StoreLogo.scale-200.png" />
     <Content Include="Assets\StoreLogo.scale-400.png" />
+    <Content Include="Assets\WatermarkLogo.png" />
     <Content Include="Assets\Wide310x150Logo.scale-100.png" />
     <Content Include="Assets\Wide310x150Logo.scale-125.png" />
     <Content Include="Assets\Wide310x150Logo.scale-150.png" />
@@ -454,6 +464,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\Compose\ComposeSheet.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Compose\Renderer\ComposeImageRenderer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -583,6 +597,12 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="AngleSharp">
+      <Version>1.2.0-beta.439</Version>
+    </PackageReference>
+    <PackageReference Include="AngleSharp.Io">
+      <Version>1.0.0</Version>
+    </PackageReference>
     <PackageReference Include="CommunityToolkit.Mvvm">
       <Version>8.4.0</Version>
     </PackageReference>
@@ -621,6 +641,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed">
       <Version>2.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="OwlCore">
+      <Version>0.6.1</Version>
     </PackageReference>
     <PackageReference Include="System.Text.Json">
       <Version>9.0.0</Version>

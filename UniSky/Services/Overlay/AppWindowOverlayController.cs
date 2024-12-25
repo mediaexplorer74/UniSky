@@ -128,14 +128,21 @@ internal class AppWindowOverlayController : IOverlayController
             SizeHelpers.Scale(ref width, ref height, maxWidth, maxHeight);
 
             if ((applicationView.AdjacentToLeftDisplayEdge && applicationView.AdjacentToRightDisplayEdge) ||
-                Math.Max(offsetFromLeftEdge, offsetFromRightEdge) < width) // not enough space 
+                Math.Max(offsetFromLeftEdge, offsetFromRightEdge) < ((currentDisplaySize.Width / 3.0) * 1.0)) // not enough space 
             {
+                var windowCenter = new Point(
+                    (applicationView.VisibleBounds.X - currentRegion.WorkAreaOffset.X) + (applicationView.VisibleBounds.Width / 2.0),
+                    (applicationView.VisibleBounds.Y - currentRegion.WorkAreaOffset.Y) + (applicationView.VisibleBounds.Height / 2.0));
+                var windowSize = new Size(applicationView.VisibleBounds.Width, applicationView.VisibleBounds.Height);
+
                 width = initialSize.Width;
                 height = initialSize.Height;
-                SizeHelpers.Scale(ref width, ref height, currentDisplayRect.Width / 4.0 * 3.0, currentDisplayRect.Height / 4.0 * 3.0);
+                SizeHelpers.Scale(ref width, ref height, (windowSize.Width / 5.0) * 4.0, (windowSize.Height / 5.0) * 4.0);
+
+                var position = new Point(windowCenter.X - (width / 2.0), windowCenter.Y - (height / 2.0));
 
                 appWindow.RequestSize(new Size(width, height + 32));
-                appWindow.RequestMoveRelativeToDisplayRegion(currentRegion, new Point((currentDisplayCenter - (width / 2)) + 20, 150));
+                appWindow.RequestMoveRelativeToDisplayRegion(currentRegion, position);
             }
             else if (offsetFromRightEdge > offsetFromLeftEdge)
             {

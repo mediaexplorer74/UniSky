@@ -7,6 +7,7 @@ using Windows.UI.Core;
 using Windows.UI.Core.Preview;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace UniSky.Services.Overlay;
 
@@ -22,7 +23,7 @@ internal class ApplicationViewOverlayController : IOverlayController
     private bool hasActivated = false;
     private long titlePropertyChangedRef;
 
-    private FrameworkElement Control 
+    private FrameworkElement Control
         => (FrameworkElement)control;
 
     public ApplicationViewOverlayController(IOverlayControl control,
@@ -57,6 +58,15 @@ internal class ApplicationViewOverlayController : IOverlayController
 
         titlePropertyChangedRef = Control.RegisterPropertyChangedCallback(OverlayControl.TitleContentProperty, OnTitleChanged);
         OnTitleChanged(Control, OverlayControl.TitleContentProperty);
+
+        Window.Current.Content = new Grid()
+        {
+            Children =
+            {
+                new Canvas() { Name = "RenderTargetRoot" },
+                (UIElement)control,
+            }
+        };
     }
 
     private void OnTitleChanged(DependencyObject sender, DependencyProperty dp)

@@ -121,6 +121,9 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="IElementCaptureService.cs" />
+    <Compile Include="IEmbedExtractor.cs" />
+    <Compile Include="IEmbedThumbnailGenerator.cs" />
     <Compile Include="IModerationService.cs" />
     <Compile Include="Implementation\BadgeService.cs" />
     <Compile Include="Constants.cs" />
