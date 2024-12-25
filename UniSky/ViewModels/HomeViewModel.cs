@@ -55,6 +55,7 @@ public partial class HomeViewModel : ViewModelBase
     private readonly DispatcherTimer notificationUpdateTimer;
     private readonly DispatcherTimer refreshTokenTimer;
 
+    private bool isLoaded;
     private ProfileViewDetailed profile;
 
     [ObservableProperty]
@@ -143,6 +144,7 @@ public partial class HomeViewModel : ViewModelBase
         navigationManager.BackRequested += OnBackRequested;
 
         var window = Window.Current;
+        window.Activated += OnWindowActivatedAsync;
         window.VisibilityChanged += OnVisibilityChanged;
 
         //Task.Run(LoadAsync);
@@ -156,6 +158,11 @@ public partial class HomeViewModel : ViewModelBase
 
     private async Task LoadAsync()
     {
+        if (isLoaded)
+            return;
+
+        isLoaded = true;
+
         using var loading = this.GetLoadingContext();
         var protocol = this.protocolService.Protocol;
 
@@ -285,6 +292,23 @@ public partial class HomeViewModel : ViewModelBase
         }
     }
 
+    private async void OnWindowActivatedAsync(object sender, WindowActivatedEventArgs e)
+    {
+        if (e.WindowActivationState == CoreWindowActivationState.Deactivated)        
+            return;
+        
+        try
+        {
+            await RefreshSessionAsync()
+                .ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Failed to authenticate!");
+            return;
+        }
+    }
+
     partial void OnPageChanged(HomePages oldValue, HomePages newValue)
     {
         if (oldValue != newValue)
@@ -300,19 +324,23 @@ public partial class HomeViewModel : ViewModelBase
 
         this.syncContext.Post(() =>
         {
-            var statusBar = StatusBar.GetForCurrentView();
-            _ = statusBar.ShowAsync();
-
-            statusBar.ProgressIndicator.ProgressValue = null;
-
-            if (value)
+            try
             {
-                _ = statusBar.ProgressIndicator.ShowAsync();
+                var statusBar = StatusBar.GetForCurrentView();
+                _ = statusBar.ShowAsync();
+
+                statusBar.ProgressIndicator.ProgressValue = null;
+
+                if (value)
+                {
+                    _ = statusBar.ProgressIndicator.ShowAsync();
+                }
+                else
+                {
+                    _ = statusBar.ProgressIndicator.HideAsync();
+                }
             }
-            else
-            {
-                _ = statusBar.ProgressIndicator.HideAsync();
-            }
+            catch { }
         });
     }
 

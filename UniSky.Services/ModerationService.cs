@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FishyFlip;
 using FishyFlip.Lexicon.App.Bsky.Labeler;
+using Microsoft.Extensions.Logging;
 using UniSky.Moderation;
 using Windows.ApplicationModel.Resources;
 
@@ -13,41 +15,63 @@ namespace UniSky.Services;
 
 public record struct LabelStrings(string Name, string Description);
 
-public class ModerationService(IProtocolService protocolService) : IModerationService
+public class ModerationService(IProtocolService protocolService, ILogger<ModerationService> logger) : IModerationService
 {
     private readonly ResourceLoader resources
         = ResourceLoader.GetForCurrentView();
-    private IReadOnlyDictionary<string, LabelerViewDetailed> labelers;
 
     public ModerationOptions ModerationOptions { get; set; }
 
     public async Task ConfigureModerationAsync()
     {
-        var protocol = protocolService.Protocol;
-        var moderationPrefs = await protocol.GetModerationPrefsAsync()
-            .ConfigureAwait(false);
+        logger.LogInformation("Configuring moderation...");
+        try
+        {
+            var protocol = protocolService.Protocol;
+            var moderationPrefs = await protocol.GetModerationPrefsAsync()
+                .ConfigureAwait(false);
 
-        var labelDefs = await protocol.GetLabelDefinitionsAsync(moderationPrefs)
-            .ConfigureAwait(false);
+            logger.LogDebug("Got moderation preferences, AdultContent = {AdultContentEnabled}, Labels = {Labels}, Labelers = {Labelers}, MutedWords = {MutedWords}",
+                moderationPrefs.AdultContentEnabled,
+                moderationPrefs.Labels.Count,
+                moderationPrefs.Labelers.Count,
+                moderationPrefs.MutedWords.Count);
 
-        await protocol.ConfigureLabelersAsync(moderationPrefs.Labelers)
-            .ConfigureAwait(false);
+            var labelDefs = await protocol.GetLabelDefinitionsAsync(moderationPrefs)
+                .ConfigureAwait(false);
 
-        labelers = labelDefs.Labelers;
-        ModerationOptions = new ModerationOptions(protocol.Session.Did, moderationPrefs, labelDefs.LabelDefs);
+            // check if we got all the labelers
+            Debug.Assert(labelDefs.Labelers.Count == moderationPrefs.Labelers.Count);
+            logger.LogDebug("Fetched label definitions, Expected {LabelerCount}, got {FetchedLabelerCount}",
+                moderationPrefs.Labelers.Count,
+                labelDefs.Labelers.Count);
+
+            await protocol.ConfigureLabelersAsync(moderationPrefs.Labelers)
+                .ConfigureAwait(false);
+
+            logger.LogDebug("Configured labelers header on protocol: {Header}", string.Join(", ", moderationPrefs.Labelers.Select(l => l.Id)));
+
+            ModerationOptions = new ModerationOptions(protocol.Session.Did, moderationPrefs, labelDefs.LabelDefs);
+        }
+        catch (Exception ex)
+        {
+            // TODO: do i just kill the app here? cause this is _bad_
+            logger.LogCritical(ex, "Failed to configure moderation, this is bad.");
+        }
     }
+
 
     public bool TryGetDisplayNameForLabeler(InterpretedLabelValueDefinition labelDef, out string displayName)
     {
-        if (labelDef.DefinedBy == null)
+        if (labelDef.DefinedBy == null || labelDef.Detailed == null)
         {
             displayName = "Bluesky Moderation Service";
             return true;
         }
 
-        if (labelers.TryGetValue(labelDef.DefinedBy.ToString(), out var labelerViewDetailed))
+        if (labelDef.Detailed != null)
         {
-            displayName = labelerViewDetailed.Creator?.DisplayName ?? "Unknown Labeler";
+            displayName = labelDef.Detailed.Creator?.DisplayName ?? "Unknown Labeler";
             return true;
         }
 

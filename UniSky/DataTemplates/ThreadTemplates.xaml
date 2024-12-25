@@ -113,6 +113,7 @@
                 </Button>
 
                 <labels:LabelsControl x:Name="LabelViewer"
+                                      x:Phase="3"
                                       x:Load="{x:Bind converters:Static.Any(Author.Labels)}"
                                       Labels="{x:Bind Author.Labels}"
                                       Margin="0,6,0,0"/>

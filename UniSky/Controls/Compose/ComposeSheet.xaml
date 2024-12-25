@@ -124,9 +124,10 @@
                             </Grid>
 
                             <labels:LabelsControl x:Name="LabelViewer"
-                                              x:Load="{x:Bind converters:Static.Any(Author.Labels)}"
-                                              Labels="{x:Bind Author.Labels}"
-                                              Margin="0,4,0,2"/>
+                                                  x:Load="{x:Bind converters:Static.Any(Author.Labels)}"
+                                                  x:Phase="3"
+                                                  Labels="{x:Bind Author.Labels}"
+                                                  Margin="0,4,0,2"/>
 
                             <localControls:RichTextBlock x:Name="MainContent"
                                                          x:Load="{x:Bind converters:Static.NotNullOrWhiteSpace(Text)}"

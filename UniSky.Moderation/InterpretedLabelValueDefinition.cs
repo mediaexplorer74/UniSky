@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using FishyFlip.Lexicon.App.Bsky.Labeler;
 using FishyFlip.Lexicon.Com.Atproto.Label;
 using FishyFlip.Models;
 
@@ -16,7 +17,7 @@ public class InterpretedLabelValueDefinition
         Locales = [];
     }
 
-    public InterpretedLabelValueDefinition(LabelValueDefinition def, ATDid definedBy)
+    public InterpretedLabelValueDefinition(LabelValueDefinition def, LabelerViewDetailed definedBy)
     {
         var behaviors = new ModerationBehaviors();
         var alertOrInform = def.Severity switch
@@ -95,7 +96,8 @@ public class InterpretedLabelValueDefinition
             "media" => LabelBlurs.Media,
             _ => LabelBlurs.None
         };
-        DefinedBy = definedBy;
+        Detailed = definedBy;
+        DefinedBy = definedBy.Creator!.Did;
         Configurable = true;
         AdultOnly = def.AdultOnly ?? false;
         DefaultSetting = defaultSetting;
@@ -103,6 +105,8 @@ public class InterpretedLabelValueDefinition
         Behaviors = behaviors;
         Locales = def.Locales != null ? [.. def.Locales] : [];
     }
+
+    public LabelerViewDetailed Detailed { get; }
 
     public string Identifier { get; init; }
     public LabelSeverity Severity { get; init; }

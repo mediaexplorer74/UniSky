@@ -554,6 +554,7 @@
 
                         <labels:LabelsControl x:Name="LabelViewer"
                                               x:Load="{x:Bind converters:Static.Any(Author.Labels)}"
+                                              x:Phase="3"
                                               Labels="{x:Bind Author.Labels}"
                                               Margin="0,4,0,2"/>
 
