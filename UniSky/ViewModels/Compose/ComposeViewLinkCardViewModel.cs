@@ -32,9 +32,6 @@ public partial class ComposeViewLinkCardViewModel : ViewModelBase, IDisposable
     private readonly IEmbedExtractor embedExtractor;
     private readonly IEmbedThumbnailGenerator thumbnailGenerator;
     private readonly CoreDispatcher dispatcher = Window.Current.Dispatcher;
-
-    private SoftwareBitmap thumbnailBitmap;
-
     [ObservableProperty]
     private string title;
     [ObservableProperty]
@@ -45,6 +42,7 @@ public partial class ComposeViewLinkCardViewModel : ViewModelBase, IDisposable
     private object thumbnail;
 
     public Uri Url { get; }
+    public SoftwareBitmap ThumbnailBitmap { get; private set; }
 
     public ComposeViewLinkCardViewModel(ComposeViewModel parent, Uri url)
     {
@@ -79,11 +77,11 @@ public partial class ComposeViewLinkCardViewModel : ViewModelBase, IDisposable
 
             try
             {
-                this.thumbnailBitmap = await thumbnailGenerator.GenerateThumbnailAsync(embedDetails.Value);
+                this.ThumbnailBitmap = await thumbnailGenerator.GenerateThumbnailAsync(embedDetails.Value);
                 await dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
                 {
                     var softwareSource = new SoftwareBitmapSource();
-                    await softwareSource.SetBitmapAsync(thumbnailBitmap);
+                    await softwareSource.SetBitmapAsync(ThumbnailBitmap);
 
                     Thumbnail = softwareSource;
                 });

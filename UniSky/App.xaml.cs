@@ -73,6 +73,7 @@ sealed partial class App : Application
         collection.AddSingleton<INotificationsService, BackgroundNotificationsService>();
         collection.AddSingleton<IModerationService, ModerationService>();
         collection.AddSingleton<IEmbedExtractor, AngleSharpEmbedExtractor>();
+        collection.AddSingleton<IImageCompressionService, ImageCompressionService>();
 
         collection.AddScoped<ISafeAreaService, ApplicationViewSafeAreaService>();
         collection.AddScoped<ISheetService, SheetService>();

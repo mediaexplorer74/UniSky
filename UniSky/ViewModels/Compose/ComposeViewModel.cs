@@ -62,6 +62,7 @@ public partial class ComposeViewModel : ViewModelBase
 
     private readonly ResourceLoader resources;
     private readonly IProtocolService protocolService;
+    private readonly IImageCompressionService compressionService;
     private readonly ILogger<ComposeViewModel> logger;
 
     // TODO: this but better
@@ -88,12 +89,14 @@ public partial class ComposeViewModel : ViewModelBase
 
     public ComposeViewModel(IOverlayController sheetController,
                             IProtocolService protocolService,
+                            IImageCompressionService compressionService,
                             ILogger<ComposeViewModel> logger,
                             PostViewModel replyTo = null)
     {
         this.protocolService = protocolService;
         this.logger = logger;
         this.SheetController = sheetController;
+        this.compressionService = compressionService;
         this.resources = ResourceLoader.GetForCurrentView();
 
         this.Text = "";
@@ -197,7 +200,7 @@ public partial class ComposeViewModel : ViewModelBase
             var replyRef = await GetReplyDefAsync().ConfigureAwait(false);
             var embed = await CreateEmbedAsync().ConfigureAwait(false);
 
-            var postModel = new Post(text, reply: replyRef, embed: embed);
+            var postModel = new Post(text, reply: replyRef, embed: embed, facets: [..facets]);
             var post = (await protocolService.Protocol.CreatePostAsync(postModel)
                 .ConfigureAwait(false))
                 .HandleResult();
@@ -216,6 +219,41 @@ public partial class ComposeViewModel : ViewModelBase
     }
 
     private async Task<ATObject> CreateEmbedAsync()
+    {
+        if (AttachedUri != null)
+        {
+            var card = AttachedUri;
+            if (card.ThumbnailBitmap != null)
+            {
+                using var memoryStream = new MemoryStream(10_000_000);
+                var image = await compressionService.CompressSoftwareBitmapAsync(card.ThumbnailBitmap, memoryStream.AsRandomAccessStream());
+
+                memoryStream.Seek(0, SeekOrigin.Begin);
+                using var content = new StreamContent(memoryStream);
+                content.Headers.ContentType = new MediaTypeHeaderValue(image.ContentType);
+
+                var blob = (await protocolService.Protocol.UploadBlobAsync(content)
+                    .ConfigureAwait(false))
+                    .HandleResult();
+
+                var external = new EmbedExternal()
+                {
+                    External = new External(card.Url.ToString(), card.Title, card.Description, blob.Blob)
+                };
+
+                return external;
+            }
+
+            return null;
+        }
+        else
+        {
+            return await UploadImageEmbedAsync()
+                .ConfigureAwait(false);
+        }
+    }
+
+    private async Task<ATObject> UploadImageEmbedAsync()
     {
         EmbedImages embed = null;
         foreach (var image in this.AttachedFiles.Where(f => f.AttachmentType == ComposeViewAttachmentType.Image))
