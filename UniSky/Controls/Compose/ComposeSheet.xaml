@@ -362,7 +362,7 @@
                             <DataTemplate x:DataType="compose:ComposeViewAttachmentViewModel">
                                 <Button Style="{ThemeResource CleanButtonStyle}"
                                         Command="{x:Bind AddAltTextCommand}"
-                                        Padding="0">
+                                        Padding="0,4,0,0">
                                     <Grid Width="175" VerticalAlignment="Stretch">
                                         <Image VerticalAlignment="Center"
                                                HorizontalAlignment="Center" 

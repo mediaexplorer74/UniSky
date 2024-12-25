@@ -66,7 +66,7 @@ public partial class ComposeViewLinkCardViewModel : ViewModelBase, IDisposable
             token.ThrowIfCancellationRequested();
             var embedDetails = await embedExtractor.ExtractEmbedAsync(this.Url, token);
             if (embedDetails == null)
-                return;
+                throw new Exception("No embed found!");
 
             Title = embedDetails.Value.Title;
             Description = embedDetails.Value.Description;
@@ -94,6 +94,7 @@ public partial class ComposeViewLinkCardViewModel : ViewModelBase, IDisposable
         catch (Exception ex)
         {
             this.SetErrored(ex);
+            this.Remove();
         }
     }
 
@@ -101,7 +102,8 @@ public partial class ComposeViewLinkCardViewModel : ViewModelBase, IDisposable
     [RelayCommand]
     private void Remove()
     {
-        this.parent.AttachedUri = null;
+        if (this.parent.AttachedUri == this)
+            this.parent.AttachedUri = null;
     }
 
     protected override void OnLoadingChanged(bool value)

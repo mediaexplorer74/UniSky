@@ -265,7 +265,6 @@
     </Compile>
     <Compile Include="Polyfill\IsExternalInit.cs" />
     <Compile Include="Services\BackgroundNotificationsService.cs" />
-    <Compile Include="Services\IImageCompressionService.cs" />
     <Compile Include="Services\ImageCompressionService.cs" />
     <Compile Include="Services\XamlEmbedThumbnailGenerator.cs" />
     <Compile Include="Services\NavigationServiceLocator.cs" />

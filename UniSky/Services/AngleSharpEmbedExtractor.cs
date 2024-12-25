@@ -41,6 +41,9 @@ public class AngleSharpEmbedExtractor : IEmbedExtractor
         var document = await browsingContext.OpenAsync(new Url(uri.ToString()), cancellationToken);
         cancellationToken.ThrowIfCancellationRequested();
 
+        if (document.StatusCode != System.Net.HttpStatusCode.OK)
+            return null;
+
         var title = ExtractTitleFromDocument(document);
         var description = ExtractDescriptionFromDocument(document);
         var imageUrl = ExtractImageFromDocument(document);

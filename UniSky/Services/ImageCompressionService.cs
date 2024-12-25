@@ -24,7 +24,12 @@ public class ImageCompressionService : IImageCompressionService
         IRandomAccessStream outputStream,
         int size = 4096)
     {
-        return await CompressSoftwareBitmapAsync(softwareBitmap, outputStream, CheckHeifSupport(), size, (int)softwareBitmap.PixelWidth, (int)softwareBitmap.PixelHeight);
+        return await CompressSoftwareBitmapAsync(softwareBitmap,
+                                                 outputStream,
+                                                 CheckHeifSupport(),
+                                                 size,
+                                                 (int)softwareBitmap.PixelWidth,
+                                                 (int)softwareBitmap.PixelHeight);
     }
 
     private async Task<CompressedImageFile> CompressImageAsync(IStorageFile input, bool useHeif, int size)
@@ -71,9 +76,10 @@ public class ImageCompressionService : IImageCompressionService
         var contentType = useHeif ? "image/heic" : "image/jpeg";
         var codec = useHeif ? BitmapEncoder.HeifEncoderId : BitmapEncoder.JpegEncoderId;
 
-        try
+        // for reasons that dont entirely make sense, this needs to run on a separate thread
+        return await Task.Run(async () =>
         {
-            return await Task.Run(async () =>
+            try
             {
                 do
                 {
@@ -89,18 +95,18 @@ public class ImageCompressionService : IImageCompressionService
                     await encoder.FlushAsync();
 
                     contentType = encoder.EncoderInformation.MimeTypes.FirstOrDefault()
-                        ?? contentType;
+                            ?? contentType;
                     size = (int)Math.Floor(size * 0.75);
                 }
                 while (outputStream.Size > 1_000_000);
 
                 return new CompressedImageStream((int)Math.Ceiling(width), (int)Math.Ceiling(height), contentType, outputStream);
-            });
-        }
-        catch (Exception ex) when ((uint)ex.HResult == 0xc00d5212) // missing heif codec
-        {
-            return await CompressSoftwareBitmapAsync(softwareBitmap, outputStream, false, size, rawWidth, rawHeight);
-        }
+            }
+            catch (Exception ex) when ((uint)ex.HResult == 0xc00d5212) // missing heif codec
+            {
+                return await CompressSoftwareBitmapAsync(softwareBitmap, outputStream, false, size, rawWidth, rawHeight);
+            }
+        });
     }
 
     private static bool CheckHeifSupport()
