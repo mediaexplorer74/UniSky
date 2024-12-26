@@ -71,17 +71,22 @@ sealed partial class App : Application
         collection.AddSingleton<IThemeService, ThemeService>();
         collection.AddSingleton<INavigationServiceLocator, NavigationServiceLocator>();
         collection.AddSingleton<INotificationsService, BackgroundNotificationsService>();
+        collection.AddSingleton<IModerationService, ModerationService>();
+        collection.AddSingleton<IEmbedExtractor, AngleSharpEmbedExtractor>();
+        collection.AddSingleton<IImageCompressionService, ImageCompressionService>();
 
         collection.AddScoped<ISafeAreaService, ApplicationViewSafeAreaService>();
         collection.AddScoped<ISheetService, SheetService>();
         collection.AddScoped<IStandardOverlayService, StandardOverlayService>();
+        collection.AddScoped<IElementCaptureService, XamlElementCaptureService>();
+        collection.AddScoped<IEmbedThumbnailGenerator, XamlEmbedThumbnailGenerator>();
 
         collection.AddTransient<ILoginService, LoginService>();
         collection.AddTransient<ISessionService, SessionService>();
         collection.AddTransient<IBadgeService, BadgeService>();
 
         ServiceContainer.Default.ConfigureServices(collection.BuildServiceProvider());
-        
+
         Configurator.Formatters.Register("en", (locale) => new ShortTimespanFormatter("en"));
         Configurator.Formatters.Register("en-GB", (locale) => new ShortTimespanFormatter("en"));
         Configurator.Formatters.Register("en-US", (locale) => new ShortTimespanFormatter("en"));

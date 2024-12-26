@@ -18,6 +18,7 @@
 <Directives xmlns="http://schemas.microsoft.com/netfx/2013/01/metadata">
   <Application>
     <Namespace Name="UniSky.ViewModels" Activate="Required Public" />
+    <Namespace Name="UniSky.Services" Activate="Required Public" />
     
     <Namespace Name="Microsoft.Extensions.Options" Activate="Required Public" />
     <Namespace Name="Microsoft.Extensions.Logging" Activate="Required Public" />

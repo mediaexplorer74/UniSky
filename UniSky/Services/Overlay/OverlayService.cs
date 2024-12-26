@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using UniSky.Controls.Overlay;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Foundation.Metadata;
@@ -59,7 +58,6 @@ internal abstract class OverlayService
             controller = new ApplicationViewOverlayController(control, currentViewId, newViewId, parameter as IOverlaySizeProvider);
             control.SetOverlayController(controller);
 
-            Window.Current.Content = control;
             Window.Current.Activate();
 
             control.InvokeShowing(parameter);

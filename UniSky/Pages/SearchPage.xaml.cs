@@ -25,6 +25,12 @@ public sealed partial class SearchPage : Page
     public SearchPage()
     {
         this.InitializeComponent();
+        this.Loaded += OnLoaded;
+    }
+
+    private void OnLoaded(object sender, RoutedEventArgs e)
+    {
+        this.SearchBox.Focus(FocusState.Keyboard);
     }
 
     protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -36,7 +42,6 @@ public sealed partial class SearchPage : Page
 
         if (this.ViewModel == null)
             this.DataContext = this.ViewModel = ActivatorUtilities.CreateInstance<SearchPageViewModel>(ServiceContainer.Scoped);
-        this.SearchBox.Focus(FocusState.Programmatic);
     }
 
     protected override void OnNavigatedFrom(NavigationEventArgs e)
