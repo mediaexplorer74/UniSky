@@ -246,10 +246,10 @@
                                          CanOverride="{Binding Warning.CanOverride, Mode=OneWay, FallbackValue=True}"
                                          Visibility="{Binding Embed, Converter={StaticResource VisibilityConverter}}">
                     <ContentControl x:Name="EmbedContent"
-                                            HorizontalAlignment="Stretch"
-                                            HorizontalContentAlignment="Stretch"
-                                            ContentTemplateSelector="{StaticResource PostEmbedTemplateSelector}"
-                                            Content="{Binding Embed}"/>
+                                    HorizontalAlignment="Stretch"
+                                    HorizontalContentAlignment="Stretch"
+                                    ContentTemplateSelector="{StaticResource PostEmbedTemplateSelector}"
+                                    Content="{Binding Embed}"/>
                 </controls:SpoilerControl>
             </StackPanel>
         </Button>
