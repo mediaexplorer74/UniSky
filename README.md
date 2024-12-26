@@ -4,9 +4,7 @@ A [Bluesky](https://bsky.app) client for Windows 10 & Windows 10 Mobile. Built w
 ## Downloads
 See the [latest release](https://github.com/UnicordDev/UniSky/releases)!
 
-<a href="https://apps.microsoft.com/detail/9mxts7g6fchx?mode=direct">
-	<img src="https://get.microsoft.com/images/en-gb%20dark.svg" width="200"/>
-</a>
+[![Microsoft Store badge](https://get.microsoft.com/images/en-gb%20dark.svg)](https://apps.microsoft.com/detail/9mxts7g6fchx?mode=direct)
 
 Requires Windows 10 build 15063 or later, please make sure your device is up to date!
 
