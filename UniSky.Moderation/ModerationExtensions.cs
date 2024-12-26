@@ -23,15 +23,15 @@ public static class ModerationExtensions
         return Task.CompletedTask;
     }
 
-    public static async Task<ModerationPrefs> GetModerationPrefsAsync(this ATProtocol protocol, GetPreferencesOutput? preferences = null)
+    public static async Task<ModerationPrefs> GetModerationPrefsAsync(this ATProtocol protocol)
     {
         var adultContent = false;
         var currentDid = protocol.Session?.Did
             ?? throw new InvalidOperationException("A session must be initialized before creating ModerationOptions");
 
-        preferences ??= (await protocol.GetPreferencesAsync()
-            .ConfigureAwait(false))
-            .HandleResult();
+        var preferences = (await protocol.GetPreferencesAsync()
+              .ConfigureAwait(false))
+              .HandleResult();
 
         var labelPrefs = new List<ContentLabelPref>();
         var labelers = new List<ModerationPrefsLabeler>() { ModerationPrefsLabeler.BSKY_MODERATION_SERVICE };
