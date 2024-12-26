@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Frozen;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text.Json.Serialization;
-using System.Threading;
 using System.Threading.Tasks;
 using FishyFlip;
 using FishyFlip.Lexicon.App.Bsky.Actor;
@@ -16,12 +13,13 @@ namespace UniSky.Moderation;
 
 public static class ModerationExtensions
 {
-    private const string ATPROTO_ACCEPT_LABELERS = "Atproto-Accept-Labelers";
-
     public static Task ConfigureLabelersAsync(this ATProtocol protocol, IReadOnlyList<ModerationPrefsLabeler> labelers)
     {
-        protocol.Client.DefaultRequestHeaders.Remove(ATPROTO_ACCEPT_LABELERS);
-        protocol.Client.DefaultRequestHeaders.Add(ATPROTO_ACCEPT_LABELERS, string.Join(", ", labelers.Select(l => l.Id)));
+        foreach (var items in labelers)
+        {
+            protocol.Options.LabelParameters.Add(LabelParameter.Create(items.Did.Handler, items.Redact ? ["redact"] : []));
+        }
+
         return Task.CompletedTask;
     }
 

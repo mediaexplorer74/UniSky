@@ -8,21 +8,14 @@ using FishyFlip.Models;
 
 namespace UniSky.Moderation;
 
-public class ModerationDecision
+public class ModerationDecision(ATDid did, bool isMe, IEnumerable<ModerationCause> causes)
 {
     private static readonly Regex CustomLabelValueRegex = new Regex("^[a-z-]+$", RegexOptions.ECMAScript | RegexOptions.Compiled);
 
-    private readonly List<ModerationCause> causes;
+    private readonly List<ModerationCause> causes = [.. causes];
 
-    public ModerationDecision(ATDid did, bool isMe, IEnumerable<ModerationCause> causes)
-    {
-        Did = did;
-        IsMe = isMe;
-        this.causes = [.. causes];
-    }
-
-    public ATDid Did { get; }
-    public bool IsMe { get; }
+    public ATDid Did { get; } = did;
+    public bool IsMe { get; } = isMe;
     public IReadOnlyList<ModerationCause> Causes
         => causes;
 
