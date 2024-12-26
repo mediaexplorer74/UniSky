@@ -1,6 +1,4 @@
-﻿using UniSky.Services;
-
-namespace UniSky.ViewModels.Notifications;
+﻿namespace UniSky.ViewModels.Notifications;
 
 public partial class NotificationsPageViewModel : ViewModelBase
 {
