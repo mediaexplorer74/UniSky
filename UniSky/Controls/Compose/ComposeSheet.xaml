@@ -9,7 +9,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:converters="using:UniSky.Converters"
     xmlns:extensions="using:UniSky.Extensions"
-    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls" 
+    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls" 
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls" 
     xmlns:compose="using:UniSky.ViewModels.Compose" 
     xmlns:templates="using:UniSky.Templates" 
@@ -27,6 +27,82 @@
                 <templates:FeedTemplates/>
             </ResourceDictionary.MergedDictionaries>
 
+            <DataTemplate x:Key="ComposeEmbedContentTemplate" 
+                          x:DataType="compose:ComposeViewLinkCardViewModel">
+                <Grid BorderBrush="{ThemeResource SystemControlSeparatorBrush}"
+                      extensions:Hairline.BorderThickness="1"
+                      MaxWidth="500">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid x:Name="ThumbnailBox"
+                            Visibility="{Binding Thumbnail, Converter={StaticResource VisibilityConverter}}"
+                            BorderBrush="{ThemeResource SystemControlSeparatorBrush}"
+                            extensions:Hairline.BorderThickness="0,0,0,1">
+                        <toolkit:ConstrainedBox AspectRatio="2:1">
+                            <Image Source="{Binding Thumbnail}"
+                                   VerticalAlignment="Center"
+                                   Stretch="UniformToFill"/>
+                        </toolkit:ConstrainedBox>
+                    </Grid>
+
+                    <StackPanel Grid.Row="1"
+                            Padding="8,8,8,4">
+                        <TextBlock x:Name="TitleBlock"
+                                   Visibility="{Binding Title, Converter={StaticResource VisibilityConverter}}"
+                                   Grid.Row="0"
+                                   Grid.Column="1"
+                                   Style="{ThemeResource BaseTextBlockStyle}" 
+                                   Text="{Binding Title}"
+                                   VerticalAlignment="Bottom"
+                                   TextWrapping="NoWrap"/>
+
+                        <TextBlock x:Name="SubtitleBlock"
+                                   Visibility="{Binding Description, Converter={StaticResource VisibilityConverter}}"
+                                   Grid.Row="1"
+                                   Grid.Column="1"
+                                   Margin="0,2,0,0"
+                                   Style="{ThemeResource CaptionTextBlockStyle}" 
+                                   Text="{Binding Description}"
+                                   VerticalAlignment="Top"
+                                   MaxLines="2"/>
+                    </StackPanel>
+
+                    <TextBlock Grid.Row="2" 
+                               Text="{Binding Source}"
+                               Style="{ThemeResource CaptionTextBlockStyle}" 
+                               Foreground="{ThemeResource ApplicationSecondaryForegroundThemeBrush}"
+                               TextWrapping="NoWrap"
+                               Margin="8,0,8,8"/>
+
+                    <ProgressBar Visibility="{Binding IsLoading, Converter={StaticResource VisibilityConverter}}"
+                                 Grid.RowSpan="3"
+                                 HorizontalAlignment="Stretch"
+                                 Margin="16,0"
+                                 Background="Transparent"
+                                 IsIndeterminate="{Binding IsLoading}"/>
+                    
+                    <Button Style="{ThemeResource CleanButtonStyle}"
+                            Command="{x:Bind RemoveCommand}"
+                            VerticalAlignment="Top"
+                            HorizontalAlignment="Right"
+                            Margin="0,-16,-16,0">
+                        <Grid>
+                            <Ellipse Width="32"
+                                     Height="32"
+                                     Fill="{ThemeResource SystemColorControlAccentBrush}"/>
+                            <Viewbox Width="16"
+                                     Height="16">
+                                <TextBlock FontFamily="{ThemeResource SymbolThemeFontFamily}">&#xE711;</TextBlock>
+                            </Viewbox>
+                        </Grid>
+                    </Button>
+                </Grid>
+            </DataTemplate>
+            
             <DataTemplate x:Key="ReplyingToPostContentTemplate"
                           x:DataType="posts:PostViewModel">
                 <StackPanel HorizontalAlignment="Stretch">
@@ -202,6 +278,7 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Grid x:Name="ReplyContainer"
                       x:Load="{x:Bind ViewModel.HasReply}"
@@ -244,7 +321,17 @@
                              Paste="PrimaryTextBox_Paste"/>
                 </Grid>
 
-                <Grid Grid.Row="2">
+                <Grid Grid.Row="2"
+                      Margin="4">
+                    <ContentControl x:Name="ComposeEmbed"
+                                    x:Load="{x:Bind converters:Static.NotNull(ViewModel.AttachedUri), Mode=OneWay}"
+                                    HorizontalAlignment="Stretch"
+                                    HorizontalContentAlignment="Stretch"
+                                    Content="{x:Bind ViewModel.AttachedUri, Mode=OneWay}"
+                                    ContentTemplate="{StaticResource ComposeEmbedContentTemplate}"/>
+                </Grid>
+                
+                <Grid Grid.Row="3">
                     <ListView x:Name="UploadsList"
                               x:Load="{x:Bind ViewModel.HasAttachments, Mode=OneWay}"
                               Margin="-12"
@@ -275,7 +362,7 @@
                             <DataTemplate x:DataType="compose:ComposeViewAttachmentViewModel">
                                 <Button Style="{ThemeResource CleanButtonStyle}"
                                         Command="{x:Bind AddAltTextCommand}"
-                                        Padding="0">
+                                        Padding="0,4,0,0">
                                     <Grid Width="175" VerticalAlignment="Stretch">
                                         <Image VerticalAlignment="Center"
                                                HorizontalAlignment="Center" 
@@ -349,13 +436,13 @@
                         Margin="0,0,2,0"/>
             </StackPanel>
 
-            <controls:RadialProgressBar Grid.Column="1"
-                                        Margin="8,6"
-                                        Minimum="0" 
-                                        Maximum="{x:Bind ViewModel.MaxCharacters, FallbackValue=300}" 
-                                        Value="{x:Bind ViewModel.Characters, Mode=OneWay}"
-                                        Width="32"
-                                        Height="32"/>
+            <toolkit:RadialProgressBar Grid.Column="1"
+                                       Margin="8,6"
+                                       Minimum="0" 
+                                       Maximum="{x:Bind ViewModel.MaxCharacters, FallbackValue=300}" 
+                                       Value="{x:Bind ViewModel.Characters, Mode=OneWay}"
+                                       Width="32"
+                                       Height="32"/>
         </Grid>
     </Grid>
 </sheet:SheetControl>

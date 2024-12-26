@@ -59,7 +59,6 @@ internal abstract class OverlayService
             controller = new ApplicationViewOverlayController(control, currentViewId, newViewId, parameter as IOverlaySizeProvider);
             control.SetOverlayController(controller);
 
-            Window.Current.Content = control;
             Window.Current.Activate();
 
             control.InvokeShowing(parameter);

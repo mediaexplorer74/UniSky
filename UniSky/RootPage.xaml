@@ -15,6 +15,7 @@
     </Page.DataContext>
 
     <Grid>
+        <Canvas x:Name="RenderTargetRoot"/>
         <Border Background="#FF0085ff"/>
         <sheet:SheetRootControl x:Name="SheetRoot"
                                 Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
