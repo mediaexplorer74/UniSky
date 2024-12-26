@@ -111,6 +111,10 @@ internal class AppWindowOverlayController : IOverlayController
             visibleBounds.Width * dpiScale,
             visibleBounds.Height * dpiScale);
 
+        initialSize = new Size(
+            initialSize.Width * dpiScale,
+            initialSize.Height * dpiScale);
+
         var environment = applicationView.WindowingEnvironment;
         if (environment.Kind == WindowingEnvironmentKind.Overlapped)
         {
@@ -153,7 +157,6 @@ internal class AppWindowOverlayController : IOverlayController
                 SizeHelpers.Scale(ref width, ref height, (windowSize.Width / 5.0) * 4.0, (windowSize.Height / 5.0) * 4.0);
 
                 var position = new Point(windowCenter.X - (width / 2.0), windowCenter.Y - (height / 2.0));
-
                 appWindow.RequestSize(new Size(width, height + 32));
                 appWindow.RequestMoveRelativeToDisplayRegion(currentRegion, position);
             }
@@ -171,6 +174,10 @@ internal class AppWindowOverlayController : IOverlayController
                 // ditto
                 appWindow.RequestMoveRelativeToCurrentViewContent(new Point((-width / dpiScale) - 8, 0));
             }
+        }
+        else
+        {
+            appWindow.RequestSize(initialSize);
         }
     }
 }
