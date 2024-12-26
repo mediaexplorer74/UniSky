@@ -31,6 +31,7 @@
                                 Content="{TemplateBinding Warning}"
                                 ContentTemplate="{TemplateBinding WarningTemplate}"
                                 ContentTemplateSelector="{TemplateBinding WarningTemplateSelector}"
+                                IsEnabled="{TemplateBinding CanOverride}"
                                 Padding="0"
                                 Margin="0,0,0,4"
                                 HorizontalAlignment="Stretch"

@@ -130,8 +130,9 @@
                 <controls:SpoilerControl x:Name="EmbedContentContainer"
                                          x:Load="{x:Bind converters:Static.NotNull(Embed)}"
                                          x:Phase="2"
-                                         Warning="{x:Bind Warning}"
+                                         Warning="{x:Bind Warning, Mode=OneWay}"
                                          WarningTemplate="{StaticResource PostContentWarningTemplate}"
+                                         CanOverride="{x:Bind Warning.CanOverride, Mode=OneWay}"
                                          IsHidden="{x:Bind Warning.IsHidden, Mode=TwoWay}"
                                          Margin="0,4,0,0">
                     <ContentControl x:Name="EmbedContent"

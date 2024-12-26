@@ -31,42 +31,13 @@ using Windows.UI.Xaml;
 
 namespace UniSky.ViewModels.Posts;
 
-
-public partial class ContentWarningViewModel : ViewModelBase
-{
-    [ObservableProperty]
-    private string warning;
-
-    [ObservableProperty]
-    private bool isHidden;
-
-    public ContentWarningViewModel(ModerationUI mediaFilter)
-    {
-        var moderationService = ServiceContainer.Default.GetRequiredService<IModerationService>();
-        var cause = (mediaFilter.Alerts.FirstOrDefault() ?? mediaFilter.Blurs.FirstOrDefault());
-        if (cause is LabelModerationCause label)
-        {
-            if (moderationService.TryGetLocalisedStringsForLabel(label.LabelDef, out var strings))
-            {
-                Warning = strings.Name;
-            }
-            else
-            {
-                Warning = label.LabelDef.Identifier.ToString();
-            }
-        }
-        else
-        {
-            Warning = "Hidden";
-        }
-        IsHidden = true;
-    }
-}
-
 public partial class PostViewModel : ViewModelBase
 {
     private ATUri like;
     private ATUri repost;
+
+    private readonly IModerationService moderationService
+        = ServiceContainer.Default.GetRequiredService<IModerationService>();
 
     [ObservableProperty]
     private ProfileViewModel author;
@@ -166,7 +137,7 @@ public partial class PostViewModel : ViewModelBase
         this.Post = post;
         this.Uri = view.Uri;
 
-        var moderator = new Moderator(ServiceContainer.Default.GetRequiredService<IModerationService>().ModerationOptions);
+        var moderator = new Moderator(moderationService.ModerationOptions);
         Moderation = moderator.ModeratePost(view);
 
         HasChild = hasChild;
@@ -174,13 +145,13 @@ public partial class PostViewModel : ViewModelBase
         RichText = new RichTextViewModel(post.Text, post.Facets ?? []);
         Author = new ProfileViewModel(view.Author);
 
-        // TODO: this better
         var media = Moderation.GetUI(ModerationContext.ContentMedia);
-        if (!media.Filter)
+        if (media.Blur)
         {
-            Warning = (media.Alert || media.Blur) ? new ContentWarningViewModel(media) : null;
-            Embed = CreateEmbedViewModel(view.Embed, false);
+            Warning = new ContentWarningViewModel(media);
         }
+
+        Embed = CreateEmbedViewModel(view.Embed, false);
 
         var timeSinceIndex = DateTime.Now - (view.IndexedAt.Value.ToLocalTime());
         var date = timeSinceIndex.Humanize(1, minUnit: Humanizer.Localisation.TimeUnit.Second);

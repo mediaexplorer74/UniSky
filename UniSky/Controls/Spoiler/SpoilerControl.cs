@@ -79,6 +79,15 @@ public sealed class SpoilerControl : Control
     public static readonly DependencyProperty WarningTemplateSelectorProperty =
         DependencyProperty.Register("WarningTemplateSelector", typeof(DataTemplateSelector), typeof(SpoilerControl), new PropertyMetadata(DependencyProperty.UnsetValue));
 
+    public bool CanOverride
+    {
+        get { return (bool)GetValue(CanOverrideProperty); }
+        set { SetValue(CanOverrideProperty, value); }
+    }
+
+    public static readonly DependencyProperty CanOverrideProperty =
+        DependencyProperty.Register("CanOverride", typeof(bool), typeof(SpoilerControl), new PropertyMetadata(true));
+
     public SpoilerControl()
     {
         this.DefaultStyleKey = typeof(SpoilerControl);

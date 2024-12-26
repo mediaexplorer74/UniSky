@@ -6,41 +6,49 @@ public enum ModerationContext
 {
     /// <summary>
     /// A profile being listed, e.g. search or follower list
+    /// Can Blur, Alert & Inform
     /// </summary>
     ProfileList,
 
     /// <summary>
     /// A profile being viewed directly
+    /// Can Blur, Alert & Inform
     /// </summary>
     ProfileView,
 
     /// <summary>
     /// The user's avatar in any context
+    /// Can Blur & Alert 
     /// </summary>
     Avatar,
 
     /// <summary>
     /// The user's banner in any context
+    /// Can Blur
     /// </summary>
     Banner,
 
     /// <summary>
     /// The user's display name in any context
+    /// Can Blur
     /// </summary>
     DisplayName,
 
     /// <summary>
     /// Content being listed, e.g. posts in a feed/as replies, a list of user lists, a list of feed generators, etc.
+    /// Can Blur, Alert & Inform
     /// </summary>
     ContentList,
 
     /// <summary>
     /// Conent being viewed directly, e.g. an open post, the user list page, the feed generator page, etc.
+    /// Can Blur, Alert & Inform
     /// </summary>
     ContentView,
 
     /// <summary>
     /// Media inside content, e.g. images embedded in a post
+    /// Can Blur
     /// </summary>
     ContentMedia
 }

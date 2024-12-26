@@ -243,6 +243,7 @@
                                          Warning="{Binding Warning}"
                                          WarningTemplate="{StaticResource PostContentWarningTemplate}"
                                          IsHidden="{Binding Warning.IsHidden, Mode=TwoWay}"
+                                         CanOverride="{Binding Warning.CanOverride, Mode=OneWay, FallbackValue=True}"
                                          Visibility="{Binding Embed, Converter={StaticResource VisibilityConverter}}">
                     <ContentControl x:Name="EmbedContent"
                                             HorizontalAlignment="Stretch"
@@ -568,9 +569,10 @@
                         <controls:SpoilerControl x:Name="EmbedContentContainer"
                                                  x:Load="{x:Bind converters:Static.NotNull(Embed)}"
                                                  x:Phase="2"
-                                                 Warning="{x:Bind Warning}"
+                                                 Warning="{x:Bind Warning, Mode=OneWay}"
                                                  WarningTemplate="{StaticResource PostContentWarningTemplate}"
                                                  IsHidden="{x:Bind Warning.IsHidden, Mode=TwoWay}"
+                                                 CanOverride="{x:Bind Warning.CanOverride, Mode=OneWay}"
                                                  Margin="0,4,0,0">
                             <ContentControl x:Name="EmbedContent"
                                             HorizontalAlignment="Stretch"

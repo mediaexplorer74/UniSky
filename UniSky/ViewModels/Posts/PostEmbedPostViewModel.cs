@@ -16,6 +16,9 @@ namespace UniSky.ViewModels.Posts;
 
 public partial class PostEmbedPostViewModel : PostEmbedViewModel
 {
+    private readonly IModerationService moderationService 
+        = ServiceContainer.Default.GetRequiredService<IModerationService>();
+
     [ObservableProperty]
     private string text;
     [ObservableProperty]
@@ -42,14 +45,15 @@ public partial class PostEmbedPostViewModel : PostEmbedViewModel
         Author = new ProfileViewModel(view.Author);
 
         // TODO: this better
-        var moderator = new Moderator(ServiceContainer.Default.GetRequiredService<IModerationService>().ModerationOptions);
+        var moderator = new Moderator(moderationService.ModerationOptions);
         var decision = moderator.ModeratePost(new ModerationSubjectPost(view, post));
         var media = decision.GetUI(ModerationContext.ContentMedia);
-        if (!media.Filter)
+        if (media.Blur)
         {
-            Warning = (media.Alert || media.Blur) ? new ContentWarningViewModel(media) : null;
-            Embed = PostViewModel.CreateEmbedViewModel(view.Embeds?.FirstOrDefault(), true);
+            Warning = new ContentWarningViewModel(media);
         }
+
+        Embed = PostViewModel.CreateEmbedViewModel(view.Embeds?.FirstOrDefault(), true);
 
         var timeSinceIndex = DateTime.Now - (view.IndexedAt.Value.ToLocalTime());
         var date = timeSinceIndex.Humanize(1, minUnit: Humanizer.Localisation.TimeUnit.Second);
