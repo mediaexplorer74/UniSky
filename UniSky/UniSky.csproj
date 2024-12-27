@@ -292,9 +292,9 @@
     <Compile Include="ViewModels\Compose\ComposeViewModel.cs" />
     <Compile Include="ViewModels\Error\ExceptionViewModel.cs" />
     <Compile Include="ViewModels\Gallery\GalleryViewModel.cs" />
-    <Compile Include="ViewModels\MenuItemViewModel.cs" />
+    <Compile Include="ViewModels\MenuItems\MenuItemViewModel.cs" />
     <Compile Include="ViewModels\Moderation\LabelViewModel.cs" />
-    <Compile Include="ViewModels\NotificationsMenuItemViewModel.cs" />
+    <Compile Include="ViewModels\MenuItems\NotificationsMenuItemViewModel.cs" />
     <Compile Include="ViewModels\Notifications\NotificationsCollection.cs" />
     <Compile Include="ViewModels\Notifications\NotificationsPageViewModel.cs" />
     <Compile Include="ViewModels\Notifications\NotificationViewModel.cs" />
@@ -303,7 +303,7 @@
     <Compile Include="ViewModels\Posts\PostEmbedPostViewModel.cs" />
     <Compile Include="ViewModels\Posts\PostEmbedRecordWithMediaViewModel.cs" />
     <Compile Include="ViewModels\Posts\PostEmbedVideoViewModel.cs" />
-    <Compile Include="ViewModels\ProfileMenuItemViewModel.cs" />
+    <Compile Include="ViewModels\MenuItems\ProfileMenuItemViewModel.cs" />
     <Compile Include="ViewModels\Profile\ProfileFeedViewModel.cs" />
     <Compile Include="ViewModels\Profile\ProfilePageViewModel.cs" />
     <Compile Include="ViewModels\Profile\ProfileViewModel.cs" />

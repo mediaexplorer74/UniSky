@@ -10,16 +10,38 @@
     xmlns:sheet="using:UniSky.Controls.Sheet"
     mc:Ignorable="d"
     NavigationCacheMode="Required">
-    <Page.DataContext>
-        <viewmodels:RootViewModel/>
-    </Page.DataContext>
 
     <Grid>
         <Canvas x:Name="RenderTargetRoot"/>
         <Border Background="#FF0085ff"/>
         <sheet:SheetRootControl x:Name="SheetRoot"
                                 Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-            <Frame x:Name="RootFrame"/>
+            <Frame x:Name="RootFrame"
+                   Navigated="RootFrame_Navigated"/>
         </sheet:SheetRootControl>
+
+        <Canvas x:Name="ExtendedSplash" 
+                IsHitTestVisible="False"
+                Background="#FF0085ff">
+            <Viewbox x:Name="ExtendedSplashContainer">
+                <Grid x:Name="ExtendedSplashImage" 
+                      Width="620"
+                      Height="300">
+                    <Viewbox Width="100"
+                             Height="100"
+                             VerticalAlignment="Center"
+                             HorizontalAlignment="Center"
+                             CacheMode="BitmapCache">
+                        <Path Data="{StaticResource BlueSkyLogoPath}"
+                              Fill="White"/>
+                    </Viewbox>
+                </Grid>
+            </Viewbox>
+            <ProgressRing x:Name="ExtendedProgressRing"
+                          Foreground="White" 
+                          IsActive="True"
+                          Width="32"
+                          Height="32"/>
+        </Canvas>
     </Grid>
 </Page>

@@ -47,7 +47,7 @@
             <uap:ShowOn Tile="wide310x150Logo"/>
           </uap:ShowNameOnTiles>
         </uap:DefaultTile >
-        <uap:SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="#0085ff" />
+        <uap:SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="#0085ff" uap5:Optional="true" />
         <uap:LockScreen Notification="badge" BadgeLogo="Assets\BadgeLogo.png"/>
       </uap:VisualElements>
       <Extensions>

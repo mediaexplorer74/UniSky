@@ -30,6 +30,7 @@ public sealed partial class ThreadPage : Page
         base.OnNavigatedTo(e);
 
         var safeAreaService = ServiceContainer.Scoped.GetRequiredService<ISafeAreaService>();
+        safeAreaService.SetTitlebarTheme(ElementTheme.Default);
         safeAreaService.SafeAreaUpdated += OnSafeAreaUpdated;
 
         if (e.Parameter is not (ATUri))

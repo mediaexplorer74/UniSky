@@ -30,7 +30,7 @@ internal class AppWindowOverlayController : IOverlayController
         this.SafeAreaService = new AppWindowSafeAreaService(appWindow);
 
         this.settingsKey = "CoreWindow_LastSize_" + control.GetType().FullName.Replace(".", "_");
-        var initialSize = new Size(Control.MinWidth, Control.MinHeight);
+        var initialSize = control.PreferredWindowSize;
         if (overlaySizeProvider != null)
         {
             var size = overlaySizeProvider.GetDesiredSize();

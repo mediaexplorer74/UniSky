@@ -39,12 +39,13 @@ public sealed partial class HomePage : Page
         Window.Current.SetTitleBar(TitleBarDrag);
 
         var safeAreaService = ServiceContainer.Scoped.GetRequiredService<ISafeAreaService>();
+        safeAreaService.SetTitlebarTheme(ElementTheme.Default);
         safeAreaService.SafeAreaUpdated += OnSafeAreaUpdated;
 
-        if (e.Parameter is string session || e.Parameter is ATDid did && (session = did.Handler) != null)
-        {
-            ViewModel = ActivatorUtilities.CreateInstance<HomeViewModel>(ServiceContainer.Scoped, session);
-        }
+        if (e.Parameter is not HomeViewModel)
+            return;
+
+        DataContext = ViewModel = (HomeViewModel)e.Parameter;
     }
 
     private void OnSafeAreaUpdated(object sender, SafeAreaUpdatedEventArgs e)
