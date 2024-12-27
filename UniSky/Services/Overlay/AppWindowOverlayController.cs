@@ -143,7 +143,7 @@ internal class AppWindowOverlayController : IOverlayController
                 Math.Max(offsetFromLeftEdge, offsetFromRightEdge) < ((displaySize.Width / 3.0) * 1.0)) // not enough space 
             {
                 var windowCenter = new Point(
-                    visibleBounds.X - currentRegion.WorkAreaOffset.X + visibleBounds.Width / 2.0,
+                    (visibleBounds.X - currentRegion.WorkAreaOffset.X + visibleBounds.Width / 2.0) + 21, 
                     visibleBounds.Y - currentRegion.WorkAreaOffset.Y + visibleBounds.Height / 2.0);
                 var windowSize = new Size(visibleBounds.Width, visibleBounds.Height);
 

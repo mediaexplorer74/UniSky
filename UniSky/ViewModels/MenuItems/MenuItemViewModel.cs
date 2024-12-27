@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
@@ -49,8 +50,10 @@ public partial class MenuItemViewModel : ViewModelBase
         Debug.Assert(typeof(Page).IsAssignableFrom(frameType));
         this.parent = parent;
 
+        var resources = ResourceLoader.GetForCurrentView();
+
         Page = page;
-        Name = page.ToString();
+        Name = resources.GetString($"HomePage_{page}");
         IconGlyph = iconGlyph;
         FrameType = frameType;
     }
