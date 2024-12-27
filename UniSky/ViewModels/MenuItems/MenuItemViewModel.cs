@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using UniSky.Services;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -29,8 +30,6 @@ public partial class MenuItemViewModel : ViewModelBase
     private bool isSelected;
 
     public Type FrameType { get; }
-    // TODO: unsure if i actually want this or not
-    public virtual object NavigationParameter { get; }
 
     public Frame Content
     {
@@ -66,11 +65,40 @@ public partial class MenuItemViewModel : ViewModelBase
         _contentCache?.GoBack();
     }
 
+    [RelayCommand]
+    public void Tapped()
+    {
+        if (_contentCache == null || !IsSelected)
+        {
+            IsSelected = true;
+            return;
+        }
+
+        if (_contentCache.CanGoBack)
+        {
+            while (_contentCache.CanGoBack)
+                _contentCache.GoBack();
+        }
+        else
+        {
+            if (_contentCache.Content is IScrollToTop scrollToTop)
+                scrollToTop.ScrollToTop();
+        }
+
+        OnPropertyChanged(nameof(IsSelected));
+    }
+
     partial void OnIsSelectedChanged(bool value)
     {
         if (value == true)
         {
             parent.SelectedMenuItem = this;
         }
+        else
+        {
+            IsSelected = parent.SelectedMenuItem == this;
+        }
+
+        OnPropertyChanged(nameof(IsSelected));
     }
 }

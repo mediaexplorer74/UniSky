@@ -5,21 +5,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using FishyFlip;
 using FishyFlip.Tools;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using UniSky.Controls.Settings;
 using UniSky.Extensions;
-using UniSky.Models;
 using UniSky.Pages;
 using UniSky.Services;
 using Windows.Foundation.Metadata;
 using Windows.Phone;
-using Windows.Storage;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace UniSky.ViewModels;
@@ -112,12 +108,6 @@ public partial class HomeViewModel : ViewModelBase
         Task.Run(LoadAsync);
     }
 
-    [RelayCommand]
-    private void GoBack()
-    {
-        this.homeNavigationService.GoBack();
-    }
-
     private async Task LoadAsync()
     {
         if (isLoaded)
@@ -140,6 +130,12 @@ public partial class HomeViewModel : ViewModelBase
         await Task.WhenAll(
             MenuItems.Concat(FooterMenuItems)
                      .Select(s => s.LoadAsync()));
+    }
+
+    [RelayCommand]
+    private void GoBack()
+    {
+        this.homeNavigationService.GoBack();
     }
 
     [RelayCommand]

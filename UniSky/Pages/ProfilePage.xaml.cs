@@ -20,7 +20,7 @@ using EF = Microsoft.Toolkit.Uwp.UI.Animations.Expressions.ExpressionFunctions;
 
 namespace UniSky.Pages;
 
-public sealed partial class ProfilePage : Page
+public sealed partial class ProfilePage : Page, IScrollToTop
 {
     private const string PROGRESS_NODE = "progress";
     private const string PIXELS_TO_MOVE_NODE = "pixelsToMove";
@@ -264,6 +264,11 @@ public sealed partial class ProfilePage : Page
     {
         if (e.Handled) return;
 
+        ScrollToTop();
+    }
+
+    public void ScrollToTop()
+    {
         var scrollView = RootList.FindDescendant<ScrollViewer>();
         if (scrollView is null)
             return;

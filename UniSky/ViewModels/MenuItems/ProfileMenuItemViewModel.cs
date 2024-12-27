@@ -17,9 +17,6 @@ public partial class ProfileMenuItemViewModel : MenuItemViewModel
 
     private ProfileViewDetailed profile;
 
-    public override object NavigationParameter
-        => profile;
-
     public ProfileMenuItemViewModel(HomeViewModel parent)
         : base(parent, HomePages.Profile, "\uE77B", typeof(ProfilePage))
     {

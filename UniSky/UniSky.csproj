@@ -270,6 +270,7 @@
     <Compile Include="Polyfill\IsExternalInit.cs" />
     <Compile Include="Services\BackgroundNotificationsService.cs" />
     <Compile Include="Services\ImageCompressionService.cs" />
+    <Compile Include="Services\IScrollToTop.cs" />
     <Compile Include="Services\XamlEmbedThumbnailGenerator.cs" />
     <Compile Include="Services\NavigationServiceLocator.cs" />
     <Compile Include="DataTemplates\FeedTemplates.xaml.cs">

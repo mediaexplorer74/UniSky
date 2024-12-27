@@ -220,11 +220,12 @@ public partial class ComposeViewModel : ViewModelBase
             var card = AttachedUri;
             if (card.ThumbnailBitmap != null)
             {
-                using var memoryStream = new MemoryStream(10_000_000);
-                var image = await compressionService.CompressSoftwareBitmapAsync(card.ThumbnailBitmap, memoryStream.AsRandomAccessStream());
+                using var memoryStream = new InMemoryRandomAccessStream();
 
-                memoryStream.Seek(0, SeekOrigin.Begin);
-                using var content = new StreamContent(memoryStream);
+                var image = await compressionService.CompressSoftwareBitmapAsync(card.ThumbnailBitmap, memoryStream);
+                memoryStream.Seek(0);
+
+                using var content = new StreamContent(memoryStream.AsStream());
                 content.Headers.ContentType = new MediaTypeHeaderValue(image.ContentType);
 
                 var blob = (await protocolService.Protocol.UploadBlobAsync(content)

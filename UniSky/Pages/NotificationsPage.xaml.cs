@@ -10,7 +10,7 @@ using Windows.UI.Xaml.Navigation;
 
 namespace UniSky.Pages;
 
-public sealed partial class NotificationsPage : Page
+public sealed partial class NotificationsPage : Page, IScrollToTop
 {
     public NotificationsPageViewModel ViewModel
     {
@@ -63,5 +63,14 @@ public sealed partial class NotificationsPage : Page
             var scrollViewer = RootList.FindDescendant<ScrollViewer>();
             scrollViewer.CanContentRenderOutsideBounds = true;
         }
+    }
+
+    public void ScrollToTop()
+    {
+        var scrollViewer = RootList.FindDescendant<ScrollViewer>();
+        if (scrollViewer == null) 
+            return;
+
+        scrollViewer.ChangeView(0, 0, 1);
     }
 }

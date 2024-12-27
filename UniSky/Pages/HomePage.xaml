@@ -180,7 +180,8 @@
                                               Style="{StaticResource FooterToggleButtonRevealStyle}"
                                               ToolTipService.ToolTip="Notifications"
                                               ToolTipService.Placement="Top"
-                                              IsChecked="{x:Bind IsSelected, Mode=TwoWay}">
+                                              IsChecked="{x:Bind IsSelected, Mode=OneWay}"
+                                              Command="{x:Bind TappedCommand}">
                                     <Grid>
                                         <Viewbox Height="16"
                                                  VerticalAlignment="Center"
