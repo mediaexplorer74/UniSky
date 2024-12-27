@@ -15,14 +15,14 @@ namespace UniSky.Services;
 
 public class AngleSharpEmbedExtractor : IEmbedExtractor
 {
+    private readonly ILogger<AngleSharpEmbedExtractor> logger;
     private readonly IConfiguration configuration;
-    private readonly ILogger<AngleSharpEmbedExtractor> logger
-        = ServiceContainer.Default.GetRequiredService<ILogger<AngleSharpEmbedExtractor>>();
     private readonly HttpClient httpClient
         = new HttpClient();
 
-    public AngleSharpEmbedExtractor()
+    public AngleSharpEmbedExtractor(ILogger<AngleSharpEmbedExtractor> logger)
     {
+        this.logger = logger;
         httpClient.DefaultRequestHeaders.Add("User-Agent", Constants.CrawlerUserAgent);
 
         configuration = Configuration.Default

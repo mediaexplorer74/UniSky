@@ -31,11 +31,24 @@ public class ModerationService(IProtocolService protocolService, ILogger<Moderat
             var moderationPrefs = await protocol.GetModerationPrefsAsync()
                 .ConfigureAwait(false);
 
-            logger.LogDebug("Got moderation preferences, AdultContent = {AdultContentEnabled}, Labels = {Labels}, Labelers = {Labelers}, MutedWords = {MutedWords}",
+            logger.LogDebug("Got moderation preferences, AdultContent = {AdultContentEnabled}, Labels = {Labels}, Labelers = {Labelers}, MutedWords = {MutedWords}, HiddenPosts = {HiddenPosts}",
                 moderationPrefs.AdultContentEnabled,
                 moderationPrefs.Labels.Count,
                 moderationPrefs.Labelers.Count,
-                moderationPrefs.MutedWords.Count);
+                moderationPrefs.MutedWords.Count,
+                moderationPrefs.HiddenPosts.Count);
+
+            moderationPrefs = moderationPrefs with
+            {
+                MutedWords =
+                [
+                    .. moderationPrefs.MutedWords,
+                ],
+                HiddenPosts =
+                [
+                    .. moderationPrefs.HiddenPosts,
+                ],
+            };
 
             var labelDefs = await protocol.GetLabelDefinitionsAsync(moderationPrefs)
                 .ConfigureAwait(false);

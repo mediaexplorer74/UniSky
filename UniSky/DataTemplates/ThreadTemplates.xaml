@@ -118,7 +118,7 @@
                                       Labels="{x:Bind Author.Labels}"
                                       Margin="0,6,0,0"/>
 
-                <controls:RichTextBlock x:Name="MainContent"
+                <controls:FacetTextBlock x:Name="MainContent"
                                         x:Load="{x:Bind converters:Static.NotNullOrWhiteSpace(Text)}"
                                         Inlines="{x:Bind RichText.Facets}"
                                         FontSize="16"
@@ -358,7 +358,7 @@
                                       Labels="{x:Bind Author.Labels}"
                                       Margin="0,2,0,2"/>
                         
-                        <controls:RichTextBlock x:Name="MainContent"
+                        <controls:FacetTextBlock x:Name="MainContent"
                                                 x:Load="{x:Bind converters:Static.NotNullOrWhiteSpace(Text)}"
                                                 Inlines="{x:Bind RichText.Facets}"
                                                 TextWrapping="Wrap"

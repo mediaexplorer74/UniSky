@@ -156,8 +156,23 @@ public class FeedItemCollection : ObservableCollection<PostViewModel>, ISupportI
                     if (item.Reply is { Parent: PostView } && item.Reason is not ReasonRepost)
                     {
                         var reply = item.Reply;
-                        //var root = (PostView)reply.Root;
+                        var root = (PostView)reply.Root;
                         var parent = (PostView)reply.Parent;
+
+                        var moderation = new Moderator(moderationService.ModerationOptions);
+                        if (root != null)
+                        {
+                            var rootMod = moderation.ModeratePost(root);
+                            if (rootMod.GetUI(ModerationContext.ContentList).Filter)
+                                continue;
+                        }
+
+                        if (parent != null)
+                        {
+                            var parentMod = moderation.ModeratePost(parent);
+                            if (parentMod.GetUI(ModerationContext.ContentList).Filter)
+                                continue;
+                        }
 
                         if (!ids.Contains(parent.Cid))
                         {

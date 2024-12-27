@@ -231,7 +231,7 @@
                                       Labels="{Binding Author.Labels}"
                                       Margin="0,4,0,0"/>
                 
-                <controls:RichTextBlock x:Name="MainContent"
+                <controls:FacetTextBlock x:Name="MainContent"
                                         Visibility="{Binding Text, Converter={StaticResource VisibilityConverter}}"
                                         Inlines="{Binding RichText.Facets}"
                                         TextWrapping="Wrap"
@@ -559,7 +559,7 @@
                                               Labels="{x:Bind Author.Labels}"
                                               Margin="0,4,0,2"/>
 
-                        <controls:RichTextBlock x:Name="MainContent"
+                        <controls:FacetTextBlock x:Name="MainContent"
                                                 x:Load="{x:Bind converters:Static.NotNullOrWhiteSpace(Text)}"
                                                 Inlines="{x:Bind RichText.Facets}"
                                                 TextWrapping="Wrap"

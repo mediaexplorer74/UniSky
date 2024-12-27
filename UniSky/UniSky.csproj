@@ -172,7 +172,7 @@
       <DependentUpon>PreviewPaneAuroraControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\RadialProgressBar\RadialProgressBar.cs" />
-    <Compile Include="Controls\RichTextBlock\RichTextBlock.cs" />
+    <Compile Include="Controls\RichTextBlock\FacetTextBlock.cs" />
     <Compile Include="Controls\Settings\SettingsNeedsRelaunchDialog.xaml.cs">
       <DependentUpon>SettingsNeedsRelaunchDialog.xaml</DependentUpon>
     </Compile>

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Foundation.Metadata;
@@ -11,24 +13,34 @@ using Windows.UI.Xaml.Hosting;
 
 namespace UniSky.Services.Overlay;
 
-internal abstract class OverlayService
+public abstract class OverlayService
 {
+    private readonly ILogger<OverlayService> logger
+        = ServiceContainer.Scoped.GetRequiredService<ILogger<OverlayService>>();
+
     protected async Task<IOverlayController> ShowOverlayForWindow<T>(Func<T> factory, object parameter) where T : FrameworkElement, IOverlayControl
     {
-        if (ApiInformation.IsApiContractPresent(typeof(UniversalApiContract).FullName, 8, 0))
+        try
         {
-            return await ShowOverlayForAppWindow<T>(factory, parameter);
+            if (ApiInformation.IsApiContractPresent(typeof(UniversalApiContract).FullName, 8, 0))
+            {
+                return await ShowOverlayForAppWindow<T>(factory, parameter);
+            }
         }
-        else
+        catch (Exception ex)
         {
-            return await ShowOverlayForCoreWindow<T>(factory, parameter);
+            logger.LogError(ex, $"Failed to create app window, falling back to CoreWindow! This is probably bad!");
         }
+
+        return await ShowOverlayForCoreWindow<T>(factory, parameter);
     }
 
     protected async Task<IOverlayController> ShowOverlayForAppWindow<T>(Func<T> factory, object parameter) where T : FrameworkElement, IOverlayControl
     {
         var control = factory();
         var appWindow = await AppWindow.TryCreateAsync();
+        if (appWindow == null)
+            throw new InvalidOperationException("Failed to create app window! Falling back!");
 
         var controller = new AppWindowOverlayController(appWindow, control, parameter as IOverlaySizeProvider);
         control.SetOverlayController(controller);
