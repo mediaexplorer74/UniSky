@@ -64,13 +64,12 @@ public sealed partial class ProfilePage : Page
         var safeAreaService = ServiceContainer.Scoped.GetRequiredService<ISafeAreaService>();
         safeAreaService.SafeAreaUpdated += OnSafeAreaUpdated;
 
-        if (e.Parameter is not (ProfileView or ProfileViewBasic or ProfileViewDetailed or Uri))
-            return;
-
         if (e.Parameter is Uri { Scheme: "unisky" } uri)
             HandleUniskyProtocol(uri);
         else if (e.Parameter is ATObject basic)
             this.DataContext = ViewModel = ActivatorUtilities.CreateInstance<ProfilePageViewModel>(ServiceContainer.Default, basic);
+        else
+            this.DataContext = ViewModel = ActivatorUtilities.CreateInstance<ProfilePageViewModel>(ServiceContainer.Default);
     }
 
     protected override void OnNavigatedFrom(NavigationEventArgs e)

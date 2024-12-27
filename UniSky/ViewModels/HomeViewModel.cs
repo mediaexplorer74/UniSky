@@ -246,6 +246,13 @@ public partial class HomeViewModel : ViewModelBase
 
         if (newValue != null)
             newValue.IsSelected = true;
+
+        this.syncContext.Post(() =>
+        {
+            var serviceLocator = ServiceContainer.Scoped.GetRequiredService<INavigationServiceLocator>();
+            var service = serviceLocator.GetNavigationService("Home");
+            service.Frame = newValue.Content;
+        });
     }
 
     protected override void OnLoadingChanged(bool value)

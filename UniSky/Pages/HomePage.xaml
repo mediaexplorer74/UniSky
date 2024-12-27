@@ -250,14 +250,13 @@
                                 <TranslateTransform x:Name="TitleHeaderTransform"/>
                             </Grid.RenderTransform>
 
-                            <!-- x:Load="{x:Bind NavigationFrame.CanGoBack, Mode=OneWay}" -->
                             <Button x:Name="BackButton"
-                                    
+                                    x:Load="{x:Bind ViewModel.SelectedMenuItem.Content.CanGoBack, Mode=OneWay}"
                                     Style="{StaticResource NavigationBackButtonNormalStyle}"
                                     Height="32"
                                     FontSize="13"
                                     ToolTipService.ToolTip="Back"
-                                    Command="{x:Bind ViewModel.GoBackCommand}" />
+                                    Command="{x:Bind ViewModel.SelectedMenuItem.GoBackCommand, Mode=OneWay}" />
 
                             <Viewbox VerticalAlignment="Center"
                                      HorizontalAlignment="Center"

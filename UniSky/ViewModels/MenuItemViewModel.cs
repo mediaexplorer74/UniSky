@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
@@ -11,7 +12,7 @@ namespace UniSky.ViewModels;
 public partial class MenuItemViewModel : ViewModelBase
 {
     private readonly HomeViewModel parent;
-    private object _contentCache; // i dont like this either
+    private Frame _contentCache; // i dont like this either
 
     [ObservableProperty]
     private HomePages _page;
@@ -30,7 +31,7 @@ public partial class MenuItemViewModel : ViewModelBase
     // TODO: unsure if i actually want this or not
     public virtual object NavigationParameter { get; }
 
-    public object Content
+    public Frame Content
     {
         get
         {
@@ -55,6 +56,12 @@ public partial class MenuItemViewModel : ViewModelBase
     }
 
     public virtual Task LoadAsync() { return Task.CompletedTask; }
+
+    [RelayCommand]
+    public void GoBack()
+    {
+        _contentCache?.GoBack();
+    }
 
     partial void OnIsSelectedChanged(bool value)
     {

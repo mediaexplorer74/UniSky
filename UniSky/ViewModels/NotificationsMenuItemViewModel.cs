@@ -4,6 +4,7 @@ using FishyFlip.Lexicon.App.Bsky.Notification;
 using FishyFlip.Tools;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using UniSky.Extensions;
 using UniSky.Pages;
 using UniSky.Services;
 using Windows.UI.Xaml;
@@ -33,7 +34,7 @@ public partial class NotificationsMenuItemViewModel : MenuItemViewModel
         await UpdateNotificationsAsync()
             .ConfigureAwait(false);
 
-        this.notificationUpdateTimer.Start();
+        this.syncContext.Post(() => this.notificationUpdateTimer.Start());
     }
 
     private async void OnNotificationTimerTick(object sender, object e)
