@@ -136,7 +136,7 @@ sealed partial class App : Application
                 // When the navigation stack isn't restored navigate to the first page,
                 // configuring the new page by passing required information as a navigation
                 // parameter
-                rootFrame.Navigate(typeof(RootPage), e.Arguments);
+                rootFrame.Navigate(typeof(RootPage), e.SplashScreen);
             }
 
             // Ensure the current window is active
@@ -152,7 +152,7 @@ sealed partial class App : Application
         {
             rootFrame = new Frame();
             rootFrame.NavigationFailed += OnNavigationFailed;
-            rootFrame.Navigate(typeof(RootPage));
+            rootFrame.Navigate(typeof(RootPage), e.SplashScreen);
             Window.Current.Content = rootFrame;
         }
 

@@ -65,6 +65,13 @@ public class SettingsService : ISettingsService
     {
         if (Settings.Values.TryGetValue(key, out var valueObj) && valueObj is string valueString)
         {
+            if (typeof(T) == typeof(string) && !valueString.StartsWith('"'))
+            {
+                // :D
+                value = (T)(object)valueString;
+                return true;
+            }
+
             value = JsonSerializer.Deserialize<T>(valueString, Options);
             return true;
         }

@@ -31,6 +31,7 @@ public sealed partial class NotificationsPage : Page
         base.OnNavigatedTo(e);
 
         var safeAreaService = ServiceContainer.Scoped.GetRequiredService<ISafeAreaService>();
+        safeAreaService.SetTitlebarTheme(ElementTheme.Default);
         safeAreaService.SafeAreaUpdated += OnSafeAreaUpdated;
 
         if (this.ViewModel == null)

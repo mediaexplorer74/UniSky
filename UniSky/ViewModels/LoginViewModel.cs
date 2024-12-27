@@ -19,7 +19,7 @@ public partial class LoginViewModel : ViewModelBase
 {
     private readonly ILoginService loginService;
     private readonly ISessionService sessionService;
-    private readonly INavigationService navigationService;
+    private readonly IRootNavigator rootNavigator;
 
     [ObservableProperty]
     private bool _advanced;
@@ -30,11 +30,13 @@ public partial class LoginViewModel : ViewModelBase
     [ObservableProperty]
     private string _host;
 
-    public LoginViewModel(ILoginService loginService, ISessionService sessionService, INavigationServiceLocator navigationServiceLocator)
+    public LoginViewModel(ILoginService loginService,
+                          ISessionService sessionService,
+                          IRootNavigator rootNavigator)
     {
         this.loginService = loginService;
         this.sessionService = sessionService;
-        this.navigationService = navigationServiceLocator.GetNavigationService("Root");
+        this.rootNavigator = rootNavigator;
 
         Advanced = false;
         Username = "";
@@ -69,8 +71,8 @@ public partial class LoginViewModel : ViewModelBase
             var sessionModel = new SessionModel(true, normalisedHost, session);
 
             sessionService.SaveSession(sessionModel);
-            syncContext.Post(() =>
-                navigationService.Navigate<HomePage>(session.Did));
+
+            await rootNavigator.GoToHomeAsync(sessionModel.DID);
         }
         catch (Exception ex)
         {

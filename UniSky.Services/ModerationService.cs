@@ -15,10 +15,12 @@ namespace UniSky.Services;
 
 public record struct LabelStrings(string Name, string Description);
 
-public class ModerationService(IProtocolService protocolService, ILogger<ModerationService> logger) : IModerationService
+public class ModerationService(
+    IProtocolService protocolService,
+    ILogger<ModerationService> logger) : IModerationService
 {
     private readonly ResourceLoader resources
-        = ResourceLoader.GetForCurrentView();
+        = ResourceLoader.GetForViewIndependentUse();
 
     public ModerationOptions ModerationOptions { get; set; }
 

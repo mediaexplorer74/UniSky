@@ -467,4 +467,28 @@
   <data name="GlobalLabel_WARN_Name" xml:space="preserve">
     <value>Content Warning</value>
   </data>
+  <data name="HomePage_Chat" xml:space="preserve">
+    <value>Chat</value>
+  </data>
+  <data name="HomePage_Feeds" xml:space="preserve">
+    <value>Feeds</value>
+  </data>
+  <data name="HomePage_Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="HomePage_Lists" xml:space="preserve">
+    <value>Lists</value>
+  </data>
+  <data name="HomePage_Notifications" xml:space="preserve">
+    <value>Notifications</value>
+  </data>
+  <data name="HomePage_Profile" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+  <data name="HomePage_Search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="HomePage_Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
 </root>
