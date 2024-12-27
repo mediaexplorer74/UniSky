@@ -46,7 +46,7 @@ public sealed partial class RootPage : Page
 
     void Dismiss()
     {
-        _ = Dispatcher.RunAsync(CoreDispatcherPriority.High, () =>
+        _ = Dispatcher.RunIdleAsync((a) =>
         {
             if (dismissed)
                 return;
