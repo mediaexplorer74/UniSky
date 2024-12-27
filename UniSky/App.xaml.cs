@@ -41,6 +41,14 @@ sealed partial class App : Application
             .CreateLogger<App>();
         _settings = ServiceContainer.Default.GetRequiredService<ITypedSettings>();
 
+        if (_settings.RequestedColourScheme != ElementTheme.Default)
+        {
+            if (_settings.RequestedColourScheme == ElementTheme.Light)
+                RequestedTheme = ApplicationTheme.Light;
+            else
+                RequestedTheme = ApplicationTheme.Dark;
+        }
+
         if (_settings.UseTwitterLocale)
         {
             ResourceContext.SetGlobalQualifierValue("Custom", "Twitter", ResourceQualifierPersistence.LocalMachine);
