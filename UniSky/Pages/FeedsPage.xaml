@@ -10,14 +10,14 @@
     xmlns:viewmodels="using:UniSky.ViewModels" 
     xmlns:mux="using:Microsoft.UI.Xaml.Controls" 
     xmlns:feeds="using:UniSky.ViewModels.Feeds" 
-    xmlns:extensions="using:UniSky.Extensions" 
+    xmlns:extensions="using:UniSky.Extensions" xmlns:templates="using:UniSky.Templates"
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance Type=viewmodels:FeedsViewModel}"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     NavigationCacheMode="Enabled"
     w1803:KeyboardAcceleratorPlacementMode="Hidden">
     <Page.Resources>
-        <FeedTemplates xmlns="using:UniSky.Templates"/>
+        <templates:FeedTemplates/>
     </Page.Resources>
     <w1709:Page.KeyboardAccelerators>
         <w1709:KeyboardAccelerator x:Name="RefreshAccelerator"

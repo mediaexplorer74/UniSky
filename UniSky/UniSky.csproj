@@ -185,6 +185,10 @@
       <DependentUpon>SheetRootControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Spoiler\SpoilerControl.cs" />
+    <Compile Include="Controls\UniformGrid\TakenSpotsReferenceHolder.cs" />
+    <Compile Include="Controls\UniformGrid\UniformGrid.cs" />
+    <Compile Include="Controls\UniformGrid\UniformGrid.Helpers.cs" />
+    <Compile Include="Controls\UniformGrid\UniformGrid.Properties.cs" />
     <Compile Include="Controls\WrapLayout\UvBounds.cs" />
     <Compile Include="Controls\WrapLayout\UvMeasure.cs" />
     <Compile Include="Controls\WrapLayout\WrapItem.cs" />
@@ -288,7 +292,9 @@
     <Compile Include="ViewModels\Compose\ComposeViewModel.cs" />
     <Compile Include="ViewModels\Error\ExceptionViewModel.cs" />
     <Compile Include="ViewModels\Gallery\GalleryViewModel.cs" />
+    <Compile Include="ViewModels\MenuItemViewModel.cs" />
     <Compile Include="ViewModels\Moderation\LabelViewModel.cs" />
+    <Compile Include="ViewModels\NotificationsMenuItemViewModel.cs" />
     <Compile Include="ViewModels\Notifications\NotificationsCollection.cs" />
     <Compile Include="ViewModels\Notifications\NotificationsPageViewModel.cs" />
     <Compile Include="ViewModels\Notifications\NotificationViewModel.cs" />
@@ -297,6 +303,7 @@
     <Compile Include="ViewModels\Posts\PostEmbedPostViewModel.cs" />
     <Compile Include="ViewModels\Posts\PostEmbedRecordWithMediaViewModel.cs" />
     <Compile Include="ViewModels\Posts\PostEmbedVideoViewModel.cs" />
+    <Compile Include="ViewModels\ProfileMenuItemViewModel.cs" />
     <Compile Include="ViewModels\Profile\ProfileFeedViewModel.cs" />
     <Compile Include="ViewModels\Profile\ProfilePageViewModel.cs" />
     <Compile Include="ViewModels\Profile\ProfileViewModel.cs" />
@@ -687,6 +694,7 @@
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

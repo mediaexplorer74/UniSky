@@ -41,9 +41,9 @@ public sealed partial class HomePage : Page
         var safeAreaService = ServiceContainer.Scoped.GetRequiredService<ISafeAreaService>();
         safeAreaService.SafeAreaUpdated += OnSafeAreaUpdated;
 
-        var serviceLocator = ServiceContainer.Scoped.GetRequiredService<INavigationServiceLocator>();
-        var service = serviceLocator.GetNavigationService("Home");
-        service.Frame = NavigationFrame;
+        //var serviceLocator = ServiceContainer.Scoped.GetRequiredService<INavigationServiceLocator>();
+        //var service = serviceLocator.GetNavigationService("Home");
+        //service.Frame = NavigationFrame;
 
         if (e.Parameter is string session || e.Parameter is ATDid did && (session = did.Handler) != null)
         {
@@ -78,30 +78,30 @@ public sealed partial class HomePage : Page
         Margin = new Thickness(e.SafeArea.Bounds.Left, 0, e.SafeArea.Bounds.Right, e.SafeArea.Bounds.Bottom);
     }
 
-    private async void NavigationView_ItemInvoked(MUXC.NavigationView sender, MUXC.NavigationViewItemInvokedEventArgs args)
-    {
-        if (args.InvokedItemContainer?.Tag is HomePages page)
-            ViewModel.Page = page;
+    //private async void NavigationView_ItemInvoked(MUXC.NavigationView sender, MUXC.NavigationViewItemInvokedEventArgs args)
+    //{
+    //    if (args.InvokedItemContainer?.Tag is HomePages page)
+    //        ViewModel.Page = page;
 
-        if (args.IsSettingsInvoked)
-        {
-            ViewModel.Page = ViewModel.Page;
-            await ViewModel.OpenSettingsCommand.ExecuteAsync(null);
-        }
-    }
+    //    if (args.IsSettingsInvoked)
+    //    {
+    //        ViewModel.Page = ViewModel.Page;
+    //        await ViewModel.OpenSettingsCommand.ExecuteAsync(null);
+    //    }
+    //}
 
-    private void FooterToggleButton_Checked(object sender, RoutedEventArgs e)
-    {
-        var button = (ToggleButton)sender;
-        var page = (HomePages)button.Tag;
+    //private void FooterToggleButton_Checked(object sender, RoutedEventArgs e)
+    //{
+    //    var button = (ToggleButton)sender;
+    //    var page = (HomePages)button.Tag;
 
-        ViewModel.Page = page;
-    }
+    //    ViewModel.Page = page;
+    //}
 
-    private void FooterToggleButton_Unchecked(object sender, RoutedEventArgs e)
-    {
-        ViewModel.UpdateChecked();
-    }
+    //private void FooterToggleButton_Unchecked(object sender, RoutedEventArgs e)
+    //{
+    //    ViewModel.UpdateChecked();
+    //}
 
     private void NavView_PaneOpening(MUXC.NavigationView sender, object args)
     {

@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FishyFlip;
-using FishyFlip.Lexicon.App.Bsky.Actor;
-using FishyFlip.Lexicon.App.Bsky.Notification;
 using FishyFlip.Tools;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -32,7 +32,8 @@ public enum HomePages
     Feeds,
     Lists,
     Chat,
-    Profile
+    Profile,
+    Settings
 }
 
 public partial class HomeViewModel : ViewModelBase
@@ -44,50 +45,19 @@ public partial class HomeViewModel : ViewModelBase
     private readonly ILogger<ATProtocol> atLogger;
     private readonly IProtocolService protocolService;
     private readonly INotificationsService notificationsService;
-    private readonly IBadgeService badgeService;
     private readonly IModerationService moderationService;
     private readonly SessionModel sessionModel;
 
-    private readonly DispatcherTimer notificationUpdateTimer;
     private readonly DispatcherTimer refreshTokenTimer;
 
     private bool isLoaded;
-    private ProfileViewDetailed profile;
 
     [ObservableProperty]
-    private string _avatarUrl;
+    private MenuItemViewModel _selectedMenuItem;
 
-    [ObservableProperty]
-    private string _displayName;
-
-    [ObservableProperty]
-    public int _notificationCount;
-
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(
-        nameof(HomeSelected),
-        nameof(SearchSelected),
-        nameof(NotificationsSelected),
-        nameof(FeedsSelected),
-        nameof(ListsSelected),
-        nameof(ChatSelected),
-        nameof(ProfileSelected))]
-    private HomePages _page = (HomePages)(-1);
-
-    public bool HomeSelected
-        => Page == HomePages.Home;
-    public bool SearchSelected
-        => Page == HomePages.Search;
-    public bool NotificationsSelected
-        => Page == HomePages.Notifications;
-    public bool FeedsSelected
-        => Page == HomePages.Feeds;
-    public bool ListsSelected
-        => Page == HomePages.Lists;
-    public bool ChatSelected
-        => Page == HomePages.Chat;
-    public bool ProfileSelected
-        => Page == HomePages.Profile;
+    public ObservableCollection<MenuItemViewModel> MenuItems { get; } = [];
+    public ObservableCollection<MenuItemViewModel> FooterMenuItems { get; } = [];
+    public ObservableCollection<MenuItemViewModel> PinnedMenuItems { get; } = [];
 
     public HomeViewModel(
         string profile,
@@ -95,7 +65,6 @@ public partial class HomeViewModel : ViewModelBase
         INavigationServiceLocator navigationServiceLocator,
         IProtocolService protocolService,
         INotificationsService notificationsService,
-        IBadgeService badgeService,
         IModerationService moderationService,
         ILogger<HomeViewModel> logger,
         ILogger<ATProtocol> protocolLogger)
@@ -116,7 +85,6 @@ public partial class HomeViewModel : ViewModelBase
         this.protocolService = protocolService;
         this.sessionModel = sessionModel;
         this.notificationsService = notificationsService;
-        this.badgeService = badgeService;
         this.moderationService = moderationService;
         this.atLogger = protocolLogger;
 
@@ -129,9 +97,23 @@ public partial class HomeViewModel : ViewModelBase
 
         protocolService.SetProtocol(protocol);
 
+        MenuItems.Add(new MenuItemViewModel(this, HomePages.Home, "\uE80F", typeof(FeedsPage)));
+        MenuItems.Add(new MenuItemViewModel(this, HomePages.Search, "\uE71E", typeof(SearchPage)));
+        MenuItems.Add(new NotificationsMenuItemViewModel(this));
+        MenuItems.Add(new MenuItemViewModel(this, HomePages.Feeds, "\uE728", typeof(Page)));
+        MenuItems.Add(new MenuItemViewModel(this, HomePages.Lists, "\uE71D", typeof(Page)));
+        MenuItems.Add(new MenuItemViewModel(this, HomePages.Chat, "\uE8F2", typeof(Page)));
+
+        FooterMenuItems.Add(new ProfileMenuItemViewModel(this));
+        FooterMenuItems.Add(new MenuItemViewModel(this, HomePages.Settings, "\uE713", typeof(Page)));
+
+        PinnedMenuItems.Add(MenuItems[0]);
+        PinnedMenuItems.Add(MenuItems[1]);
+        PinnedMenuItems.Add(MenuItems[2]);
+        PinnedMenuItems.Add(MenuItems[5]);
+        PinnedMenuItems.Add(FooterMenuItems[0]);
+
         // TODO: throttle when in background
-        this.notificationUpdateTimer = new DispatcherTimer() { Interval = TimeSpan.FromMinutes(1) };
-        this.notificationUpdateTimer.Tick += OnNotificationTimerTick;
 
         this.refreshTokenTimer = new DispatcherTimer() { Interval = TimeSpan.FromHours(1) };
         this.refreshTokenTimer.Tick += OnRefreshTokenTimerTick;
@@ -174,10 +156,10 @@ public partial class HomeViewModel : ViewModelBase
             return;
         }
 
-        this.Page = HomePages.Home;
-
         await moderationService.ConfigureModerationAsync()
             .ConfigureAwait(false);
+
+        SelectedMenuItem = MenuItems[0];
 
         try
         {
@@ -188,23 +170,9 @@ public partial class HomeViewModel : ViewModelBase
             logger.LogError(ex, "Failed to start notifications service!");
         }
 
-        try
-        {
-            await Task.WhenAll(UpdateProfileAsync(), UpdateNotificationsAsync())
-                .ConfigureAwait(false);
-
-            this.syncContext.Post(() => notificationUpdateTimer.Start());
-        }
-        catch (ATNetworkErrorException ex) when (ex is { AtError.Detail.Error: "ExpiredToken" })
-        {
-            this.syncContext.Post(() => rootNavigationService.Navigate<LoginPage>());
-            return;
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Failed to fetch user info!");
-            this.SetErrored(ex);
-        }
+        await Task.WhenAll(
+            MenuItems.Concat(FooterMenuItems)
+                     .Select(s => s.LoadAsync()));
     }
 
     private Task RefreshSessionAsync()
@@ -212,48 +180,11 @@ public partial class HomeViewModel : ViewModelBase
         return protocolService.RefreshSessionAsync(sessionModel);
     }
 
-    private async Task UpdateProfileAsync()
-    {
-        var protocol = protocolService.Protocol;
-
-        profile = (await protocol.GetProfileAsync(protocol.AuthSession.Session.Did)
-            .ConfigureAwait(false))
-            .HandleResult();
-
-        AvatarUrl = profile.Avatar;
-        DisplayName = profile.DisplayName;
-    }
-
-    private async Task UpdateNotificationsAsync()
-    {
-        var protocol = protocolService.Protocol;
-
-        var notifications = (await protocol.GetUnreadCountAsync()
-            .ConfigureAwait(false))
-            .HandleResult();
-
-        NotificationCount = (int)notifications.Count;
-        this.badgeService.UpdateBadge(NotificationCount);
-    }
-
     [RelayCommand]
     private async Task OpenSettingsAsync()
     {
         var sheetService = ServiceContainer.Scoped.GetRequiredService<ISheetService>();
         await sheetService.ShowAsync<SettingsSheet>();
-    }
-
-    private async void OnNotificationTimerTick(object sender, object e)
-    {
-        try
-        {
-            await UpdateNotificationsAsync()
-                .ConfigureAwait(false);
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Failed to update notifications");
-        }
     }
 
     private async void OnRefreshTokenTimerTick(object sender, object e)
@@ -290,9 +221,9 @@ public partial class HomeViewModel : ViewModelBase
 
     private async void OnWindowActivatedAsync(object sender, WindowActivatedEventArgs e)
     {
-        if (e.WindowActivationState == CoreWindowActivationState.Deactivated)        
+        if (e.WindowActivationState == CoreWindowActivationState.Deactivated)
             return;
-        
+
         try
         {
             await RefreshSessionAsync()
@@ -305,12 +236,16 @@ public partial class HomeViewModel : ViewModelBase
         }
     }
 
-    partial void OnPageChanged(HomePages oldValue, HomePages newValue)
+
+    partial void OnSelectedMenuItemChanging(MenuItemViewModel oldValue, MenuItemViewModel newValue)
     {
-        if (oldValue != newValue)
-        {
-            this.syncContext.Post(NavigateToPage);
-        }
+        if (oldValue == newValue) return;
+
+        if (oldValue != null)
+            oldValue.IsSelected = false;
+
+        if (newValue != null)
+            newValue.IsSelected = true;
     }
 
     protected override void OnLoadingChanged(bool value)
@@ -340,38 +275,38 @@ public partial class HomeViewModel : ViewModelBase
         });
     }
 
-    private void NavigateToPage()
-    {
-        switch (Page)
-        {
-            case HomePages.Home:
-                this.homeNavigationService.Navigate<FeedsPage>();
-                break;
-            case HomePages.Search:
-                this.homeNavigationService.Navigate<SearchPage>();
-                break;
-            case HomePages.Notifications:
-                this.homeNavigationService.Navigate<NotificationsPage>();
-                break;
-            case HomePages.Feeds:
-            case HomePages.Lists:
-            case HomePages.Chat:
-                this.homeNavigationService.Navigate<Page>();
-                break;
-            case HomePages.Profile:
-                this.homeNavigationService.Navigate<ProfilePage>(this.profile);
-                break;
-        }
-    }
+    //private void NavigateToPage()
+    //{
+    //    switch (Page)
+    //    {
+    //        case HomePages.Home:
+    //            this.homeNavigationService.Navigate<FeedsPage>();
+    //            break;
+    //        case HomePages.Search:
+    //            this.homeNavigationService.Navigate<SearchPage>();
+    //            break;
+    //        case HomePages.Notifications:
+    //            this.homeNavigationService.Navigate<NotificationsPage>();
+    //            break;
+    //        case HomePages.Feeds:
+    //        case HomePages.Lists:
+    //        case HomePages.Chat:
+    //            this.homeNavigationService.Navigate<Page>();
+    //            break;
+    //        case HomePages.Profile:
+    //            this.homeNavigationService.Navigate<ProfilePage>(this.profile);
+    //            break;
+    //    }
+    //}
 
-    internal void UpdateChecked()
-    {
-        this.OnPropertyChanged(nameof(HomeSelected),
-                nameof(SearchSelected),
-                nameof(NotificationsSelected),
-                nameof(FeedsSelected),
-                nameof(ListsSelected),
-                nameof(ChatSelected),
-                nameof(ProfileSelected));
-    }
+    //internal void UpdateChecked()
+    //{
+    //    this.OnPropertyChanged(nameof(HomeSelected),
+    //            nameof(SearchSelected),
+    //            nameof(NotificationsSelected),
+    //            nameof(FeedsSelected),
+    //            nameof(ListsSelected),
+    //            nameof(ChatSelected),
+    //            nameof(ProfileSelected));
+    //}
 }
