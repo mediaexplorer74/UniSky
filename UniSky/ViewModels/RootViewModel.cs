@@ -50,44 +50,46 @@ public partial class RootViewModel : ViewModelBase, IRootNavigator
 
         if (!settingsService.TryRead<string>("LastUsedUser", out var session))
         {
-            _ = GoToLoginAsync();
+            Task.Run(() => GoToLoginAsync());
             return;
         }
 
-        _ = GoToHomeAsync();
+        Task.Run(() => GoToHomeAsync());
     }
 
     public async Task GoToHomeAsync(string did = null)
     {
         using var loading = this.GetLoadingContext();
 
-        if (did == null && !settingsService.TryRead("LastUsedUser", out did))
-        {
-            await GoToLoginAsync();
-            return;
-        }
-
-        if (!sessionService.TryFindSession(did, out var session))
-        {
-            await GoToLoginAsync();
-            return;
-        }
-
-        settingsService.Save<string>("LastUsedUser", did);
-
-        var logger = services.GetRequiredService<ILogger<ATProtocol>>();
-        var protocol = new ATProtocolBuilder()
-            .WithLogger(logger)
-            .EnableAutoRenewSession(true)
-            .WithSessionRefreshInterval(TimeSpan.FromMinutes(30))
-            .WithUserAgent(Constants.UserAgent)
-            .Build();
-
-        protocolService.SetProtocol(protocol);
-
         try
         {
+            if (did == null && !settingsService.TryRead("LastUsedUser", out did))
+            {
+                await GoToLoginAsync();
+                return;
+            }
+
+            if (!sessionService.TryFindSession(did, out var session))
+            {
+                await GoToLoginAsync();
+                return;
+            }
+
+            settingsService.Save<string>("LastUsedUser", did);
+
+            var logger = services.GetRequiredService<ILogger<ATProtocol>>();
+            var protocol = new ATProtocolBuilder()
+                .WithLogger(logger)
+                .EnableAutoRenewSession(true)
+                .WithSessionRefreshInterval(TimeSpan.FromMinutes(30))
+                .WithUserAgent(Constants.UserAgent)
+                .Build();
+
+            protocolService.SetProtocol(protocol);
+
             await protocolService.RefreshSessionAsync(session);
+
+            syncContext.Post(() => navigationService.Navigate<HomePage>(CreateHomeViewModel()));
         }
         catch (Exception ex)
         {
@@ -95,8 +97,6 @@ public partial class RootViewModel : ViewModelBase, IRootNavigator
             await GoToLoginAsync();
             return;
         }
-
-        syncContext.Post(() => navigationService.Navigate<HomePage>(CreateHomeViewModel()));
     }
 
     public Task GoToLoginAsync()

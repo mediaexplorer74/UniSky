@@ -20,10 +20,16 @@
                    Navigated="RootFrame_Navigated"/>
         </sheet:SheetRootControl>
 
-        <Canvas x:Name="ExtendedSplash" 
+        <Grid x:Name="ExtendedSplash" 
                 IsHitTestVisible="False"
                 Background="#FF0085ff">
-            <Viewbox x:Name="ExtendedSplashContainer">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Viewbox x:Name="ExtendedSplashContainer"
+                     Grid.RowSpan="2"
+                     StretchDirection="DownOnly">
                 <Grid x:Name="ExtendedSplashImage" 
                       Width="620"
                       Height="300">
@@ -38,10 +44,12 @@
                 </Grid>
             </Viewbox>
             <ProgressRing x:Name="ExtendedProgressRing"
+                          Grid.Row="1"
+                          VerticalAlignment="Top"
                           Foreground="White" 
                           IsActive="True"
-                          Width="32"
-                          Height="32"/>
-        </Canvas>
+                          Width="24"
+                          Height="24"/>
+        </Grid>
     </Grid>
 </Page>
