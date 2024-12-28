@@ -8,9 +8,12 @@ My fork of WamWooWam's UniSky project for some code patterns&devops micro-resear
 - Built with [FishyFlip](https://drasticactions.github.io/FishyFlip/)
 
 ## Screenshot(s)
-![](Images/shot01.png)
+![](Images/shot01.png) 
 ![](Images/shot02.png)
-![](Images/shot03.png)
+![](Images/shot03.png) 
+![](Images/shot04.png)
+![](Images/shot05.png) 
+![](Images/shot06.png)
 
 ## Downloads (WamWooWam's Unisky app)
 <a href="https://apps.microsoft.com/detail/9mxts7g6fchx?mode=direct">
