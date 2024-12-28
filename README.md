@@ -10,6 +10,7 @@ My fork of WamWooWam's UniSky project for some code patterns&devops micro-resear
 ## Screenshot(s)
 ![](Images/shot01.png)
 ![](Images/shot02.png)
+![](Images/shot03.png)
 
 ## Downloads (WamWooWam's Unisky app)
 <a href="https://apps.microsoft.com/detail/9mxts7g6fchx?mode=direct">
