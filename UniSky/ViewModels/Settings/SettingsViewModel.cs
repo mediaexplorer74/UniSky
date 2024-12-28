@@ -58,6 +58,12 @@ public class SettingsViewModel(ITypedSettings settingsService, IThemeService the
         }
     }
 
+    public bool VideosInFeeds
+    {
+        get => settingsService.VideosInFeeds;
+        set => settingsService.VideosInFeeds = value;
+    }
+
     public bool IsDirty
         => ApplicationTheme != _initialTheme || ColourScheme != _initialColour || _initialTwitterLocale != UseTwitterLocale;
 }

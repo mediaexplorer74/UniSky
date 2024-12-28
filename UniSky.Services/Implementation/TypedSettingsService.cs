@@ -32,4 +32,9 @@ public class TypedSettingsService(ISettingsService settings) : ITypedSettings
         set => settings.Save(USE_TWITTER_LOCALE, value);
     }
 
+    public bool VideosInFeeds
+    {
+        get => settings.Read(VIDEOS_IN_FEEDS, VIDEOS_IN_FEEDS_DEFAULT);
+        set => settings.Save(VIDEOS_IN_FEEDS, value);
+    }
 }

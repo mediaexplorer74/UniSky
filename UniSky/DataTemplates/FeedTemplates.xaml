@@ -11,7 +11,7 @@
                     xmlns:extensions="using:UniSky.Extensions"
                     xmlns:feeds="using:UniSky.ViewModels.Feeds" 
                     xmlns:posts="using:UniSky.ViewModels.Posts" 
-                    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls" xmlns:labels="using:UniSky.Controls.Labels"
+                    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls" xmlns:labels="using:UniSky.Controls.Labels" xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
                     x:DefaultBindMode="OneWay">
 
     <!-- TODO: un-steal these colours -->
@@ -21,6 +21,7 @@
     <datatemplates:PostEmbedTemplateSelector x:Key="PostEmbedTemplateSelector"
                                              ImagesEmbedTemplate="{StaticResource ImagesEmbedContentTemplate}"
                                              VideoEmbedTemplate="{StaticResource VideoEmbedContentTemplate}"
+                                             InlineVideoEmbedTemplate="{StaticResource InlineVideoEmbedContentTemplate}"
                                              PostEmbedTemplate="{StaticResource PostEmbedContentTemplate}"
                                              ExternalEmbedTemplate="{StaticResource ExternalEmbedContentTemplate}"
                                              RecordWithMediaEmbedTemplate="{StaticResource RecordWithMediaEmbedContentTemplate}"/>
@@ -413,7 +414,7 @@
         </UserControl>
     </DataTemplate>
 
-    <DataTemplate x:Key="VideoEmbedContentTemplate" x:DataType="posts:PostEmbedVideoViewModel">
+    <DataTemplate x:Key="InlineVideoEmbedContentTemplate" x:DataType="posts:PostEmbedVideoViewModel">
         <toolkit:ConstrainedBox AspectRatio="{Binding Ratio}">
             <MediaPlayerElement PosterSource="{Binding ThumbnailUrl}"
                                 Source="{Binding Source}"
@@ -425,6 +426,36 @@
                     <MediaTransportControls Style="{StaticResource MediaTransportControlsStyle}"/>
                 </MediaPlayerElement.TransportControls>
             </MediaPlayerElement>
+        </toolkit:ConstrainedBox>
+    </DataTemplate>
+
+
+    <DataTemplate x:Key="VideoEmbedContentTemplate" x:DataType="posts:PostEmbedVideoViewModel">
+        <toolkit:ConstrainedBox AspectRatio="{Binding Ratio}">
+            <Grid>
+                <Grid.Resources>
+                    <ui:AttachedDropShadow x:Key="PlayButtonShadow" CastTo="{Binding ElementName=ImageElement}" BlurRadius="8" Opacity="1" Color="Black"/>
+                </Grid.Resources>
+                <Button x:Name="PlayButton"
+                        Padding="0"
+                        Style="{ThemeResource CleanButtonStyle}"
+                        Command="{Binding ShowVideoPlayerCommand}">
+                    <Grid>
+                        <Image x:Name="ImageElement"
+                               Stretch="UniformToFill"
+                               Source="{Binding ThumbnailUrl}"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"/>
+
+                        <TextBlock ui:Effects.Shadow="{StaticResource PlayButtonShadow}" 
+                                   FontFamily="{StaticResource SymbolThemeFontFamily}" 
+                                   Foreground="White" 
+                                   FontSize="32"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center">&#xE768;</TextBlock>
+                    </Grid>
+                </Button>
+            </Grid>
         </toolkit:ConstrainedBox>
     </DataTemplate>
 

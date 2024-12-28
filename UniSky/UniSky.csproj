@@ -189,6 +189,9 @@
     <Compile Include="Controls\UniformGrid\UniformGrid.cs" />
     <Compile Include="Controls\UniformGrid\UniformGrid.Helpers.cs" />
     <Compile Include="Controls\UniformGrid\UniformGrid.Properties.cs" />
+    <Compile Include="Controls\VideoPlayer\VideoPlayerOverlay.xaml.cs">
+      <DependentUpon>VideoPlayerOverlay.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\WrapLayout\UvBounds.cs" />
     <Compile Include="Controls\WrapLayout\UvMeasure.cs" />
     <Compile Include="Controls\WrapLayout\WrapItem.cs" />
@@ -320,6 +323,7 @@
     <Compile Include="ViewModels\Text\RichTextViewModel.cs" />
     <Compile Include="ViewModels\Thread\ThreadPostViewModel.cs" />
     <Compile Include="ViewModels\Thread\ThreadViewModel.cs" />
+    <Compile Include="ViewModels\VideoPlayer\VideoPlayerViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Pages\FeedsPage.xaml.cs">
       <DependentUpon>FeedsPage.xaml</DependentUpon>
@@ -510,6 +514,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Sheet\SheetRootControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\VideoPlayer\VideoPlayerOverlay.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -45,5 +45,8 @@ public static class Constants
 
         public const string USE_TWITTER_LOCALE = "UseTwitterLocale_v1";
         public const bool USE_TWITTER_LOCALE_DEFAULT = false;
+
+        public const string VIDEOS_IN_FEEDS = "VideosInFeeds_v1";
+        public const bool VIDEOS_IN_FEEDS_DEFAULT = true;
     }
 }
