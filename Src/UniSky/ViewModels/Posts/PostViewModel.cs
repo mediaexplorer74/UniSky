@@ -151,7 +151,8 @@ public partial class PostViewModel : ViewModelBase
         Embed = CreateEmbedViewModel(view.Embed, false);
 
         var timeSinceIndex = DateTime.Now - (view.IndexedAt.Value.ToLocalTime());
-        var date = timeSinceIndex.Humanize(1, minUnit: Humanizer.Localisation.TimeUnit.Second);
+        string date = timeSinceIndex.Humanize(1, minUnit: Humanizer.Localisation.TimeUnit.Second);
+        
         Date = date;
 
         LikeCount = (int)(view.LikeCount ?? 0);

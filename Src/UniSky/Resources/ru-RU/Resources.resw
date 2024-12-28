@@ -1,0 +1,494 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="PostsRun.Text" xml:space="preserve">
+    <value>Посты</value>
+  </data>
+  <data name="FollowersRun.Text" xml:space="preserve">
+    <value>Последователи</value>
+    <comment>n users following person, not doing plural because it will almost always be &gt; 10</comment>
+  </data>
+  <data name="FollowingRun.Text" xml:space="preserve">
+    <value>Следующие</value>
+    <comment>n users followed by person, not doing plural because it will almost always be &gt; 10</comment>
+  </data>
+  <data name="Feed_Posts" xml:space="preserve">
+    <value>Посты</value>
+  </data>
+  <data name="Feed_Replies" xml:space="preserve">
+    <value>Посты и ответы</value>
+  </data>
+  <data name="Feed_Media" xml:space="preserve">
+    <value>Носители</value>
+  </data>
+  <data name="RetweetedByRun.Text" xml:space="preserve">
+    <value>Переслано</value>
+  </data>
+  <data name="PostReplyButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ответов</value>
+  </data>
+  <data name="PostRetweetButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Переслать пост</value>
+  </data>
+  <data name="PostLikeButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Нрав.</value>
+  </data>
+  <data name="ReplyingToRun.Text" xml:space="preserve">
+    <value>Ответить на</value>
+  </data>
+  <data name="AppName" xml:space="preserve">
+    <value>Unisky</value>
+  </data>
+  <data name="AppTitle.Text" xml:space="preserve">
+    <value>Unisky</value>
+  </data>
+  <data name="TimeUnit_Day" xml:space="preserve">
+    <value>d</value>
+  </data>
+  <data name="TimeUnit_Hour" xml:space="preserve">
+    <value>h</value>
+  </data>
+  <data name="TimeUnit_Millisecond" xml:space="preserve">
+    <value>ms</value>
+  </data>
+  <data name="TimeUnit_Minute" xml:space="preserve">
+    <value>m</value>
+  </data>
+  <data name="TimeUnit_Month" xml:space="preserve">
+    <value>mo</value>
+  </data>
+  <data name="TimeUnit_Second" xml:space="preserve">
+    <value>s</value>
+  </data>
+  <data name="TimeUnit_Week" xml:space="preserve">
+    <value>w</value>
+  </data>
+  <data name="TimeUnit_Year" xml:space="preserve">
+    <value>yr</value>
+  </data>
+  <data name="E_NonImageOrVideo" xml:space="preserve">
+    <value>Поддерживаются только типы Изображение и Видео.</value>
+  </data>
+  <data name="E_ReplyToNonPost" xml:space="preserve">
+    <value>Пытаетесь ответить на что-то, что не является постом?</value>
+  </data>
+  <data name="E_TooManyPhotos" xml:space="preserve">
+    <value>Посты могут содержать лишь до 4 фото.</value>
+  </data>
+  <data name="E_TooManyVideos" xml:space="preserve">
+    <value>Посты могут содержать только 1 видео.</value>
+  </data>
+  <data name="E_UnableToAddImageToVideoPost" xml:space="preserve">
+    <value>Не могу добавить фото, так как пост содержит видео.</value>
+  </data>
+  <data name="E_UnableToAddVideoToImagePost" xml:space="preserve">
+    <value>Не могу добавить видео, так как пост содержит фото.</value>
+  </data>
+  <data name="ComposePrimaryTextBox.PlaceholderText" xml:space="preserve">
+    <value>Что происходит?</value>
+  </data>
+  <data name="ComposeSheetPrimaryText.Text" xml:space="preserve">
+    <value>Пост</value>
+  </data>
+  <data name="ComposeSheetSecondaryText.Text" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="ComposeSheet.TitleContent" xml:space="preserve">
+    <value>НОВЫЙ ПОСТ</value>
+  </data>
+  <data name="E_FileUnavailable" xml:space="preserve">
+    <value>Извините, этот файл недоступен.</value>
+  </data>
+  <data name="E_VideosUnsupported" xml:space="preserve">
+    <value>Извините, видео пока не поддерживаются.</value>
+  </data>
+  <data name="UploadToBluesky" xml:space="preserve">
+    <value>Прикрепить к посту</value>
+  </data>
+  <data name="Search_New" xml:space="preserve">
+    <value>Свежее</value>
+  </data>
+  <data name="Search_Hot" xml:space="preserve">
+    <value>Популярное</value>
+  </data>
+  <data name="Search_People" xml:space="preserve">
+    <value>Люди</value>
+  </data>
+  <data name="Profile_Follow" xml:space="preserve">
+    <value>Следовать</value>
+    <comment>Click to follow the user</comment>
+  </data>
+  <data name="Profile_Following" xml:space="preserve">
+    <value>Следующие</value>
+    <comment>Currently following the user</comment>
+  </data>
+  <data name="Notification_LikedTweetSingle" xml:space="preserve">
+    <value>{0} оценило Ваш пост</value>
+    <comment>{0} = user display name</comment>
+  </data>
+  <data name="Notification_LikedTweetMultiple" xml:space="preserve">
+    <value>{0} и {1} оценили Ваш пост</value>
+    <comment>{0},{1} = user display name</comment>
+  </data>
+  <data name="Notification_Follow" xml:space="preserve">
+    <value>{0} следуют за Вами</value>
+    <comment>{0} = user display name</comment>
+  </data>
+  <data name="Notification_Mention" xml:space="preserve">
+    <value>{0} сослалось на Ваш пост</value>
+    <comment>{0} = user display name</comment>
+  </data>
+  <data name="Notification_Other" xml:space="preserve">
+    <value>прочие</value>
+  </data>
+  <data name="Notification_Quote" xml:space="preserve">
+    <value>{0} процитировали Ваш пост</value>
+    <comment>{0} = user display name</comment>
+  </data>
+  <data name="Notification_Reply" xml:space="preserve">
+    <value>{0} ответили Вам</value>
+    <comment>{0} = user display name</comment>
+  </data>
+  <data name="Notification_RetweetMultiple" xml:space="preserve">
+    <value>{0} и {1} переслали пост</value>
+    <comment>{0},{1} = user display name</comment>
+  </data>
+  <data name="Notification_RetweetSingle" xml:space="preserve">
+    <value>{0} переслали пост</value>
+    <comment>{0} = user display name</comment>
+  </data>
+  <data name="Profile_Blocked" xml:space="preserve">
+    <value>Заблокирован</value>
+  </data>
+  <data name="Profile_InvalidHandle" xml:space="preserve">
+    <value>неверный хэндл</value>
+  </data>
+  <data name="Profile_BlockedUser" xml:space="preserve">
+    <value>Вы заблокировали пользователя</value>
+  </data>
+  <data name="Profile_BlockedByUser" xml:space="preserve">
+    <value>Вы заблокированы этим пользователемYou are blocked by this user</value>
+  </data>
+  <data name="ComposeAddAltTextDialog.PrimaryButtonText" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="ComposeAddAltTextDialog.SecondaryButtonText" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="ComposeAddAltTextDialog.Title" xml:space="preserve">
+    <value>Доб. альт. текст</value>
+  </data>
+  <data name="ComposeAddAltTextTextBox.PlaceholderText" xml:space="preserve">
+    <value>Опишите изображение настолько детально, насколько сможете.</value>
+  </data>
+  <data name="ComposeDiscardDraftDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Отказаться</value>
+  </data>
+  <data name="ComposeDiscardDraftDialog.SecondaryButtonText" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="ComposeDiscardDraftDialog.Title" xml:space="preserve">
+    <value>Отклонить черновик?</value>
+  </data>
+  <data name="ComposeDiscardDraftInfoBlock.Text" xml:space="preserve">
+    <value>Уверены, что хотите отклонить черновик? Данное действие не обратимо!</value>
+  </data>
+  <data name="FeedMoreCopyLinkItem.Text" xml:space="preserve">
+    <value>Копировать ссылку</value>
+  </data>
+  <data name="FeedMoreCopyTextItem.Text" xml:space="preserve">
+    <value>Копировать текст</value>
+  </data>
+  <data name="FeedMoreHidePostItem.Text" xml:space="preserve">
+    <value>Спрятать пост</value>
+  </data>
+  <data name="FeedMoreMuteItem.Text" xml:space="preserve">
+    <value>Отключить элемент</value>
+  </data>
+  <data name="FeedMoreReportPostItem.Text" xml:space="preserve">
+    <value>Публикация поста</value>
+  </data>
+  <data name="FeedMoreShareItem.Text" xml:space="preserve">
+    <value>Поделиться</value>
+  </data>
+  <data name="Feed_Following" xml:space="preserve">
+    <value>Следование</value>
+  </data>
+  <data name="LoginAdvancedButton.Content" xml:space="preserve">
+    <value>Продвинутые настройки</value>
+    <comment>Shows the hostname/PDS server textbox</comment>
+  </data>
+  <data name="LoginButton.Content" xml:space="preserve">
+    <value>Логин</value>
+  </data>
+  <data name="LoginHostBox.Header" xml:space="preserve">
+    <value>Сервер</value>
+  </data>
+  <data name="LoginPageHeader.Text" xml:space="preserve">
+    <value>Для начала работы, введите свое имя пользователя и пароль.</value>
+    <comment>Taken from Windows XP's Welcome Screen, try to keep that reference if possible :)</comment>
+  </data>
+  <data name="LoginPasswordBox.Header" xml:space="preserve">
+    <value>Пароль</value>
+  </data>
+  <data name="LoginUsernameBox.Header" xml:space="preserve">
+    <value>Имя пользователя (ник/хэндл) или емейл</value>
+  </data>
+  <data name="NotificationsPageTitleBlock.Text" xml:space="preserve">
+    <value>УВЕДОМЛЕНИЯ</value>
+  </data>
+  <data name="SearchPageSearchBox.PlaceholderText" xml:space="preserve">
+    <value>Найди что-нибудь классное...</value>
+    <comment>Can really be anything</comment>
+  </data>
+  <data name="SearchPageTitleBlock.Text" xml:space="preserve">
+    <value>ПОИСК</value>
+  </data>
+  <data name="SettingsAboutHeaderBlock.Text" xml:space="preserve">
+    <value>О программе</value>
+  </data>
+  <data name="SettingsAboutVersionRun.Text" xml:space="preserve">
+    <value>Версия</value>
+    <comment>Version 1.0.0.0-abcdefg (branch)</comment>
+  </data>
+  <data name="SettingsAppThemeItem_Fluent.Content" xml:space="preserve">
+    <value>Fluent</value>
+  </data>
+  <data name="SettingsAppThemeItem_OLED.Content" xml:space="preserve">
+    <value>OLED</value>
+  </data>
+  <data name="SettingsAppThemeItem_Performance.Content" xml:space="preserve">
+    <value>Производительность</value>
+  </data>
+  <data name="SettingsAppThemeItem_SunValley.Content" xml:space="preserve">
+    <value>Sun Valley</value>
+  </data>
+  <data name="SettingsAutoRefreshFeedsSwitch.Header" xml:space="preserve">
+    <value>Автоматическое обновление каналов (экспериментальное)</value>
+  </data>
+  <data name="SettingsColorSchemeBox.Header" xml:space="preserve">
+    <value>Цветовая схема</value>
+  </data>
+  <data name="SettingsColourSchemeItem_Dark.Content" xml:space="preserve">
+    <value>Темная</value>
+  </data>
+  <data name="SettingsColourSchemeItem_Default.Content" xml:space="preserve">
+    <value>По умолчанию</value>
+  </data>
+  <data name="SettingsColourSchemeItem_Light.Content" xml:space="preserve">
+    <value>Светлая</value>
+  </data>
+  <data name="SettingsNeedsRelaunchDialog.Title" xml:space="preserve">
+    <value>ТРЕБУЕТСЯ ПЕРЕЗАГРУЗКА</value>
+  </data>
+  <data name="SettingsNeedsRelaunchInfoBlock.Text" xml:space="preserve">
+    <value>Чтобы некоторые изменения вступили в силу, Unisky необходимо перезапустить. Вы хотите перезапустить сейчас?</value>
+  </data>
+  <data name="SettingsOptionsHeaderBlock.Text" xml:space="preserve">
+    <value>Опции</value>
+  </data>
+  <data name="SettingsSheet.SecondaryButtonContent" xml:space="preserve">
+    <value>Закрыть</value>
+  </data>
+  <data name="SettingsSheet.TitleContent" xml:space="preserve">
+    <value>НАСТРОЙКИ</value>
+  </data>
+  <data name="SettingsThemeBox.Header" xml:space="preserve">
+    <value>Тема</value>
+  </data>
+  <data name="SettingsUseMultipleWindowsSwitch.Header" xml:space="preserve">
+    <value>Используйте отдельные окна для всплывающих окошек</value>
+  </data>
+  <data name="Share_Username" xml:space="preserve">
+    <value>@{0} по Bluesky</value>
+    <comment>{0} = user handle</comment>
+  </data>
+  <data name="GalleryControl.TitleContent" xml:space="preserve">
+    <value>ГАЛЕРЕЯ</value>
+  </data>
+  <data name="ThreadPageTitleBlock.Text" xml:space="preserve">
+    <value>ПОСТ</value>
+  </data>
+  <data name="GlobalLabel_GRAPHIC_MEDIA_Description" xml:space="preserve">
+    <value>Явные или потенциально вызывающие беспокойство носители</value>
+  </data>
+  <data name="GlobalLabel_GRAPHIC_MEDIA_Name" xml:space="preserve">
+    <value>Графические носители</value>
+  </data>
+  <data name="GlobalLabel_HIDE_Description" xml:space="preserve">
+    <value>Этот контент был скрыт командой модераторов Blue sky.</value>
+  </data>
+  <data name="GlobalLabel_HIDE_Name" xml:space="preserve">
+    <value>Заблокированный контент</value>
+  </data>
+  <data name="GlobalLabel_NO_UNAUTHENTICATED_Description" xml:space="preserve">
+    <value>Этот пользователь потребовал, чтобы его содержимое было доступно только авторизованным пользователям. Пожалуйста, обратите внимание, что этот механизм в корне небезопасен.</value>
+  </data>
+  <data name="GlobalLabel_NO_UNAUTHENTICATED_Name" xml:space="preserve">
+    <value>Требуется вход в систему</value>
+  </data>
+  <data name="GlobalLabel_NUDITY_Description" xml:space="preserve">
+    <value>Художественная нагота и так далее.</value>
+  </data>
+  <data name="GlobalLabel_NUDITY_Name" xml:space="preserve">
+    <value>Несексуальная нагота</value>
+  </data>
+  <data name="GlobalLabel_PORN_Description" xml:space="preserve">
+    <value>Откровенные сексуальные образы.</value>
+  </data>
+  <data name="GlobalLabel_PORN_Name" xml:space="preserve">
+    <value>Контент для взрослых</value>
+  </data>
+  <data name="GlobalLabel_SEXUAL_Description" xml:space="preserve">
+    <value>Неявные сексуальные образы.</value>
+  </data>
+  <data name="GlobalLabel_SEXUAL_Name" xml:space="preserve">
+    <value>Наводящий на сексуальные размышления</value>
+  </data>
+  <data name="GlobalLabel_WARN_Description" xml:space="preserve">
+    <value>Этот контент получил общее предупреждение от команды модераторов Blue sky.</value>
+  </data>
+  <data name="GlobalLabel_WARN_Name" xml:space="preserve">
+    <value>Предупреждение о содержании</value>
+  </data>
+  <data name="HomePage_Chat" xml:space="preserve">
+    <value>Чат</value>
+  </data>
+  <data name="HomePage_Feeds" xml:space="preserve">
+    <value>Новостные ленты</value>
+  </data>
+  <data name="HomePage_Home" xml:space="preserve">
+    <value>Домашняя страница</value>
+  </data>
+  <data name="HomePage_Lists" xml:space="preserve">
+    <value>Списки</value>
+  </data>
+  <data name="HomePage_Notifications" xml:space="preserve">
+    <value>Уведомления</value>
+  </data>
+  <data name="HomePage_Profile" xml:space="preserve">
+    <value>Профиль</value>
+  </data>
+  <data name="HomePage_Search" xml:space="preserve">
+    <value>Поиск</value>
+  </data>
+  <data name="HomePage_Settings" xml:space="preserve">
+    <value>Настройки</value>
+  </data>
+</root>

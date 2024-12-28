@@ -10,15 +10,15 @@
   IgnorableNamespaces="uap mp uap5 rescap uap18">
 
   <Identity
-    Name="24101WamWooWamRD.25225E497690B"
-    Publisher="CN=0F22111D-EDF0-42F0-B58D-26C4C5C5054B"
+    Name="ME.UniSkyV1"
+    Publisher="CN=Admin"
     Version="1.0.197.0" />
 
   <mp:PhoneIdentity PhoneProductId="d3ae258d-7752-4bdb-bb0c-b6cca57f9cd1" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>ms-resource:AppName</DisplayName>
-    <PublisherDisplayName>Wan Kerr Co. Ltd.</PublisherDisplayName>
+    <PublisherDisplayName>Admin</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -49,6 +49,10 @@
         </uap:DefaultTile >
         <uap:SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="#0085ff" uap5:Optional="true" />
         <uap:LockScreen Notification="badge" BadgeLogo="Assets\BadgeLogo.png"/>
+        <uap:InitialRotationPreference>
+          <uap:Rotation Preference="landscape"/>
+          <uap:Rotation Preference="portrait"/>
+          <uap:Rotation Preference="landscapeFlipped"/></uap:InitialRotationPreference>
       </uap:VisualElements>
       <Extensions>
         <uap:Extension Category="windows.protocol">
